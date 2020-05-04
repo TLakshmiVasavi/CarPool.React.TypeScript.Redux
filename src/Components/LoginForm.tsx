@@ -8,19 +8,16 @@ import { RouteComponentProps } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Cookies from 'js-cookie';
+import {IAuthUser} from "./Interfaces";
+import { RootState } from "./Redux/rootReducer";
 
-interface IState {
-  [key: string]: string;
-  id: string;
-  password: string;
-}
 
 const validationSchema = Yup.object({
   id: Yup.string().required("Required"),
   password: Yup.string().required("Required"),
 });
 
-class LoginForm extends Component<RouteComponentProps, IState> {
+class LoginForm extends Component<RouteComponentProps, IAuthUser> {
   static contextType = UserContext;
   context: React.ContextType<typeof UserContext>;
 
@@ -41,26 +38,11 @@ class LoginForm extends Component<RouteComponentProps, IState> {
           initialValues={this.state}
           validationSchema={validationSchema}
           onSubmit={(values) => {
+
             var x=this;
             var history = this.props.history; //
             const { toggleAuth, setUser } = this.context!;
-            axios
-              .post("https://localhost:5001/api/UserApi/Login", values)
-              .then(function (response) {
-                if(response.data.isSuccess)
-                {
-                toggleAuth();
-                 setUser(response.data);
-                history.push("/Home"); //
-                }
-                else
-                {
-                  x.setState({error:response.data.errorMessage});
-                }
-              })
-              .catch(function () {
-                alert("Error Loading Page");
-              });
+            
           }}
         >
           {({ handleSubmit, handleChange, errors }) => (
@@ -107,5 +89,18 @@ class LoginForm extends Component<RouteComponentProps, IState> {
   }
 }
 
-export default LoginForm;
+
 //completed
+
+const mapStateToProps = (state:RootState,ownProps:IAuthUser) => {
+    user: state.user,
+}
+
+const mapDispatchToProps = (dispatch,props) => {  
+    loginUser:IAuthUser=>dispatch(loginUser(user))
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LoginForm)

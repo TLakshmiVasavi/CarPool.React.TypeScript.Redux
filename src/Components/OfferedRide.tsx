@@ -2,18 +2,8 @@ import { Row, Col } from "react-grid-system";
 import React from "react";
 import { MdLocationOn } from "react-icons/md";
 import OfferRide from "./OfferRide";
+import {IRideDetails} from "./Interfaces";
 
-interface IRideDetails
-{
-  Id:number,
-  VehicleNumber:string,
-  StartDate:Date,
-  Cost:number,
-  Provider:string,
-  ProviderId:string,
-  From:string,
-  To:string
-}
 class OfferedRide extends React.Component<IRideDetails,{}>
 {
     render()

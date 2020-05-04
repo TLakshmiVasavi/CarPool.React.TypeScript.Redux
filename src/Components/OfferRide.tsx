@@ -12,21 +12,11 @@ import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import "../StyleSheets/OfferRide.css";
 import "../StyleSheets/Toogle.css";
+import {IOfferedRide} from "./Interfaces";
 
 const times = ["5am-9am", "9am-12pm", "12pm-3pm", "3pm-6pm", "6pm-9pm"];
 
-interface IState {
-  [key: string]: any;
-  totalNoOfSeats: number;
-  noOfSeats: number;
-  isChecked: Boolean;
-  selectedDate: Date;
-  stops: string[];
-  from: string;
-  to: string;
-  time: string;
-  firstHalf: Boolean;
-}
+
 
 const validationSchema = Yup.object({
   noOfSeats: Yup.string().required("Required"),
@@ -35,7 +25,7 @@ const validationSchema = Yup.object({
   time: Yup.string().required("Required"),
 });
 
-class OfferRide extends React.Component<RouteComponentProps, IState> {
+class OfferRide extends React.Component<RouteComponentProps, IOfferedRide> {
   constructor(props: RouteComponentProps) {
     super(props);
     this.state = {

@@ -12,29 +12,9 @@ import axios from "axios";
 import { RouteComponentProps } from "react-router-dom";
 // import AvailableRide from "./AvailableRide";
 import UserContext from "./UserContext";
+import { IBookRide } from "./Interfaces";
 
 const times = ["5am-9am", "9am-12pm", "12pm-3pm", "3pm-6pm", "6pm-9pm"];
-
-interface IState {
-  [key: string]: any;
-  AvailableRides: IRideDetails[];
-  isChecked: Boolean;
-  selectedDate: Date;
-  from: string;
-  to: string;
-  time: string;
-}
-
-interface IRideDetails {
-  Id: number;
-  VehicleNumber: string;
-  StartDate: Date;
-  Cost: number;
-  Provider: string;
-  ProviderId: string;
-  From: string;
-  To: string;
-}
 
 const validationSchema = Yup.object({
   from: Yup.string().required("Required"),
@@ -42,7 +22,7 @@ const validationSchema = Yup.object({
   time: Yup.string().required("Required"),
 });
 
-class BookRide extends React.Component<RouteComponentProps, IState> {
+class BookRide extends React.Component<RouteComponentProps, IBookRide> {
   static contextType = UserContext;
   context: React.ContextType<typeof UserContext>;
   constructor(props: RouteComponentProps) {
@@ -215,4 +195,3 @@ class BookRide extends React.Component<RouteComponentProps, IState> {
 }
 
 export default BookRide;
-

@@ -3,26 +3,17 @@ import { Container, Row, Col } from "react-grid-system";
 import axios from "axios";
 import { MdLocationOn } from "react-icons/md";
 import UserContext from "./UserContext";
-interface IRideDetails
+import {IMRideDetails} from "./Interfaces";
+
+
+
+interface IMyRides
 {
-  Id:number,
-  Source:string,
-  Destination:string,
-  StartDate:Date,
-  Time:string,
-  IsRideCompleted:string,
-  VehicleId:string
+  Offers:IMRideDetails[],
+  Bookings:IMRideDetails[]
 }
 
-
-
-interface IState
-{
-  Offers:IRideDetails[],
-  Bookings:IRideDetails[]
-}
-
-class MyRides extends React.Component<{},IState> {
+class MyRides extends React.Component<{},IMyRides> {
   static contextType = UserContext;
   state = {
     Offers: [],
@@ -54,7 +45,7 @@ class MyRides extends React.Component<{},IState> {
           <Col md={6}>
             <div className="rectangle bg-darkviolet">Booked Rides</div>
             <Col id="bookings" md={10}>
-              {this.state.Bookings.map((item:IRideDetails) => (
+              {this.state.Bookings.map((item:IMRideDetails) => (
                 <div className="shadowBox">
                   <Row>
                     <Col md={8}>
@@ -131,7 +122,7 @@ class MyRides extends React.Component<{},IState> {
           <Col md={6}>
             <div className="rectangle bg-darkorange">Offered Rides</div>
             <Col id="offers" md={10}>
-              {this.state.Offers.map((item:IRideDetails) => (
+              {this.state.Offers.map((item:IMRideDetails) => (
                 <div className="shadowBox">
                   <Row>
                     <Col md={8}>

@@ -7,6 +7,7 @@ import { Visibility, VisibilityOff } from "@material-ui/icons";
 import IconButton from "@material-ui/core/IconButton";
 import UserContext from "./UserContext";
 import { RouteComponentProps } from "react-router-dom";
+import {INewUser} from "./Interfaces";
 
 const Gender = [
   {
@@ -37,25 +38,7 @@ const hasVehicle = [
   },
 ];
 
-interface IState {
-  [key: string]: any;
-  name: string;
-  mail: string;
-  password: string;
-  age: number;
-  number: string;
-  photo: any;
-  gender: string;
-  hasVehicle: string;
-  vehicle: {
-    [key: string]: any;
-    model: string;
-    number: string;
-    capacity: number;
-  };
-  vehicleType: string;
-  showPassword: Boolean;
-}
+
 
 const validationSchema = Yup.object({
   mail: Yup.string()
@@ -74,7 +57,7 @@ const validationSchema = Yup.object({
   .max(100),
 });
 
-class SignUpForm extends Component<RouteComponentProps, IState> {
+class SignUpForm extends Component<RouteComponentProps, INewUser> {
   static contextType = UserContext;
 
   constructor(props: RouteComponentProps) {
@@ -126,18 +109,7 @@ class SignUpForm extends Component<RouteComponentProps, IState> {
     //this.props.history.push("/Home");
     const { toggleAuth, setUser } = this.context!;
     evt.preventDefault();
-    const data = new FormData();
-    Object.keys(this.state).map((i) => data.append(i, this.state[i]));
-    await axios
-      .post("https://localhost:5001/api/UserApi/SignUp", data)
-      .then(function (response) {
-        toggleAuth();
-        setUser(response.data);
-        x.push("/Home");
-      })
-      .catch(function () {
-        alert("Error Loading Page");
-      });
+    
   }
 
   render() {

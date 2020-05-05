@@ -1,15 +1,13 @@
-import { combineReducers } from 'redux'
+import { combineReducers } from "redux";
 // import BookingReducer from './Booking/BookingReducer'
-// import RideReducer from './Ride/RideReducer'
-import UserReducer from './User/UserReducer'
-
+import RideReducer from "./Ride/RideReducer";
+import UserReducer from "./User/UserReducer";
 
 const rootReducer = combineReducers({
-  // ride:RideReducer,
-  // booking:BookingReducer,
-  user:UserReducer,
-})
+  ride: RideReducer,
+  user: UserReducer,
+});
 
-export default rootReducer
+export default rootReducer;
 
-export type RootState = ReturnType<typeof rootReducer>
+export type RootState = ReturnType<typeof rootReducer>;

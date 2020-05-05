@@ -12,11 +12,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import "../StyleSheets/OfferRide.css";
 import "../StyleSheets/Toogle.css";
-import {IOfferedRide} from "./Interfaces";
+import { IOfferRide } from "./Interfaces";
 
 const times = ["5am-9am", "9am-12pm", "12pm-3pm", "3pm-6pm", "6pm-9pm"];
-
-
 
 const validationSchema = Yup.object({
   noOfSeats: Yup.string().required("Required"),
@@ -25,19 +23,24 @@ const validationSchema = Yup.object({
   time: Yup.string().required("Required"),
 });
 
-class OfferRide extends React.Component<RouteComponentProps, IOfferedRide> {
+class OfferRide extends React.Component<RouteComponentProps, IOfferRide> {
   constructor(props: RouteComponentProps) {
     super(props);
     this.state = {
-      totalNoOfSeats: 3,
-      noOfSeats: 2,
+      //totalNoOfSeats: 3,
+      noOfOfferedSeats: 2,
       isChecked: false,
-      selectedDate: new Date(),
-      stops: [],
-      from: "",
-      to: "",
+      startDate: new Date(),
+      route: {
+        stops: [],
+        from: "",
+        to: "",
+      },
       time: "",
       firstHalf: true,
+      cost: 0,
+      availableVehicles: [],
+      vehicleId: "",
     };
     this.handleChecked = this.handleChecked.bind(this);
     this.dateHandler = this.dateHandler.bind(this);
@@ -56,25 +59,13 @@ class OfferRide extends React.Component<RouteComponentProps, IOfferedRide> {
 
   handleSubmit(e: any) {
     e.preventDefault();
-    axios({
-      method: "post",
-      url: "https://localhost:5001/api/UserApi/Login",
-      data: this.state,
-    })
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (response) {
-        alert("error responding page");
-        console.log(response);
-      });
   }
 
   onStopChange(e: any) {
     // console.log(e.target);
     const { name, value } = e.target;
     this.setState((state) => {
-      const stops = state.stops.map((item, j) => {
+      const stops = state.stops.map((item: string, j: string) => {
         if (j == name) {
           return value;
         } else {
@@ -89,7 +80,7 @@ class OfferRide extends React.Component<RouteComponentProps, IOfferedRide> {
 
   dateHandler(e: any) {
     // console.log(e);
-    this.setState({ ["selectedDate"]: e });
+    this.setState({ ["startDate"]: e });
   }
 
   addStop() {
@@ -127,7 +118,10 @@ class OfferRide extends React.Component<RouteComponentProps, IOfferedRide> {
             const { userId } = this.context!.user?.Mail;
 
             axios
-              .post("https://localhost:5001/api/UserApi/OfferRide?userId="+userId, values)
+              .post(
+                "https://localhost:5001/api/UserApi/OfferRide?userId=" + userId,
+                values
+              )
               .then(function (response) {
                 x.push("/Home");
               })
@@ -181,11 +175,11 @@ class OfferRide extends React.Component<RouteComponentProps, IOfferedRide> {
                         </Col>
                         <Col md={2}>
                           <div className="dots">
-                          <div className="dot bg-darkviolet" />
-                          <div className="dot" />
-                          <div className="dot" />
-                          <div className="dot" />
-                          <MdLocationOn className="bg-darkviolet"/>
+                            <div className="dot bg-darkviolet" />
+                            <div className="dot" />
+                            <div className="dot" />
+                            <div className="dot" />
+                            <MdLocationOn className="bg-darkviolet" />
                           </div>
                         </Col>
                       </Row>
@@ -248,7 +242,7 @@ class OfferRide extends React.Component<RouteComponentProps, IOfferedRide> {
                             <React.Fragment>
                               {this.state.stops
                                 .slice(0, -1)
-                                .map((item, index) => (
+                                .map((item: string, index: number) => (
                                   <TextField
                                     label={"Stop " + (index + 1)}
                                     value={item}
@@ -292,9 +286,9 @@ class OfferRide extends React.Component<RouteComponentProps, IOfferedRide> {
                         </div>
                       </div>
                       <div className="form-group">
-                      <button type="submit" className="submit bg-darkorange">
-                Submit
-              </button>
+                        <button type="submit" className="submit bg-darkorange">
+                          Submit
+                        </button>
                       </div>
                     </div>
                   )}

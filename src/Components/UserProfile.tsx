@@ -1,21 +1,10 @@
 import React from "react";
 import { Row, Col, Container } from "react-grid-system";
-import MenuListComposition from "./MenuList";
+import { IUser } from "./Interfaces";
 
-class UserProfile extends React.Component {
-  constructor(props) {
+class UserProfile extends React.Component<{}, IUser> {
+  constructor(props: any) {
     super(props);
-    this.state = {
-      disable: true,
-      user: {
-        Name: "",
-        Mail: "",
-        Number: "",
-        Age: "",
-        Gender: "",
-        Photo: "",
-      },
-    };
     this.enableEdit = this.enableEdit.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.disableEdit = this.disableEdit.bind(this);
@@ -25,22 +14,21 @@ class UserProfile extends React.Component {
     //this.setState({ user: this.props.user });
   }
 
-  enableEdit(e) {
+  enableEdit(e: any) {
     this.setState({ disable: false });
   }
 
-  handleSubmit(e) {
+  handleSubmit(e: any) {
     this.setState({ disable: true });
   }
 
-  disableEdit(e) {
+  disableEdit(e: any) {
     this.setState({ disable: true });
   }
 
   render() {
     return (
       <Container>
-        <MenuListComposition />
         <div className="shadowBox Profile center">
           <Row>
             <Col md={6}>Name</Col>

@@ -2,12 +2,17 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import React, { Component } from "react";
 import axios from "axios";
-import { TextField,OutlinedInput,InputLabel,InputAdornment,FormControl} from "@material-ui/core";
+import {
+  TextField,
+  OutlinedInput,
+  InputLabel,
+  InputAdornment,
+  FormControl,
+} from "@material-ui/core";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import IconButton from "@material-ui/core/IconButton";
-import UserContext from "./UserContext";
 import { RouteComponentProps } from "react-router-dom";
-import {INewUser} from "./Interfaces";
+import { INewUser } from "./Interfaces";
 
 const Gender = [
   {
@@ -38,28 +43,25 @@ const hasVehicle = [
   },
 ];
 
-
-
 const validationSchema = Yup.object({
-  mail: Yup.string()
-    .email('Please enter valid mail').required('Required!'),
+  mail: Yup.string().email("Please enter valid mail").required("Required!"),
   password: Yup.string()
-    .min(6, 'Password has to be longer than 6 characters!')  
+    .min(6, "Password has to be longer than 6 characters!")
     .matches(
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
       "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
     ),
   name: Yup.string().required("Required"),
-  number:Yup.string().required("Required")
-  .matches(/^[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-/\s.]?[0-9]{4}$/,"Please enter valid number"),
-  age:Yup.string().required("Required")
-  .min(1)
-  .max(100),
+  number: Yup.string()
+    .required("Required")
+    .matches(
+      /^[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-/\s.]?[0-9]{4}$/,
+      "Please enter valid number"
+    ),
+  age: Yup.string().required("Required").min(1).max(100),
 });
 
 class SignUpForm extends Component<RouteComponentProps, INewUser> {
-  static contextType = UserContext;
-
   constructor(props: RouteComponentProps) {
     super(props);
     this.state = {
@@ -88,7 +90,7 @@ class SignUpForm extends Component<RouteComponentProps, INewUser> {
       showPassword: !this.state.showPassword,
     });
   }
-  handlefile(e:any) {
+  handlefile(e: any) {
     this.setState({
       [e.target.name]: e.target.files[0],
     });
@@ -97,43 +99,20 @@ class SignUpForm extends Component<RouteComponentProps, INewUser> {
     event.preventDefault();
   }
 
-  handleChange(e:any) {
+  handleChange(e: any) {
     const { name, value } = e.target;
     this.setState({
       [name]: value,
     });
   }
-
-  async handleSubmit(evt: any) {
-    var x = this.props.history;
-    //this.props.history.push("/Home");
-    const { toggleAuth, setUser } = this.context!;
-    evt.preventDefault();
-    
-  }
+  handleSubmit(e: any) {}
 
   render() {
     return (
       <div className="bg-darkorange rightHalf">
         <Formik
           enableReinitialize
-          initialValues={{
-            name: "",
-            mail: "",
-            password: "",
-            age: "",
-            number: "",
-            photo: "",
-            gender: "Female",
-            hasVehicle: "",
-            vehicle: {
-              model: "",
-              number: "",
-              capacity: "",
-            },
-            vehicleType: "",
-            showPassword: true,
-          }}
+          initialValues={this.state}
           validationSchema={validationSchema}
           onSubmit={this.handleSubmit}
         >

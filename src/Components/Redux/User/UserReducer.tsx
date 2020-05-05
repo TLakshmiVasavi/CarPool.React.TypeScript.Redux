@@ -16,11 +16,14 @@ const intialState: IUser = {
   number: "",
   photo: null,
   gender: "Female",
-  isLoggedIn:false,
-  error:""
+  isLoggedIn: false,
+  error: "",
 };
 
-const userReducer = (state: INewUser | IUser=intialState, action: UserAction) => {
+const userReducer = (
+  state: INewUser | IUser = intialState,
+  action: UserAction
+) => {
   switch (action.type) {
     case USER_LOGIN_REQUEST:
       return {
@@ -30,17 +33,17 @@ const userReducer = (state: INewUser | IUser=intialState, action: UserAction) =>
       return {
         ...state,
         ...action.payload,
-        isLoggedIn:true
+        isLoggedIn: true,
       };
     case USER_LOGIN_FAILURE:
       return {
         ...state,
-        error:action.error
+        error: action.error,
       };
     case LOGOUT_USER:
       return {
         ...state,
-        isLoggedIn:false,
+        isLoggedIn: false,
       };
     case UPDATE_USER_REQUEST:
       return {
@@ -54,7 +57,7 @@ const userReducer = (state: INewUser | IUser=intialState, action: UserAction) =>
     case UPDATE_USER_FAILURE:
       return {
         ...state,
-        error:action.error
+        error: action.error,
       };
     default:
       return state;

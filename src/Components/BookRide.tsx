@@ -11,8 +11,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import { RouteComponentProps } from "react-router-dom";
 // import AvailableRide from "./AvailableRide";
-import UserContext from "./UserContext";
-import { IBookRide } from "./Interfaces";
+import { IRideRequest } from "./Interfaces";
 
 const times = ["5am-9am", "9am-12pm", "12pm-3pm", "3pm-6pm", "6pm-9pm"];
 
@@ -22,13 +21,10 @@ const validationSchema = Yup.object({
   time: Yup.string().required("Required"),
 });
 
-class BookRide extends React.Component<RouteComponentProps, IBookRide> {
-  static contextType = UserContext;
-  context: React.ContextType<typeof UserContext>;
+class BookRide extends React.Component<RouteComponentProps, IRideRequest> {
   constructor(props: RouteComponentProps) {
     super(props);
     this.state = {
-      AvailableRides: [],
       isChecked: false,
       selectedDate: new Date(),
       from: "",
@@ -41,9 +37,9 @@ class BookRide extends React.Component<RouteComponentProps, IBookRide> {
     this.dateHandler = this.dateHandler.bind(this);
     this.onButtonChange = this.onButtonChange.bind(this);
   }
-  dateHandler(e: any) {
+  dateHandler(e: Date) {
     console.log(e);
-    this.setState({ ["selectedDate"]: e });
+    this.setState({ selectedDate: e });
   }
   onButtonChange(e: any) {
     this.setState({ time: e.target.value });
@@ -57,18 +53,6 @@ class BookRide extends React.Component<RouteComponentProps, IBookRide> {
     var context = this.context!;
     var state = this;
     e.preventDefault();
-    axios
-      .post(
-        "https://localhost:5001/api/RideApi/BookRide?userId=" +
-          context.user?.mail,
-        this.state
-      )
-      .then(function (res) {
-        state.setState({ AvailableRides: res.data });
-      })
-      .catch(function () {
-        alert("Error Loading Page");
-      });
   }
   handleChange(e: any) {
     const { name, value } = e.target;

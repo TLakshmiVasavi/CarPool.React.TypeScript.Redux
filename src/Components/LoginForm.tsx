@@ -2,15 +2,13 @@ import React, { Component } from "react";
 import axios from "axios";
 import { TextField } from "@material-ui/core";
 import "../App.css";
-import UserContext from "./UserContext";
 import "../StyleSheets/Colors.css";
 import { RouteComponentProps } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import Cookies from 'js-cookie';
-import {IAuthUser} from "./Interfaces";
+import Cookies from "js-cookie";
+import { IAuthUser } from "./Interfaces";
 import { RootState } from "./Redux/rootReducer";
-
 
 const validationSchema = Yup.object({
   id: Yup.string().required("Required"),
@@ -18,15 +16,12 @@ const validationSchema = Yup.object({
 });
 
 class LoginForm extends Component<RouteComponentProps, IAuthUser> {
-  static contextType = UserContext;
-  context: React.ContextType<typeof UserContext>;
-
   constructor(props: RouteComponentProps) {
     super(props);
     this.state = {
       id: "",
       password: "",
-      error:""
+      error: "",
     };
   }
 
@@ -38,11 +33,7 @@ class LoginForm extends Component<RouteComponentProps, IAuthUser> {
           initialValues={this.state}
           validationSchema={validationSchema}
           onSubmit={(values) => {
-
-            var x=this;
-            var history = this.props.history; //
-            const { toggleAuth, setUser } = this.context!;
-            
+            console.log(values);
           }}
         >
           {({ handleSubmit, handleChange, errors }) => (
@@ -89,18 +80,4 @@ class LoginForm extends Component<RouteComponentProps, IAuthUser> {
   }
 }
 
-
-//completed
-
-const mapStateToProps = (state:RootState,ownProps:IAuthUser) => {
-    user: state.user,
-}
-
-const mapDispatchToProps = (dispatch,props) => {  
-    loginUser:IAuthUser=>dispatch(loginUser(user))
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LoginForm)
+export default LoginForm;

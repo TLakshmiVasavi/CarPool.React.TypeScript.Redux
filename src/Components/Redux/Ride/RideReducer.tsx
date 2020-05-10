@@ -1,5 +1,4 @@
 import {
-  RideAction,
   OFFER_RIDE_REQUEST,
   OFFER_RIDE_SUCCESS,
   OFFER_RIDE_FAILURE,
@@ -15,14 +14,42 @@ import {
   GET_MY_OFFERS,
   GET_MY_OFFERS_FAILURE,
   GET_MY_OFFERS_SUCCESS,
+  GET_RIDE_REQUESTS,
+  GET_RIDE_REQUESTS_SUCCESS,
+  GET_RIDE_REQUESTS_FAILURE,
 } from "./RideTypes";
 
-import { IBookRideResponse, IBooking, IOffer } from "../../Interfaces";
+import { RideAction } from "./RideTypes";
 
-const RideReducer = (
-  state: IOffer[] & IBookRideResponse[] & IBooking[],
-  action: RideAction
-) => {
+import {
+  IBookRideResponse,
+  IMyBooking,
+  IMyOffer,
+  IMyOffers,
+  IMyBookings,
+  IAvailableRide,
+  IOfferRide,
+  IRideRequest,
+  IBookRide,
+  IRideRequests,
+} from "../../Interfaces";
+
+interface IBool {
+  isLoaded: boolean;
+  isRequested: boolean;
+  isRequestsLoaded: boolean;
+}
+
+const intialState: IMyOffers & IBookRideResponse & IMyBookings & IBool = {
+  isRequested: false,
+  isLoaded: false,
+  isRequestsLoaded: false,
+  offers: [],
+  bookings: [],
+  availableRides: [],
+};
+
+export function rideReducer(state = intialState, action: RideAction) {
   switch (action.type) {
     case OFFER_RIDE_REQUEST:
       return {
@@ -35,11 +62,12 @@ const RideReducer = (
     case OFFER_RIDE_FAILURE:
       return {
         ...state,
-        //error,
       };
     case BOOK_RIDE_REQUEST:
       return {
         ...state,
+        isLoaded: false,
+        isRequested: true,
       };
     case BOOK_RIDE_FAILURE:
       return {
@@ -48,7 +76,8 @@ const RideReducer = (
     case BOOK_RIDE_RESPONSE:
       return {
         ...state,
-        //...Bookings,
+        availableRides: action.payload,
+        isLoaded: true,
       };
     case REQUEST_RIDE:
       return {
@@ -69,7 +98,7 @@ const RideReducer = (
     case GET_MY_BOOKINGS_SUCCESS:
       return {
         ...state,
-        //...Bookings,
+        bookings: action.payload == undefined ? [] : action.payload,
       };
     case GET_MY_BOOKINGS_FAILURE:
       return {
@@ -86,8 +115,24 @@ const RideReducer = (
     case GET_MY_OFFERS_SUCCESS:
       return {
         ...state,
+        offers: action.payload == undefined ? [] : action.payload,
       };
+    case GET_RIDE_REQUESTS:
+      return {
+        ...state,
+        isRequestsLoaded: false,
+      };
+    case GET_RIDE_REQUESTS_FAILURE:
+      return {
+        ...state,
+      };
+    case GET_RIDE_REQUESTS_SUCCESS:
+      return {
+        ...state,
+        requests: action.payload == undefined ? [] : action.payload,
+        isRequestsLoaded: true,
+      };
+    default:
+      return state;
   }
-};
-
-export default RideReducer;
+}

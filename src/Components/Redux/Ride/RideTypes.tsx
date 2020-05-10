@@ -1,4 +1,9 @@
-import { IBookRideResponse, IOffer, IBooking } from "../../Interfaces";
+import {
+  IBookRideResponse,
+  IMyOffer,
+  IMyBooking,
+  IRideRequests,
+} from "../../Interfaces";
 
 export const OFFER_RIDE_REQUEST = "OFFER_RIDE_REQUEST";
 export const OFFER_RIDE_SUCCESS = "OFFER_RIDE_SUCCESS";
@@ -28,6 +33,7 @@ export interface GetRideRequests {
 
 export interface GetRideRequestsSuccess {
   type: typeof GET_RIDE_REQUESTS_SUCCESS;
+  payload: IRideRequests;
 }
 
 export interface GetRideRequestsFailure {
@@ -64,7 +70,7 @@ export interface BookRideRequest {
 
 export interface BookRideResponse {
   type: typeof BOOK_RIDE_RESPONSE;
-  payload: IBookRideResponse[];
+  payload: IBookRideResponse;
 }
 
 export interface BookRideFailure {
@@ -90,7 +96,7 @@ export interface GetMyBookings {
 
 export interface GetMyBookingsSuccess {
   type: typeof GET_MY_BOOKINGS_SUCCESS;
-  payload: IBooking[];
+  payload: IMyBooking[];
 }
 
 export interface GetMyBookingsFailure {
@@ -104,7 +110,7 @@ export interface GetMyOffers {
 
 export interface GetMyOffersSuccess {
   type: typeof GET_MY_OFFERS_SUCCESS;
-  payload: IOffer[];
+  payload: IMyOffer[];
 }
 
 export interface GetMyOffersFailure {
@@ -113,18 +119,21 @@ export interface GetMyOffersFailure {
 }
 
 export type RideAction =
-  | GetMyOffersSuccess
-  | GetMyOffers
-  | GetMyOffersFailure
-  | GetMyBookingsSuccess
-  | GetMyBookings
-  | GetMyBookingsFailure
-  | BookRideFailure
-  | RequestRideSuccess
-  | RequestRide
-  | BookRideResponse
-  | BookRideRequest
   | OfferRideRequest
   | OfferRideSuccess
   | OfferRideFailure
-  | RequestRideFailure;
+  | BookRideRequest
+  | BookRideFailure
+  | BookRideResponse
+  | RequestRide
+  | RequestRideSuccess
+  | RequestRideFailure
+  | GetMyBookingsSuccess
+  | GetMyBookings
+  | GetMyBookingsFailure
+  | GetMyOffersSuccess
+  | GetMyOffers
+  | GetMyOffersFailure
+  | GetRideRequests
+  | GetRideRequestsSuccess
+  | GetRideRequestsFailure;

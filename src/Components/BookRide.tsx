@@ -10,36 +10,50 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import { RouteComponentProps } from "react-router-dom";
+import { connect } from "react-redux";
 // import AvailableRide from "./AvailableRide";
-import { IRideRequest } from "./Interfaces";
+import { IBookRide, IBookRideResponse, IAvailableRide } from "./Interfaces";
+import { bookRide } from "./Redux/Ride/RideActions";
+import { AppState } from "./Redux/rootReducer";
+import AvailableRides from "./AvailableRides";
 
 const times = ["5am-9am", "9am-12pm", "12pm-3pm", "3pm-6pm", "6pm-9pm"];
-
+const vehicleType = [
+  {
+    label: " Car ",
+  },
+  {
+    label: " Bike ",
+  },
+];
 const validationSchema = Yup.object({
   from: Yup.string().required("Required"),
   to: Yup.string().required("Required"),
   time: Yup.string().required("Required"),
 });
 
-class BookRide extends React.Component<RouteComponentProps, IRideRequest> {
-  constructor(props: RouteComponentProps) {
+class BookRide extends React.Component<
+  RouteComponentProps & DispatchProps & IBool,
+  IBookRide
+> {
+  constructor(props: any) {
     super(props);
     this.state = {
       isChecked: false,
-      selectedDate: new Date(),
+      startDate: new Date(),
       from: "",
       to: "",
       time: "5am-9am",
+      vehicleType: "Car",
     };
     this.handleChecked = this.handleChecked.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.dateHandler = this.dateHandler.bind(this);
     this.onButtonChange = this.onButtonChange.bind(this);
   }
   dateHandler(e: Date) {
     console.log(e);
-    this.setState({ selectedDate: e });
+    this.setState({ startDate: e });
   }
   onButtonChange(e: any) {
     this.setState({ time: e.target.value });
@@ -49,11 +63,6 @@ class BookRide extends React.Component<RouteComponentProps, IRideRequest> {
     this.setState({ isChecked: !this.state.isChecked });
   }
 
-  handleSubmit(e: any) {
-    var context = this.context!;
-    var state = this;
-    e.preventDefault();
-  }
   handleChange(e: any) {
     const { name, value } = e.target;
     this.setState({ [name]: value });
@@ -66,7 +75,7 @@ class BookRide extends React.Component<RouteComponentProps, IRideRequest> {
           enableReinitialize
           initialValues={this.state}
           validationSchema={validationSchema}
-          onSubmit={this.handleSubmit}
+          onSubmit={(values) => this.props.bookRide(this.state)}
         >
           {({ handleSubmit, handleChange, values, errors }) => (
             <form onSubmit={handleSubmit}>
@@ -117,13 +126,35 @@ class BookRide extends React.Component<RouteComponentProps, IRideRequest> {
                       </Row>
                       <Row>
                         <Col md={8}>
+                          <TextField
+                            margin="normal"
+                            className="bg-white"
+                            name="vehicleType"
+                            select
+                            label="Vehicle"
+                            onChange={this.handleChange}
+                            SelectProps={{
+                              native: true,
+                            }}
+                          >
+                            {vehicleType.map((option) => (
+                              <option key={option.label} value={option.label}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </TextField>
+                        </Col>
+                      </Row>
+
+                      <Row>
+                        <Col md={8}>
                           <small>Date</small>
                           <DatePicker
                             dateFormat="MM/dd/yyyy"
                             // margin="normal"
                             id="date-picker-inline"
                             //label="Date picker inline"
-                            selected={this.state.selectedDate}
+                            selected={this.state.startDate}
                             onChange={this.dateHandler}
                             minDate={new Date()}
                           />
@@ -153,7 +184,6 @@ class BookRide extends React.Component<RouteComponentProps, IRideRequest> {
                             ))}
                           </div>
                           <input
-                            onClick={this.handleSubmit}
                             type="submit"
                             className="submit bg-darkorange"
                             value="Submit"
@@ -166,7 +196,7 @@ class BookRide extends React.Component<RouteComponentProps, IRideRequest> {
                 </Col>
                 <Col md={8}>
                   <Col id="matches" md={10}>
-                    {/* { this.state.map((ride:IRideDetails)=>(<AvailableRide {...ride}/>))} */}
+                    {this.props.isLoaded && <AvailableRides {...this.state} />}
                   </Col>
                 </Col>
               </Row>
@@ -178,4 +208,19 @@ class BookRide extends React.Component<RouteComponentProps, IRideRequest> {
   }
 }
 
-export default BookRide;
+interface DispatchProps {
+  bookRide: (ride: IBookRide) => void;
+}
+const mapDispatchToProps = {
+  bookRide,
+};
+interface IBool {
+  isRequested: boolean;
+  isLoaded: boolean;
+}
+const mapStateToProps = (state: AppState) => ({
+  isRequested: state.ride.isRequested,
+  isLoaded: state.ride.isLoaded,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookRide);

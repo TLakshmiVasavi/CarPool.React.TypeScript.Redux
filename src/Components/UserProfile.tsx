@@ -1,8 +1,11 @@
 import React from "react";
 import { Row, Col, Container } from "react-grid-system";
 import { IUser } from "./Interfaces";
+import { connect } from "react-redux";
+import { AppState } from "./Redux/rootReducer";
+import { UpdateUser } from "./Redux/User/UserActions";
 
-class UserProfile extends React.Component<{}, IUser> {
+class UserProfile extends React.Component<DispatchProps & IUser, {}> {
   constructor(props: any) {
     super(props);
     this.enableEdit = this.enableEdit.bind(this);
@@ -35,8 +38,8 @@ class UserProfile extends React.Component<{}, IUser> {
             <Col md={6}>
               <input
                 type="text"
-                value={this.state.name}
-                disabled={this.state.disable}
+                value={this.props.user.name}
+                disabled={this.props.disable}
               />
             </Col>
           </Row>
@@ -45,8 +48,8 @@ class UserProfile extends React.Component<{}, IUser> {
             <Col md={6}>
               <input
                 type="number"
-                value={this.state.age}
-                disabled={this.state.disable}
+                value={this.props.user.age}
+                disabled={this.props.disable}
               />
             </Col>
           </Row>
@@ -55,8 +58,8 @@ class UserProfile extends React.Component<{}, IUser> {
             <Col md={6}>
               <input
                 type="text"
-                value={this.state.mail}
-                disabled={this.state.disable}
+                value={this.props.user.mail}
+                disabled={this.props.disable}
               />
             </Col>
           </Row>
@@ -65,22 +68,25 @@ class UserProfile extends React.Component<{}, IUser> {
             <Col md={6}>
               <input
                 type="text"
-                value={this.state.number}
-                disabled={this.state.disable}
+                value={this.props.user.number}
+                disabled={this.props.disable}
               />
             </Col>
           </Row>
           <Row>
             <Col md={6}>Gender</Col>
             <Col md={6}>
-              <select value={this.state.gender} disabled={this.state.disable}>
+              <select
+                value={this.props.user.gender}
+                disabled={this.props.disable}
+              >
                 <option value="Female">Female</option>
                 <option value="Male">Male</option>
               </select>
             </Col>
           </Row>
           <Row>
-            {this.state.disable ? (
+            {this.props.disable ? (
               <button id="edit" value="edit" onClick={this.enableEdit}>
                 edit
               </button>
@@ -106,4 +112,16 @@ class UserProfile extends React.Component<{}, IUser> {
   }
 }
 
-export default UserProfile;
+const mapStateToProps = (props: AppState) => ({
+  disable: true,
+  user: props.user,
+});
+
+interface DispatchProps {
+  updateUser: (user: IUser) => void;
+}
+const mapDispatchToProps = {
+  UpdateUser,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserProfile);

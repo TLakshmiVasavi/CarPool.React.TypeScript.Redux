@@ -1,7 +1,8 @@
 import React from "react";
 import { Row, Col, Container } from "react-grid-system";
 import { RouteComponentProps } from "react-router-dom";
-import store from "./Redux/Store";
+import { store } from "./Redux/Store";
+import { connect } from "react-redux";
 
 class Home extends React.Component<RouteComponentProps, {}> {
   render() {
@@ -10,7 +11,7 @@ class Home extends React.Component<RouteComponentProps, {}> {
         <div className="center">
           <Container>
             <Row>
-              {/* <div className="name">Hey {store.getState().user.name} !</div> */}
+              <div className="name">Hey {store.getState().user.name} !</div>
             </Row>
             <Row>
               <Col md={6}>

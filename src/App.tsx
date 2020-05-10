@@ -6,25 +6,24 @@ import {
 } from "react-router-dom";
 import history from "./Components/Routing/history";
 import Routes from "./Components/Routing/Routes";
-//import MenuListComposition from "./Components/MenuList";
+import MenuListComposition from "./Components/MenuList";
 import "./App.css";
-import { UserProvider } from "./Components/UserContext";
-import configureStore from "./Components/Redux/Store";
+import { store } from "./Components/Redux/Store";
 import { Provider } from "react-redux";
+import { ToastContainer } from "react-toastify";
 
-const store: any = configureStore();
+import "react-toastify/dist/ReactToastify.css";
 
 class App extends React.Component<BrowserRouterProps> {
   render() {
     return (
       <div className="App">
         <Provider store={store}>
-          <UserProvider>
-            <Router>
-              {/* <MenuListComposition /> */}
-              <Routes />
-            </Router>
-          </UserProvider>
+          <Router>
+            <ToastContainer hideProgressBar={true} />
+            <MenuListComposition />
+            <Routes />
+          </Router>
         </Provider>
       </div>
     );

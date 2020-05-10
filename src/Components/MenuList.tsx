@@ -7,130 +7,117 @@ import Popper from "@material-ui/core/Popper";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuList from "@material-ui/core/MenuList";
 import { makeStyles } from "@material-ui/core/styles";
-//import userImg from "../Images/Vasavi";
+import userImg from "../Images/Vasavi.jpg";
 import "../App.css";
 import history from "./Routing/history";
 import { Link } from "react-router-dom";
 import { withRouter } from "react-router";
 import { RouteComponentProps } from "react-router-dom";
+import { connect, DispatchProp } from "react-redux";
+import { Logout } from "./Redux/User/UserActions";
+import { AppState } from "./Redux/rootReducer";
 
 const open: Boolean = false;
 interface MenuState {
   open: boolean;
 }
 
-class UserMenuList extends React.Component<RouteComponentProps, boolean> {
-  private anchorRef = React.createRef<HTMLButtonElement>();
-  constructor(props: RouteComponentProps) {
+class UserMenuList extends React.Component<
+  RouteComponentProps & DispatchProps & IState,
+  MenuState
+> {
+  constructor(props: RouteComponentProps & DispatchProps & IState) {
     super(props);
-    this.state = false;
-
-    //this.anchorRef = React.createRef();
+    this.state = { open: false };
   }
   handleToggle = () => {
-    this.setState(!this.state);
+    this.setState({ open: !this.state.open });
   };
   handleListKeyDown = (event: any) => {
     if (event.key === "Tab") {
       event.preventDefault();
-      this.setState(false);
+      this.setState({ open: false });
     }
   };
   handleClose = (event: any) => {
-    if (
-      this.anchorRef.current &&
-      this.anchorRef.current.contains(event.target)
-    ) {
-      alert("if closing");
-    }
-    alert("closing");
-    this.setState(false);
+    this.setState({ open: false });
   };
   handleLogout = (event: any) => {
-    if (
-      this.anchorRef.current &&
-      this.anchorRef.current.contains(event.target)
-    ) {
-      alert("if logout closing");
-    }
-    alert("logout closing");
-    this.setState(false);
+    this.props.Logout();
+    this.setState({ open: false });
   };
-  componentDidMount() {
-    // if (prevOpen.current === true && open === false) {
-    if (this.anchorRef.current !== null) {
-      this.anchorRef.current.focus();
-    }
-  }
 
-  //   prevOpen.current = open;
-  // }
   render() {
-    //const anchorRef=this.anchorRef
+    var url = "data:image/png;base64,";
     return (
-      <div>
-        <div>Vasavi</div>
-        <Button
-          ref={this.anchorRef}
-          //ref={this.anchorRef}
-          aria-controls={this.state ? "menu-list-grow" : undefined}
-          aria-haspopup="true"
-          onClick={this.handleToggle}
-        >
-          {/* <img src={userImg} className="imgRound" /> */}
-        </Button>
-        <Popper
-          open={this.state}
-          anchorEl={this.anchorRef.current}
-          role={undefined}
-          transition
-          disablePortal
-        >
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{
-                transformOrigin:
-                  placement === "bottom" ? "center top" : "center bottom",
-              }}
+      <>
+        {this.props.isLoggedIn && (
+          <div>
+            <div>{this.props.name}</div>
+            <Button
+              aria-controls={this.state.open ? "menu-list-grow" : undefined}
+              aria-haspopup="true"
+              onClick={this.handleToggle}
             >
-              <Paper>
-                <ClickAwayListener onClickAway={this.handleClose}>
-                  <MenuList
-                    autoFocusItem={this.state}
-                    id="menu-list-grow"
-                    onKeyDown={this.handleListKeyDown}
-                  >
-                    <MenuItem
-                      component={Link}
-                      to="/UserProfile"
-                      onClick={this.handleClose}
-                    >
-                      Profile
-                    </MenuItem>
-                    <MenuItem
-                      component={Link}
-                      to="/MyRides"
-                      onClick={this.handleClose}
-                    >
-                      My Rides
-                    </MenuItem>
-                    <MenuItem
-                      onClick={(e) => {
-                        this.handleLogout(e);
-                      }}
-                    >
-                      Logout
-                    </MenuItem>
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
-      </div>
+              <img src={url + this.props.photo} className="imgRound" />
+            </Button>
+            <Popper
+              open={this.state.open}
+              role={undefined}
+              transition
+              disablePortal
+            >
+              {({ TransitionProps, placement }) => (
+                <Grow
+                  {...TransitionProps}
+                  style={{
+                    transformOrigin:
+                      placement === "bottom" ? "center top" : "center bottom",
+                  }}
+                >
+                  <Paper>
+                    <ClickAwayListener onClickAway={this.handleClose}>
+                      <MenuList
+                        autoFocusItem={this.state.open}
+                        id="menu-list-grow"
+                        onKeyDown={this.handleListKeyDown}
+                      >
+                        <MenuItem component={Link} to="/Profile">
+                          Profile
+                        </MenuItem>
+                        <MenuItem component={Link} to="/MyRides">
+                          My Rides
+                        </MenuItem>
+                        <MenuItem
+                          onClick={(e) => {
+                            this.handleLogout(e);
+                          }}
+                        >
+                          Logout
+                        </MenuItem>
+                      </MenuList>
+                    </ClickAwayListener>
+                  </Paper>
+                </Grow>
+              )}
+            </Popper>
+          </div>
+        )}
+      </>
     );
   }
 }
-
-export default UserMenuList;
+interface IState {
+  photo: any;
+  name: string;
+  isLoggedIn: boolean;
+}
+const mapStateToProps = (state: AppState) => ({
+  photo: state.user.photo,
+  name: state.user.name,
+  isLoggedIn: state.user.isLoggedIn,
+});
+interface DispatchProps {
+  Logout: () => void;
+}
+export default connect(mapStateToProps, { Logout })(withRouter(UserMenuList));

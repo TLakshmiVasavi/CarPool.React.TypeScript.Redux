@@ -1,22 +1,29 @@
 import React, { Component } from "react";
-import axios from "axios";
 import { TextField } from "@material-ui/core";
 import "../App.css";
 import "../StyleSheets/Colors.css";
 import { RouteComponentProps } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import Cookies from "js-cookie";
 import { IAuthUser } from "./Interfaces";
-import { RootState } from "./Redux/rootReducer";
+import { Login } from "./Redux/User/UserActions";
+import { connect } from "react-redux";
+import { Dispatch } from "redux";
+import { AppState } from "./Redux/rootReducer";
+//import * as x from "react-notifications-component";
+
+import Notification from "react-notifications-component";
 
 const validationSchema = Yup.object({
   id: Yup.string().required("Required"),
   password: Yup.string().required("Required"),
 });
 
-class LoginForm extends Component<RouteComponentProps, IAuthUser> {
-  constructor(props: RouteComponentProps) {
+class LoginForm extends Component<
+  RouteComponentProps & DispatchProps,
+  IAuthUser
+> {
+  constructor(props: RouteComponentProps & DispatchProps) {
     super(props);
     this.state = {
       id: "",
@@ -24,16 +31,16 @@ class LoginForm extends Component<RouteComponentProps, IAuthUser> {
       error: "",
     };
   }
-
   render() {
     return (
       <div className="rightHalf">
+        <Notification />
         <Formik
           enableReinitialize
           initialValues={this.state}
           validationSchema={validationSchema}
           onSubmit={(values) => {
-            console.log(values);
+            this.props.Login(values);
           }}
         >
           {({ handleSubmit, handleChange, errors }) => (
@@ -42,16 +49,17 @@ class LoginForm extends Component<RouteComponentProps, IAuthUser> {
               <h1 className="form-heading underline">Log In</h1>
               <TextField
                 margin="normal"
-                className="bg-white"
+                className="bg-white rounded-corners"
                 type="text"
                 onChange={handleChange}
                 name="id"
                 label="id"
                 helperText={errors.id}
               />
+
               <TextField
                 margin="normal"
-                className="bg-white"
+                className="bg-white rounded-corners"
                 type="text"
                 onChange={handleChange}
                 name="password"
@@ -80,4 +88,11 @@ class LoginForm extends Component<RouteComponentProps, IAuthUser> {
   }
 }
 
-export default LoginForm;
+interface DispatchProps {
+  Login: (user: IAuthUser) => void;
+}
+const mapDispatchToProps = {
+  Login,
+};
+
+export default connect(null, mapDispatchToProps)(LoginForm);

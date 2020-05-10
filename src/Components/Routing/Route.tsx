@@ -1,15 +1,18 @@
 import React, { Component } from "react";
 import { Route, Redirect, RouteProps } from "react-router-dom";
-import UserContext from "../UserContext";
+import { store } from "../Redux/Store";
+import { connect } from "react-redux";
+import { AppState } from "../Redux/rootReducer";
+import { IUser } from "../Interfaces";
 
 interface IProps extends RouteProps {
   isPrivate?: Boolean;
+  user?: IUser;
 }
 
-class RouteWrapper extends React.Component<IProps> {
-  static contextType = UserContext;
+class RouteWrapper extends React.Component<IProps, {}> {
   render() {
-    let { signed } = this.context;
+    let signed = this.props.user?.isLoggedIn; //get from store
     const { isPrivate } = this.props;
     if (isPrivate && !signed) {
       return <Redirect to="/" />;
@@ -28,4 +31,8 @@ class RouteWrapper extends React.Component<IProps> {
   }
 }
 
-export default RouteWrapper;
+const mapStateToProps = (state: AppState) => ({
+  user: state.user,
+});
+
+export default connect(mapStateToProps, null)(RouteWrapper);

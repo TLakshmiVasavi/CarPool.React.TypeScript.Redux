@@ -51,209 +51,235 @@ import {
   IOfferRide,
   IRideRequest,
   IBookRideResponse,
-  IOffer,
-  IBooking,
+  IMyOffer,
+  IMyOffers,
+  IMyBooking,
+  IRideRequests,
+  IBookRide,
+  IMyBookings,
 } from "../../Interfaces";
 import { type } from "os";
+import { AppState } from "../rootReducer";
+import { toast } from "react-toastify";
 
-export function OfferRide(offerRide: IOfferRide) {
+export function offerRide(offerRide: IOfferRide) {
   return (
     dispatch: Dispatch<OfferRideSuccess | OfferRideFailure>,
-    getState: any
+    getState: AppState
   ) => {
-    dispatch(OfferRideRequest());
+    dispatch(OfferRideRequestAction());
+    console.log(getState());
     axios
       .post(
         "https://localhost:5001/api/RideApi/OfferRide?userId=" +
-          getState().user.Id,
+          getState().user.mail,
         offerRide
       )
-      .then(() => dispatch(OfferRideSuccess()))
-      .catch((error) => dispatch(OfferRideFailure(error)));
+      .then(() => dispatch(OfferRideSuccessAction()))
+      .catch((error) => dispatch(OfferRideFailureAction(error)));
   };
 }
 
-export function BookRide(Request: IRideRequest) {
+export function bookRide(Request: IBookRide) {
   return (
     dispatch: Dispatch<BookRideResponse | BookRideFailure>,
     getState: any
   ) => {
-    dispatch(BookRideRequest());
+    dispatch(BookRideRequestAction());
     axios
       .post(
         "https://localhost:5001/api/RideApi/BookRide?userId=" +
-          getState().user.Id,
+          getState().user.mail,
         Request
       )
-      .then((response) => dispatch(BookRideResponse(response.data)))
-      .catch((error) => dispatch(BookRideFailure(error)));
+      .then((response) => {
+        dispatch(BookRideResponseAction(response.data));
+      })
+      .catch((error) => dispatch(BookRideFailureAction(error)));
   };
 }
 
-export function RequestARide(Request: IRideRequest, RideId: number) {
+export function requestRide(
+  Request: IBookRide,
+  noOfSeats: number,
+  rideId: number
+) {
   return (
     dispatch: Dispatch<RequestRideSuccess | RequestRideFailure>,
     getState: any
   ) => {
-    dispatch(RequestRide());
+    dispatch(RequestRideAction());
     axios
       .post(
         "https://localhost:5001/api/RideApi/RequestRide?userId=" +
-          getState().user.Id +
+          getState().user.mail +
           "&rideId=" +
-          RideId
+          rideId +
+          "&noOfSeats" +
+          noOfSeats,
+        Request
       )
-      .then(() => dispatch(RequestRideSuccess()))
-      .catch((error) => dispatch(RequestRideFailure(error)));
+      .then(() => dispatch(RequestRideSuccessAction()))
+      .catch((error) => dispatch(RequestRideFailureAction(error)));
   };
 }
 
-export function GetOffers() {
+export function getOffers() {
   return (
     dispatch: Dispatch<GetMyOffersSuccess | GetMyOffersFailure>,
     getState: any
   ) => {
-    dispatch(GetMyOffers());
+    dispatch(GetMyOffersAction());
     axios
-      .post(
-        "https://localhost:5001/api/RideApi/GetOffers?userId=" +
-          getState().user.Id
+      .get(
+        "https://localhost:5001/api/RideApi/GetOfferedRides?userId=" +
+          getState().user.mail
       )
-      .then((response) => dispatch(GetMyOffersSuccess(response.data)))
-      .catch((error) => dispatch(GetMyOffersFailure(error)));
+      .then((response) => dispatch(GetMyOffersSuccessAction(response.data)))
+      .catch((error) => dispatch(GetMyOffersFailureAction(error)));
   };
 }
 
-export function GetBookings() {
+export function getBookings() {
   return (
     dispatch: Dispatch<GetMyOffersSuccess | GetMyOffersFailure>,
     getState: any
   ) => {
-    dispatch(GetMyBookings());
+    dispatch(GetMyBookingsAction());
     axios
-      .post(
+      .get(
         "https://localhost:5001/api/RideApi/GetBookings?userId=" +
-          getState().user.Id
+          getState().user.mail
       )
-      .then((response) => dispatch(GetMyBookingsSuccess(response.data)))
-      .catch((error) => dispatch(GetMyBookingsFailure(error)));
+      .then((response) => dispatch(GetMyBookingsSuccessAction(response.data)))
+      .catch((error) => dispatch(GetMyBookingsFailureAction(error)));
   };
 }
 
-export function ApproveRideRequest(requestId: string) {
+export function approveRideRequest(
+  requestId: number,
+  rideId: number,
+  isApprove: boolean
+) {
   return (
     dispatch: Dispatch<ApproveRequestSuccess | ApproveRequestFailure>,
     getState: any
   ) => {
-    dispatch(ApproveRequest());
+    dispatch(ApproveRequestAction());
     axios
       .post(
-        "https://localhost:5001/api/RideApi/ApproveRequest?userId=" +
-          getState().user.Id
+        "https://localhost:5001/api/RideApi/ApproveRequest?rideId=" +
+          rideId +
+          "&requestId" +
+          requestId +
+          "&isApprove" +
+          isApprove +
+          "&providerId" +
+          getState().user.mail
       )
-      .then(() => dispatch(ApproveRequestSuccess()))
-      .catch((error) => dispatch(ApproveRequestFailure(error)));
+      .then(() => dispatch(ApproveRequestSuccessAction()))
+      .catch((error) => dispatch(ApproveRequestFailureAction(error)));
   };
 }
 
-export function GetRequests(rideId: string) {
+export function getRequests(rideId: number) {
   return (
     dispatch: Dispatch<ApproveRequestSuccess | ApproveRequestFailure>,
     getState: any
   ) => {
-    dispatch(GetRideRequests());
+    dispatch(GetRideRequestsAction());
     axios
-      .post(
+      .get(
         "https://localhost:5001/api/RideApi/GetRequests?userId=" +
-          getState().user.Id +
+          getState().user.mail +
           "&rideId=" +
           rideId
       )
-      .then(() => dispatch(GetRideRequestsSuccess()))
-      .catch((error) => dispatch(GetRideRequestsFailure(error)));
+      .then((response) => dispatch(GetRideRequestsSuccessAction(response.data)))
+      .catch((error) => dispatch(GetRideRequestsFailureAction(error)));
   };
 }
 
-export function GetRideRequests() {
-  return { type: typeof GET_RIDE_REQUESTS };
+export function GetRideRequestsAction() {
+  return { type: GET_RIDE_REQUESTS };
 }
 
-export function GetRideRequestsSuccess() {
-  return { type: typeof GET_RIDE_REQUESTS_SUCCESS };
+export function GetRideRequestsSuccessAction(response: IRideRequests) {
+  return { type: GET_RIDE_REQUESTS_SUCCESS, payload: response };
 }
 
-export function GetRideRequestsFailure(error: string) {
-  return { type: typeof GET_RIDE_REQUESTS_FAILURE };
+export function GetRideRequestsFailureAction(error: string) {
+  return { type: GET_RIDE_REQUESTS_FAILURE };
 }
 
-export function ApproveRequest() {
-  return { type: typeof APPROVE_REQUEST };
+export function ApproveRequestAction() {
+  return { type: APPROVE_REQUEST };
 }
 
-export function ApproveRequestSuccess() {
-  return { type: typeof APPROVE_REQUEST_SUCCESS };
+export function ApproveRequestSuccessAction() {
+  return { type: APPROVE_REQUEST_SUCCESS };
 }
 
-export function ApproveRequestFailure(error: string) {
-  return { type: typeof APPROVE_REQUEST_FAILURE };
+export function ApproveRequestFailureAction(error: string) {
+  return { type: APPROVE_REQUEST_FAILURE };
 }
 
-export function OfferRideRequest() {
-  return { type: typeof OFFER_RIDE_REQUEST };
+export function OfferRideRequestAction() {
+  return { type: OFFER_RIDE_REQUEST };
 }
 
-export function OfferRideSuccess() {
-  return { type: typeof OFFER_RIDE_SUCCESS };
+export function OfferRideSuccessAction() {
+  return { type: OFFER_RIDE_SUCCESS };
 }
 
-export function OfferRideFailure(error: string) {
-  return { type: typeof OFFER_RIDE_FAILURE };
+export function OfferRideFailureAction(error: string) {
+  return { type: OFFER_RIDE_FAILURE };
 }
 
-export function BookRideRequest() {
-  return { type: typeof BOOK_RIDE_REQUEST };
+export function BookRideRequestAction() {
+  return { type: BOOK_RIDE_REQUEST };
 }
 
-export function BookRideResponse(response: IBookRideResponse[]) {
-  return { type: typeof BOOK_RIDE_RESPONSE };
+export function BookRideResponseAction(response: IBookRideResponse) {
+  return { type: BOOK_RIDE_RESPONSE, payload: response };
 }
 
-export function BookRideFailure(error: string) {
-  return { type: typeof BOOK_RIDE_FAILURE };
+export function BookRideFailureAction(error: string) {
+  return { type: BOOK_RIDE_FAILURE };
 }
 
-export function RequestRide() {
-  return { type: typeof REQUEST_RIDE };
+export function RequestRideAction() {
+  return { type: REQUEST_RIDE };
 }
 
-export function RequestRideSuccess() {
-  return { type: typeof REQUEST_RIDE_SUCCESS };
+export function RequestRideSuccessAction() {
+  return { type: REQUEST_RIDE_SUCCESS };
 }
 
-export function RequestRideFailure(error: string) {
-  return { type: typeof REQUEST_RIDE_FAILURE };
+export function RequestRideFailureAction(error: string) {
+  return { type: REQUEST_RIDE_FAILURE };
 }
 
-export function GetMyBookings() {
-  return { type: typeof GET_MY_BOOKINGS };
+export function GetMyBookingsAction() {
+  return { type: GET_MY_BOOKINGS };
 }
 
-export function GetMyBookingsSuccess(bookings: IBooking[]) {
-  return { type: typeof GET_MY_BOOKINGS_SUCCESS };
+export function GetMyBookingsSuccessAction(response: IMyBookings) {
+  return { type: GET_MY_BOOKINGS_SUCCESS, payload: response };
 }
 
-export function GetMyBookingsFailure(error: string) {
-  return { type: typeof GET_MY_BOOKINGS_FAILURE };
+export function GetMyBookingsFailureAction(error: string) {
+  return { type: GET_MY_BOOKINGS_FAILURE };
 }
 
-export function GetMyOffers() {
-  return { type: typeof GET_MY_OFFERS };
+export function GetMyOffersAction() {
+  return { type: GET_MY_OFFERS };
 }
 
-export function GetMyOffersSuccess(myOffers: IOffer[]) {
-  return { type: typeof GET_MY_OFFERS_SUCCESS };
+export function GetMyOffersSuccessAction(response: IMyOffers) {
+  return { type: GET_MY_OFFERS_SUCCESS, payload: response };
 }
 
-export function GetMyOffersFailure(error: string) {
-  return { type: typeof GET_MY_OFFERS_FAILURE };
+export function GetMyOffersFailureAction(error: string) {
+  return { type: GET_MY_OFFERS_FAILURE };
 }

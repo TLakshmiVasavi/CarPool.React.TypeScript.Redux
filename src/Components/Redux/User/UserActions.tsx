@@ -9,6 +9,15 @@ import {
   UPDATE_USER_REQUEST,
   UPDATE_USER_SUCCESS,
   LOGOUT_USER,
+  GET_VEHICLES,
+  GET_VEHICLES_FAILURE,
+  GET_VEHICLES_SUCCESS,
+  ADD_VEHICLE,
+  ADD_VEHICLE_FAILURE,
+  ADD_VEHICLE_SUCCESS,
+  GET_USER_IMAGE,
+  GET_USER_IMAGE_FAILURE,
+  GET_USER_IMAGE_SUCCESS,
 } from "./UserTypes";
 import {
   UserLoginSuccess,
@@ -20,126 +29,260 @@ import {
   UpdateUserRequest,
   UpdateUserSuccess,
   UpdateUserFailure,
+  AddVehicle,
+  AddVehicleSuccess,
+  AddVehicleFailure,
+  GetVehicles,
+  GetVehiclesFailure,
+  GetVehiclesSuccess,
   LogoutUser,
+  GetUserImage,
+  GetUserImageFailure,
+  GetUserImageSuccess,
 } from "./UserTypes";
 import axios from "axios";
-import { IUser, INewUser, IAuthUser } from "../../Interfaces";
+import {
+  IUser,
+  INewUser,
+  IAuthUser,
+  IVehicles,
+  IVehicle,
+} from "../../Interfaces";
 import { Dispatch } from "redux";
+import { AppState } from "../rootReducer";
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
+import { DispatchProp } from "react-redux";
 
-export function loginUser(user: IAuthUser) {
+export function Login(user: IAuthUser) {
   return (dispatch: Dispatch<UserLoginSuccess | UserLoginFailure>) => {
-    dispatch(UserLoginRequest(user));
+    dispatch(UserLoginRequestAction(user));
     axios
       .post("https://localhost:5001/api/UserApi/Login", user)
       .then((response) => {
         if (response.data.isSuccess) {
-          {
-            dispatch(UserLoginSuccess(response.data.user));
-          }
+          dispatch(UserLoginSuccessAction(response.data.user));
+          dispatch(GetUserImageAction());
+          axios
+            .get(
+              "https://localhost:5001/api/UserApi/GetImage?userId=" +
+                response.data.user.mail
+            )
+            .then((response) =>
+              dispatch(GetUserImageSuccessAction(response.data))
+            )
+            .catch((error) => dispatch(GetUserImageFailureAction(error)));
         } else {
-          {
-            dispatch(UserLoginFailure(response.data.errorMessage));
-          }
+          toast.error(response.data.errorMessage);
+          dispatch(UserLoginFailureAction(response.data.errorMessage));
         }
       })
-      .catch((error) => dispatch(UserLoginFailure(error)));
+      .catch((error) => {
+        toast.error("Server Not Responding");
+        dispatch(UserLoginFailureAction(error));
+      });
   };
 }
 
-export function logoutUser(userId: string) {
-  return (dispatch: Dispatch<LogoutUser>) => {
+export function Logout() {
+  return (dispatch: Dispatch<LogoutUser>, getState: AppState) => {
     axios
-      .post("https://localhost:5001/api/UserApi/Logout", userId)
-      .then(() => dispatch(LogoutUser()));
+      .post(
+        "https://localhost:5001/api/UserApi/Logout?userId=" +
+          getState().user.mail
+      )
+      .then(() => dispatch(LogoutUserAction()));
   };
 }
 
-export function SignupUser(user: INewUser) {
+export function Signup(user: INewUser) {
   return (dispatch: Dispatch<UserSignupSuccess | UserSignupFailure>) => {
-    dispatch(UserSignupRequest(user));
+    dispatch(UserSignupRequestAction(user));
     const data = new FormData();
     Object.keys(user).map((i) => data.append(i, user[i]));
     axios
       .post("https://localhost:5001/api/UserApi/SignUp", data)
-      .then((response) => dispatch(UserSignupSuccess(response.data.user)))
-      .catch((error) => dispatch(UserSignupFailure(error)));
+      .then((response) => dispatch(UserSignupSuccessAction(response.data.user)))
+      .catch((error) => dispatch(UserSignupFailureAction(error)));
   };
 }
 
 export function UpdateUser(user: IUser) {
-  return (dispatch: Dispatch<UserSignupSuccess | UserSignupFailure>) => {
-    dispatch(UpdateUserRequest(user));
+  return (
+    dispatch: Dispatch<UpdateUserSuccess | UpdateUserFailure>,
+    getState: AppState
+  ) => {
+    dispatch(UpdateUserRequestAction());
     const data = new FormData();
     Object.keys(user).map((i) => data.append(i, user[i]));
     axios
-      .post("https://localhost:5001/api/UserApi/Update", data)
-      .then((response) => dispatch(UpdateUserSuccess(response.data.user)))
-      .catch((error) => dispatch(UpdateUserFailure(error)));
+      .post(
+        "https://localhost:5001/api/UserApi/Update?userId=" +
+          getState().user.mail,
+        data
+      )
+      .then((response) => dispatch(UpdateUserSuccessAction(response.data.user)))
+      .catch((error) => dispatch(UpdateUserFailureAction(error)));
   };
 }
 
-export function UserLoginRequest(user: IAuthUser) {
+export function getVehicles() {
+  return (
+    dispatch: Dispatch<GetVehiclesSuccess | GetVehiclesFailure>,
+    getState: AppState
+  ) => {
+    dispatch(GetVehiclesAction());
+    axios
+      .get(
+        "https://localhost:5001/api/UserApi/GetVehicles?userId=" +
+          getState().user.mail
+      )
+      .then((response) => {
+        console.log(response.data);
+        dispatch(GetVehiclesSuccessAction(response.data));
+      })
+      .catch((error) => dispatch(GetVehiclesFailureAction(error)));
+  };
+}
+
+export function addVehicle(vehicle: IVehicle) {
+  return (
+    dispatch: Dispatch<AddVehicleSuccess | AddVehicleFailure>,
+    getState: AppState
+  ) => {
+    dispatch(AddVehicleAction());
+    axios
+      .post(
+        "https://localhost:5001/api/UserApi/AddVehicle?userId=" +
+          getState().user.mail,
+        vehicle
+      )
+      .then((response) => dispatch(AddVehicleSuccessAction()))
+      .catch((error) => dispatch(AddVehicleFailureAction(error)));
+  };
+}
+
+export function GetVehiclesAction() {
+  return {
+    type: GET_VEHICLES,
+  };
+}
+
+export function GetVehiclesSuccessAction(vehicles: IVehicles) {
+  return {
+    type: GET_VEHICLES_SUCCESS,
+    payload: vehicles,
+  };
+}
+
+export function GetVehiclesFailureAction(error: string) {
+  return {
+    type: GET_VEHICLES_FAILURE,
+    payload: error,
+  };
+}
+
+export function UserLoginRequestAction(user: IAuthUser) {
   return {
     type: USER_LOGIN_REQUEST,
   };
 }
 
-export function UserLoginSuccess(user: IUser) {
+export function UserLoginSuccessAction(user: IUser) {
   return {
     type: USER_LOGIN_SUCCESS,
     payload: user,
   };
 }
 
-export function UserLoginFailure(error: string) {
+export function UserLoginFailureAction(error: string) {
   return {
     type: USER_LOGIN_FAILURE,
     error,
   };
 }
 
-export function LogoutUser() {
+export function GetUserImageAction() {
+  return {
+    type: GET_USER_IMAGE,
+  };
+}
+
+export function GetUserImageSuccessAction(response: any) {
+  return {
+    type: GET_USER_IMAGE_SUCCESS,
+    payload: response,
+  };
+}
+
+export function GetUserImageFailureAction(response: any) {
+  return {
+    type: GET_USER_IMAGE_FAILURE,
+    payload: response,
+  };
+}
+
+export function LogoutUserAction() {
   return {
     type: LOGOUT_USER,
   };
 }
 
-export function UserSignupRequest(user: INewUser) {
+export function UserSignupRequestAction(user: INewUser) {
   return {
     type: USER_SIGNUP_REQUEST,
   };
 }
 
-export function UserSignupSuccess(user: IUser) {
+export function UserSignupSuccessAction(user: IUser) {
   return {
     type: USER_SIGNUP_SUCCESS,
     payload: user,
   };
 }
 
-export function UserSignupFailure(error: string) {
+export function UserSignupFailureAction(error: string) {
   return {
     type: USER_SIGNUP_FAILURE,
     error,
   };
 }
 
-export function UpdateUserRequest(user: IUser) {
+export function UpdateUserRequestAction() {
   return {
     type: UPDATE_USER_REQUEST,
   };
 }
 
-export function UpdateUserSuccess(user: IUser) {
+export function UpdateUserSuccessAction(user: IUser) {
   return {
     type: UPDATE_USER_SUCCESS,
     payload: user,
   };
 }
 
-export function UpdateUserFailure(error: string) {
+export function UpdateUserFailureAction(error: string) {
   return {
     type: UPDATE_USER_FAILURE,
+    error,
+  };
+}
+
+export function AddVehicleAction() {
+  return {
+    type: ADD_VEHICLE,
+  };
+}
+
+export function AddVehicleSuccessAction() {
+  return {
+    type: ADD_VEHICLE_SUCCESS,
+  };
+}
+
+export function AddVehicleFailureAction(error: string) {
+  return {
+    type: ADD_VEHICLE_FAILURE,
     error,
   };
 }

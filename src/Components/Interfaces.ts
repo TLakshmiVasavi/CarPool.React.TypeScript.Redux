@@ -13,7 +13,7 @@ export interface INewUser {
   number: string;
   photo: any;
   gender: string;
-  hasVehicle: string;
+  hasVehicle: boolean;
   vehicle: IVehicle;
   vehicleType: string;
   showPassword: Boolean;
@@ -32,6 +32,7 @@ export interface IUser {
 }
 
 export interface IRoute {
+  [key: string]: any;
   from: string;
   to: string;
   stops: string[];
@@ -79,16 +80,7 @@ export interface IMyBooking {
 }
 
 export interface IBookRideResponse {
-  id: number;
-  vehicle: IVehicle;
-  startDate: Date;
-  time: string;
-  cost: number;
-  providerName: string;
-  providerId: string;
-  providerPic: any;
-  from: string;
-  to: string;
+  availableRides: IAvailableRide[];
 }
 
 export interface IVehicle {
@@ -98,6 +90,10 @@ export interface IVehicle {
   capacity: number;
 }
 
+export interface IVehicles {
+  vehicles: IVehicle[];
+}
+
 export interface IBookRide {
   [key: string]: any;
   from: string;
@@ -105,7 +101,7 @@ export interface IBookRide {
   startDate: Date;
   time: string;
   isChecked: boolean;
-  VehicleType: string;
+  vehicleType: string;
 }
 
 export interface IRideRequest {
@@ -121,6 +117,28 @@ export interface IRideRequest {
 export interface IMyRides {
   Offers: IMyOffer[];
   Bookings: IMyBooking[];
+}
+
+export interface IMyOffers {
+  offers: IMyOffer[];
+}
+
+export interface IMyBookings {
+  bookings: IMyBooking[];
+}
+
+export interface IAvailableRide {
+  id: number;
+  vehicle: IVehicle;
+  cost: number;
+  providerName: string;
+  providerId: string;
+  providerPic: any;
+  availableSeats: number;
+}
+
+export interface IRideRequests {
+  requests: IRideRequest[];
 }
 
 // export interface IMRideDetails {

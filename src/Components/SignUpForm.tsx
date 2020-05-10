@@ -1,7 +1,6 @@
 import { Formik } from "formik";
 import * as Yup from "yup";
 import React, { Component } from "react";
-import axios from "axios";
 import {
   TextField,
   OutlinedInput,
@@ -13,6 +12,8 @@ import { Visibility, VisibilityOff } from "@material-ui/icons";
 import IconButton from "@material-ui/core/IconButton";
 import { RouteComponentProps } from "react-router-dom";
 import { INewUser } from "./Interfaces";
+import { Signup } from "./Redux/User/UserActions";
+import { connect } from "react-redux";
 
 const Gender = [
   {
@@ -58,11 +59,14 @@ const validationSchema = Yup.object({
       /^[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-/\s.]?[0-9]{4}$/,
       "Please enter valid number"
     ),
-  age: Yup.string().required("Required").min(1).max(100),
+  age: Yup.string().required("Required").min(0).max(100),
 });
 
-class SignUpForm extends Component<RouteComponentProps, INewUser> {
-  constructor(props: RouteComponentProps) {
+class SignUpForm extends Component<
+  RouteComponentProps & DispatchProps,
+  INewUser
+> {
+  constructor(props: RouteComponentProps & DispatchProps) {
     super(props);
     this.state = {
       name: "",
@@ -72,7 +76,7 @@ class SignUpForm extends Component<RouteComponentProps, INewUser> {
       number: "",
       photo: "",
       gender: "Female",
-      hasVehicle: "",
+      hasVehicle: true,
       vehicle: {
         model: "",
         number: "",
@@ -90,11 +94,13 @@ class SignUpForm extends Component<RouteComponentProps, INewUser> {
       showPassword: !this.state.showPassword,
     });
   }
+
   handlefile(e: any) {
     this.setState({
       [e.target.name]: e.target.files[0],
     });
   }
+
   handleMouseDownPassword(event: any) {
     event.preventDefault();
   }
@@ -105,7 +111,17 @@ class SignUpForm extends Component<RouteComponentProps, INewUser> {
       [name]: value,
     });
   }
-  handleSubmit(e: any) {}
+
+  handleVehicleChange(e: any) {
+    const { name, value } = e.target;
+    const vehicle = { ...this.state.vehicle };
+    vehicle[name] = value;
+    this.setState({ vehicle });
+  }
+
+  handleSubmit() {
+    this.props.Signup(this.state);
+  }
 
   render() {
     return (
@@ -116,11 +132,11 @@ class SignUpForm extends Component<RouteComponentProps, INewUser> {
           validationSchema={validationSchema}
           onSubmit={this.handleSubmit}
         >
-          {({ handleSubmit, handleChange, values, errors }) => (
+          {({ handleSubmit, errors }) => (
             <form onSubmit={handleSubmit}>
               <h1 className="form-heading underline">SignUp</h1>
               <TextField
-                variant="filled"
+                className="bg-white rounded-corners"
                 label="Enter Name"
                 onChange={this.handleChange}
                 margin="normal"
@@ -128,7 +144,7 @@ class SignUpForm extends Component<RouteComponentProps, INewUser> {
                 helperText={errors.name}
               />
               <TextField
-                variant="filled"
+                className="bg-white rounded-corners"
                 label="Enter Mail"
                 onChange={this.handleChange}
                 margin="normal"
@@ -136,7 +152,7 @@ class SignUpForm extends Component<RouteComponentProps, INewUser> {
                 helperText={errors.mail}
               />
               <TextField
-                variant="filled"
+                className="bg-white rounded-corners"
                 label="Enter Phone number"
                 onChange={this.handleChange}
                 margin="normal"
@@ -144,7 +160,7 @@ class SignUpForm extends Component<RouteComponentProps, INewUser> {
                 helperText={errors.number}
               />
               <TextField
-                variant="filled"
+                className="bg-white rounded-corners"
                 label="Enter Age"
                 onChange={this.handleChange}
                 margin="normal"
@@ -153,11 +169,11 @@ class SignUpForm extends Component<RouteComponentProps, INewUser> {
               />
               <TextField
                 margin="normal"
+                className="bg-white rounded-corners"
                 select
                 label="Gender"
                 //value={Gender}
                 onChange={this.handleChange}
-                variant="filled"
                 SelectProps={{
                   native: true,
                 }}
@@ -170,6 +186,7 @@ class SignUpForm extends Component<RouteComponentProps, INewUser> {
 
               <TextField
                 margin="normal"
+                className="bg-white rounded-corners"
                 select
                 name="hasVehicle"
                 label="Has Car"
@@ -177,8 +194,6 @@ class SignUpForm extends Component<RouteComponentProps, INewUser> {
                 SelectProps={{
                   native: true,
                 }}
-                helperText="Do you have a Vehicle"
-                variant="filled"
               >
                 {hasVehicle.map((option) => (
                   <option key={option.label} value={option.data}>
@@ -188,8 +203,8 @@ class SignUpForm extends Component<RouteComponentProps, INewUser> {
                 />
               </TextField>
 
-              <FormControl variant="outlined" margin="normal">
-                <InputLabel htmlFor="outlined-adornment-password">
+              <FormControl margin="normal">
+                <InputLabel htmlFor="filled-adornment-password">
                   Password
                 </InputLabel>
                 <OutlinedInput
@@ -217,65 +232,72 @@ class SignUpForm extends Component<RouteComponentProps, INewUser> {
                 />
               </FormControl>
 
-              <input type="file" name="photo" onChange={this.handlefile} />
-
-              <TextField
-                margin="normal"
-                name="vehicleType"
-                select
-                label="Vehicle"
-                onChange={this.handleChange}
-                SelectProps={{
-                  native: true,
-                }}
-                helperText="Do you have a Vehicle"
-                variant="filled"
-              >
-                {vehicleType.map((option) => (
-                  <option key={option.label} value={option.label}>
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
-
-              <TextField
-                variant="filled"
-                label="Enter Car number"
-                onChange={this.handleChange}
-                margin="normal"
-                name="vehicle.number"
-                helperText={errors.vehicle?.number}
+              <input
+                type="file"
+                name="photo"
+                onChange={this.handlefile}
+                className="bg-white rounded-corners"
               />
+              {this.state.hasVehicle && (
+                <>
+                  <TextField
+                    margin="normal"
+                    className="bg-white rounded-corners"
+                    name="vehicleType"
+                    select
+                    label="Vehicle"
+                    onChange={this.handleVehicleChange}
+                    SelectProps={{
+                      native: true,
+                    }}
+                  >
+                    {vehicleType.map((option) => (
+                      <option key={option.label} value={option.label}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </TextField>
 
-              <TextField
-                variant="filled"
-                label="Enter model"
-                onChange={this.handleChange}
-                margin="normal"
-                name="vehicle.model"
-                helperText={errors.vehicle?.model}
-              />
+                  <TextField
+                    className="bg-white rounded-corners"
+                    label="Enter Car number"
+                    onChange={this.handleVehicleChange}
+                    margin="normal"
+                    name="vehicle.number"
+                    helperText={errors.vehicle?.number}
+                  />
 
-              <TextField
-                variant="filled"
-                label="Enter capacity"
-                onChange={this.handleChange}
-                margin="normal"
-                name="vehicle.capacity"
-                helperText={errors.vehicle?.capacity}
-              />
+                  <TextField
+                    className="bg-white rounded-corners"
+                    label="Enter model"
+                    onChange={this.handleVehicleChange}
+                    margin="normal"
+                    name="vehicle.model"
+                    helperText={errors.vehicle?.model}
+                  />
+
+                  <TextField
+                    className="bg-white rounded-corners"
+                    label="Enter capacity"
+                    onChange={this.handleVehicleChange}
+                    margin="normal"
+                    name="vehicle.capacity"
+                    helperText={errors.vehicle?.capacity}
+                  />
+                </>
+              )}
               <button type="submit" className="submit bg-darkorange">
-                Log In
+                SignUp
               </button>
               <div className="form-group white">
                 Not a member yet?
                 <a
                   className="underline white"
                   onClick={() => {
-                    this.props.history.push("/SignUp");
+                    this.props.history.push("/LoginForm");
                   }}
                 >
-                  SIGN UP
+                  LogIn
                 </a>
               </div>
             </form>
@@ -285,6 +307,10 @@ class SignUpForm extends Component<RouteComponentProps, INewUser> {
     );
   }
 }
-
-export default SignUpForm;
-//Completed but not checked
+interface DispatchProps {
+  Signup: (user: INewUser) => void;
+}
+const mapDispatchToProps = {
+  Signup,
+};
+export default connect(null, mapDispatchToProps)(SignUpForm);

@@ -8,34 +8,21 @@ import { MdLocationOn } from "react-icons/md";
 import TextField from "@material-ui/core/TextField";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import axios from "axios";
-import { RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-// import AvailableRide from "./AvailableRide";
-import { IBookRide, IBookRideResponse, IAvailableRide } from "./Interfaces";
+import { IBookRide, IAuthDetails } from "./Interfaces";
 import { bookRide } from "./Redux/Ride/RideActions";
 import { AppState } from "./Redux/rootReducer";
 import AvailableRides from "./AvailableRides";
+import { vehicleType, times } from "./Interfaces";
 
-const times = ["5am-9am", "9am-12pm", "12pm-3pm", "3pm-6pm", "6pm-9pm"];
-const vehicleType = [
-  {
-    label: " Car ",
-  },
-  {
-    label: " Bike ",
-  },
-];
 const validationSchema = Yup.object({
   from: Yup.string().required("Required"),
   to: Yup.string().required("Required"),
   time: Yup.string().required("Required"),
 });
 
-class BookRide extends React.Component<
-  RouteComponentProps & DispatchProps & IBool,
-  IBookRide
-> {
+class BookRide extends React.Component<IProps, IBookRide> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -49,14 +36,9 @@ class BookRide extends React.Component<
     this.handleChecked = this.handleChecked.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.dateHandler = this.dateHandler.bind(this);
-    this.onButtonChange = this.onButtonChange.bind(this);
   }
   dateHandler(e: Date) {
-    console.log(e);
     this.setState({ startDate: e });
-  }
-  onButtonChange(e: any) {
-    this.setState({ time: e.target.value });
   }
 
   handleChecked() {
@@ -69,15 +51,18 @@ class BookRide extends React.Component<
   }
 
   render() {
+    {
+      this.props.isLoggedIn || <Redirect to="/LoginForm" />;
+    }
     return (
       <div className="OfferRide">
         <Formik
           enableReinitialize
           initialValues={this.state}
           validationSchema={validationSchema}
-          onSubmit={(values) => this.props.bookRide(this.state)}
+          onSubmit={() => this.props.bookRide(this.state)}
         >
-          {({ handleSubmit, handleChange, values, errors }) => (
+          {({ handleSubmit, errors }) => (
             <form onSubmit={handleSubmit}>
               <Row>
                 <Col md={4}>
@@ -118,6 +103,7 @@ class BookRide extends React.Component<
                           />
                         </Col>
                         <Col md={2}>
+                          <div className="dot bg-darkviolet" />
                           <div className="dot" />
                           <div className="dot" />
                           <div className="dot" />
@@ -169,6 +155,7 @@ class BookRide extends React.Component<
                           >
                             {times.map((item, index) => (
                               <button
+                                name="time"
                                 type="button"
                                 key={index}
                                 className={
@@ -176,7 +163,7 @@ class BookRide extends React.Component<
                                     ? "selected"
                                     : "" + "time"
                                 }
-                                onClick={this.onButtonChange}
+                                onClick={this.handleChange}
                                 value={item}
                               >
                                 {item}
@@ -211,16 +198,14 @@ class BookRide extends React.Component<
 interface DispatchProps {
   bookRide: (ride: IBookRide) => void;
 }
-const mapDispatchToProps = {
-  bookRide,
-};
-interface IBool {
+interface IProps extends IAuthDetails, RouteComponentProps, DispatchProps {
   isRequested: boolean;
   isLoaded: boolean;
 }
 const mapStateToProps = (state: AppState) => ({
+  isLoggedIn: state.user.isLoggedIn,
   isRequested: state.ride.isRequested,
   isLoaded: state.ride.isLoaded,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(BookRide);
+export default connect(mapStateToProps, { bookRide })(BookRide);

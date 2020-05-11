@@ -1,4 +1,4 @@
-import { RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, Redirect } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import React from "react";
@@ -11,14 +11,18 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../StyleSheets/OfferRide.css";
 import "../StyleSheets/Toogle.css";
-import { IOfferRide, IVehicles, IVehicle } from "./Interfaces";
+import {
+  IOfferRide,
+  IVehicles,
+  IVehicle,
+  IAuthDetails,
+  times,
+} from "./Interfaces";
 import { connect } from "react-redux";
 import { offerRide } from "./Redux/Ride/RideActions";
 import { getVehicles } from "./Redux/User/UserActions";
 import { AppState } from "./Redux/rootReducer";
 import Loader from "react-loader-spinner";
-
-const times = ["5am-9am", "9am-12pm", "12pm-3pm", "3pm-6pm", "6pm-9pm"];
 
 const validationSchema = Yup.object({
   noOfOfferedSeats: Yup.string().required("Required"),
@@ -29,8 +33,11 @@ const validationSchema = Yup.object({
   }),
 });
 
-interface IProps extends RouteComponentProps, DispatchProps, IVehicles {
-  isLoggedIn: boolean;
+interface IProps
+  extends RouteComponentProps,
+    DispatchProps,
+    IVehicles,
+    IAuthDetails {
   isLoading: boolean;
 }
 
@@ -133,6 +140,9 @@ class OfferRide extends React.Component<IProps, IOfferRide> {
   }
 
   render() {
+    {
+      this.props.isLoggedIn || <Redirect to="/LoginForm" />;
+    }
     if (this.props.isLoading) {
       if (this.props.vehicles == []) {
         this.props.history.push("/User/AddVehicle");

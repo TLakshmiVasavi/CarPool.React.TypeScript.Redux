@@ -26,9 +26,10 @@ class LoginForm extends Component<IProps, IAuthUser> {
     };
   }
   render() {
-    {
-      this.props.isLoggedIn && <Redirect to="/Dashboard" />;
+    if (this.props.isLoggedIn) {
+      this.props.history.push("/Dashboard");
     }
+
     return (
       <div className="rightHalf">
         <Formik
@@ -60,7 +61,7 @@ class LoginForm extends Component<IProps, IAuthUser> {
               <button type="submit" className="submit bg-darkorange">
                 Log In
               </button>
-              <div className="form-group white">
+              <div className="form-group white link">
                 Not a member yet?
                 <a
                   className="underline white"

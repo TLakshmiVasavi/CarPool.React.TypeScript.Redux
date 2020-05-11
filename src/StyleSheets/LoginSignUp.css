@@ -1,6 +1,5 @@
 .rightHalf {
   background: url(../Images/imgg2.png) no-repeat bottom darkviolet;
-  background-attachment: fixed;
   width: 30%;
   position: absolute;
   right: 0px;
@@ -20,6 +19,12 @@ select {
 .rightHalf > form > div,
 input {
   width: 48%;
+  background-color: white;
+}
+
+.rightHalf > form > .link {
+  width: unset;
+  background-color: unset;
 }
 
 .form-heading {

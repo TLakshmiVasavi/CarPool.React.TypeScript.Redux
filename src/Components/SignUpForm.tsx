@@ -100,8 +100,8 @@ class SignUpForm extends Component<IProps, INewUser> {
   }
 
   render() {
-    {
-      this.props.isLoggedIn && <Redirect to="/Dashboard" />;
+    if (this.props.isLoggedIn) {
+      this.props.history.push("/Dashboard");
     }
     return (
       <div className="bg-darkorange rightHalf">
@@ -249,7 +249,7 @@ class SignUpForm extends Component<IProps, INewUser> {
                 <a
                   className="underline white"
                   onClick={() => {
-                    this.props.history.push("/LoginForm");
+                    this.props.history.push("/Login");
                   }}
                 >
                   LogIn

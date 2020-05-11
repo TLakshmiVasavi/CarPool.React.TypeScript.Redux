@@ -27,9 +27,10 @@ class UserProfile extends React.Component<IProps, {}> {
   }
 
   render() {
-    {
-      this.props.isLoggedIn || <Redirect to="/Dashboard" />;
+    if (!this.props.isLoggedIn) {
+      this.props.history.push("/Login");
     }
+
     return (
       <Container>
         <div className="shadowBox Profile center">

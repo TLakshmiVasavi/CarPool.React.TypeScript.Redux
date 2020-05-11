@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { TextField } from "@material-ui/core";
 import "../App.css";
 import "../StyleSheets/Colors.css";
-import { RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, Redirect } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { IVehicle, vehicleType, IAuthDetails } from "./Interfaces";
@@ -28,9 +28,10 @@ class AddVehicle extends Component<IProps, IVehicle> {
   }
 
   render() {
-    {
-      this.props.isLoggedIn || <Redirect to="/Dashboard" />;
+    if (!this.props.isLoggedIn) {
+      this.props.history.push("/Login");
     }
+
     return (
       <Formik
         enableReinitialize

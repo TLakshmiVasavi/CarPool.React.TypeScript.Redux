@@ -9,9 +9,10 @@ import { Redirect } from "react-router-dom";
 
 class Dashboard extends React.Component<IProps, {}> {
   render() {
-    {
-      this.props.isLoggedIn || <Redirect to="/LoginForm" />;
+    if (!this.props.isLoggedIn) {
+      this.props.history.push("/Login");
     }
+
     return (
       <div className="Dashboard">
         <div className="center">

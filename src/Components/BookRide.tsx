@@ -51,9 +51,10 @@ class BookRide extends React.Component<IProps, IBookRide> {
   }
 
   render() {
-    {
-      this.props.isLoggedIn || <Redirect to="/LoginForm" />;
+    if (!this.props.isLoggedIn) {
+      this.props.history.push("/Login");
     }
+
     return (
       <div className="OfferRide">
         <Formik

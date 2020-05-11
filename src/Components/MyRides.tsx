@@ -5,13 +5,15 @@ import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
 import OfferedRides from "./OfferedRides";
 import BookedRides from "./BookedRides";
-import { Redirect } from "react-router-dom";
+import { Redirect, RouteComponentProps } from "react-router-dom";
+interface IProps extends IAuthDetails, RouteComponentProps {}
 
-class MyRides extends React.Component<IAuthDetails, {}> {
+class MyRides extends React.Component<IProps, {}> {
   render() {
-    {
-      this.props.isLoggedIn || <Redirect to="/Dashboard" />;
+    if (!this.props.isLoggedIn) {
+      this.props.history.push("/Login");
     }
+
     return (
       <Container>
         <Row>

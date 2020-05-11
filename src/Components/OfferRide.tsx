@@ -140,9 +140,10 @@ class OfferRide extends React.Component<IProps, IOfferRide> {
   }
 
   render() {
-    {
-      this.props.isLoggedIn || <Redirect to="/LoginForm" />;
+    if (!this.props.isLoggedIn) {
+      this.props.history.push("/Login");
     }
+
     if (this.props.isLoading) {
       if (this.props.vehicles == []) {
         this.props.history.push("/User/AddVehicle");

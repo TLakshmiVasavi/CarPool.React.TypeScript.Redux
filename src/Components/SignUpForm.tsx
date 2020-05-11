@@ -14,6 +14,9 @@ import { RouteComponentProps } from "react-router-dom";
 import { INewUser, Gender, hasVehicle, vehicleType } from "./Interfaces";
 import { Signup } from "./Redux/User/UserActions";
 import { connect } from "react-redux";
+import { IAuthDetails } from "./Interfaces";
+import { AppState } from "./Redux/rootReducer";
+import { Redirect } from "react-router-dom";
 
 const validationSchema = Yup.object({
   mail: Yup.string().email("Please enter valid mail").required("Required!"),
@@ -34,11 +37,8 @@ const validationSchema = Yup.object({
   age: Yup.string().required("Required").min(0).max(100),
 });
 
-class SignUpForm extends Component<
-  RouteComponentProps & DispatchProps,
-  INewUser
-> {
-  constructor(props: RouteComponentProps & DispatchProps) {
+class SignUpForm extends Component<IProps, INewUser> {
+  constructor(props: IProps) {
     super(props);
     this.state = {
       name: "",
@@ -100,6 +100,9 @@ class SignUpForm extends Component<
   }
 
   render() {
+    {
+      this.props.isLoggedIn && <Redirect to="/Dashboard" />;
+    }
     return (
       <div className="bg-darkorange rightHalf">
         <Formik
@@ -217,21 +220,18 @@ class SignUpForm extends Component<
                       </option>
                     ))}
                   </TextField>
-
                   <TextField
                     label={errors.vehicle?.number ?? "Enter Car number"}
                     onChange={this.handleVehicleChange}
                     margin="normal"
                     name="vehicle.number"
                   />
-
                   <TextField
                     label={errors.vehicle?.model ?? "Enter model"}
                     onChange={this.handleVehicleChange}
                     margin="normal"
                     name="vehicle.model"
                   />
-
                   <TextField
                     label={errors.vehicle?.capacity ?? "Enter capacity"}
                     onChange={this.handleVehicleChange}
@@ -265,7 +265,10 @@ class SignUpForm extends Component<
 interface DispatchProps {
   Signup: (user: INewUser) => void;
 }
-const mapDispatchToProps = {
-  Signup,
-};
-export default connect(null, mapDispatchToProps)(SignUpForm);
+
+const mapStateToProps = (state: AppState) => ({
+  isLoggedIn: state.user.isLogedIn,
+});
+interface IProps extends DispatchProps, IAuthDetails, RouteComponentProps {}
+
+export default connect(mapStateToProps, { Signup })(SignUpForm);

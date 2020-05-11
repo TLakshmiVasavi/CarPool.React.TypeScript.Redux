@@ -107,7 +107,7 @@ select:disabled {
   border-bottom-style: solid;
 }
 
-.Home {
+.Dashboard {
   background: url(./Images/img3.png) no-repeat bottom fixed;
   position: absolute;
   background-size: 100% 50%;

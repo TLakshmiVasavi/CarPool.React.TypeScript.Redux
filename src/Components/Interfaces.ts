@@ -173,3 +173,7 @@ export const hasVehicle = [
     data: "false",
   },
 ];
+
+export interface IAuthDetails {
+  isLoggedIn: boolean;
+}

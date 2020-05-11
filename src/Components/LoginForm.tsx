@@ -5,25 +5,19 @@ import "../StyleSheets/Colors.css";
 import { RouteComponentProps } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { IAuthUser } from "./Interfaces";
+import { IAuthUser, IAuthDetails } from "./Interfaces";
 import { Login } from "./Redux/User/UserActions";
 import { connect } from "react-redux";
-import { Dispatch } from "redux";
 import { AppState } from "./Redux/rootReducer";
-//import * as x from "react-notifications-component";
-
-import Notification from "react-notifications-component";
+import { Redirect } from "react-router-dom";
 
 const validationSchema = Yup.object({
   id: Yup.string().required("Required"),
   password: Yup.string().required("Required"),
 });
 
-class LoginForm extends Component<
-  RouteComponentProps & DispatchProps,
-  IAuthUser
-> {
-  constructor(props: RouteComponentProps & DispatchProps) {
+class LoginForm extends Component<IProps, IAuthUser> {
+  constructor(props: IProps) {
     super(props);
     this.state = {
       id: "",
@@ -32,9 +26,11 @@ class LoginForm extends Component<
     };
   }
   render() {
+    {
+      this.props.isLoggedIn && <Redirect to="/Dashboard" />;
+    }
     return (
       <div className="rightHalf">
-        <Notification />
         <Formik
           enableReinitialize
           initialValues={this.state}
@@ -49,16 +45,13 @@ class LoginForm extends Component<
               <h1 className="form-heading underline">Log In</h1>
               <TextField
                 margin="normal"
-                className="bg-white rounded-corners"
                 type="text"
                 onChange={handleChange}
                 name="id"
                 label={errors.id ?? "id"}
               />
-
               <TextField
                 margin="normal"
-                className="bg-white rounded-corners"
                 type="text"
                 onChange={handleChange}
                 name="password"
@@ -86,11 +79,14 @@ class LoginForm extends Component<
   }
 }
 
+interface IProps extends DispatchProps, IAuthDetails, RouteComponentProps {}
+
 interface DispatchProps {
   Login: (user: IAuthUser) => void;
 }
-const mapDispatchToProps = {
-  Login,
-};
 
-export default connect(null, mapDispatchToProps)(LoginForm);
+const mapStateToProps = (state: AppState) => ({
+  isLoggedIn: state.user.isLogedIn,
+});
+
+export default connect(mapStateToProps, { Login })(LoginForm);

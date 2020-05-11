@@ -112,28 +112,24 @@ class SignUpForm extends Component<
             <form onSubmit={handleSubmit}>
               <h1 className="form-heading underline">SignUp</h1>
               <TextField
-                className="bg-white rounded-corners"
                 label="Enter Name"
                 onChange={this.handleChange}
                 margin="normal"
                 name={errors.name ?? "name"}
               />
               <TextField
-                className="bg-white rounded-corners"
                 label="Enter Mail"
                 onChange={this.handleChange}
                 margin="normal"
                 name={errors.mail ?? "mail"}
               />
               <TextField
-                className="bg-white rounded-corners"
                 label={errors.number ?? "Enter Phone number"}
                 onChange={this.handleChange}
                 margin="normal"
                 name="number"
               />
               <TextField
-                className="bg-white rounded-corners"
                 label={errors.age ?? "Enter Age"}
                 onChange={this.handleChange}
                 margin="normal"
@@ -142,7 +138,6 @@ class SignUpForm extends Component<
               />
               <TextField
                 margin="normal"
-                className="bg-white rounded-corners"
                 select
                 label="Gender"
                 //value={Gender}
@@ -159,7 +154,6 @@ class SignUpForm extends Component<
 
               <TextField
                 margin="normal"
-                className="bg-white rounded-corners"
                 select
                 name="hasVehicle"
                 label="Has Car"
@@ -204,17 +198,11 @@ class SignUpForm extends Component<
                 />
               </FormControl>
 
-              <input
-                type="file"
-                name="photo"
-                onChange={this.handlefile}
-                className="bg-white rounded-corners"
-              />
+              <input type="file" name="photo" onChange={this.handlefile} />
               {this.state.hasVehicle && (
                 <>
                   <TextField
                     margin="normal"
-                    className="bg-white rounded-corners"
                     name="type"
                     select
                     label="Vehicle"
@@ -231,7 +219,6 @@ class SignUpForm extends Component<
                   </TextField>
 
                   <TextField
-                    className="bg-white rounded-corners"
                     label={errors.vehicle?.number ?? "Enter Car number"}
                     onChange={this.handleVehicleChange}
                     margin="normal"
@@ -239,7 +226,6 @@ class SignUpForm extends Component<
                   />
 
                   <TextField
-                    className="bg-white rounded-corners"
                     label={errors.vehicle?.model ?? "Enter model"}
                     onChange={this.handleVehicleChange}
                     margin="normal"
@@ -247,7 +233,6 @@ class SignUpForm extends Component<
                   />
 
                   <TextField
-                    className="bg-white rounded-corners"
                     label={errors.vehicle?.capacity ?? "Enter capacity"}
                     onChange={this.handleVehicleChange}
                     margin="normal"

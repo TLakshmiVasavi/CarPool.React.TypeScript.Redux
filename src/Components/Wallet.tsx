@@ -15,6 +15,7 @@ const validationSchema = Yup.object({
 interface IState {
   amount: number;
 }
+
 class Wallet extends Component<RouteComponentProps & DispatchProps, IState> {
   constructor(props: RouteComponentProps & DispatchProps) {
     super(props);
@@ -56,7 +57,9 @@ class Wallet extends Component<RouteComponentProps & DispatchProps, IState> {
 interface DispatchProps {
   updateBalance: (amount: number) => void;
 }
+
 const mapDispatchToProps = {
   updateBalance,
 };
+
 export default connect(null, mapDispatchToProps)(Wallet);

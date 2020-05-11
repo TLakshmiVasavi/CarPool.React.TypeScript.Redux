@@ -1,11 +1,6 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  BrowserRouterProps,
-} from "react-router-dom";
-import history from "./Components/Routing/history";
-import Routes from "./Components/Routing/Routes";
+import { BrowserRouter as Router, BrowserRouterProps } from "react-router-dom";
+import Routes from "./Components/Routes";
 import MenuListComposition from "./Components/MenuList";
 import "./App.css";
 import { store } from "./Components/Redux/Store";

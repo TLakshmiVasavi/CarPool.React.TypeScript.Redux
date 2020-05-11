@@ -13,10 +13,6 @@ class UserProfile extends React.Component<DispatchProps & IUser, {}> {
     this.disableEdit = this.disableEdit.bind(this);
   }
 
-  componentDidMount() {
-    //this.setState({ user: this.props.user });
-  }
-
   enableEdit(e: any) {
     this.setState({ disable: false });
   }

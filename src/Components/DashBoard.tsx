@@ -4,10 +4,10 @@ import { RouteComponentProps } from "react-router-dom";
 import { store } from "./Redux/Store";
 import { connect } from "react-redux";
 
-class Home extends React.Component<RouteComponentProps, {}> {
+class Dashboard extends React.Component<RouteComponentProps, {}> {
   render() {
     return (
-      <div className="Home">
+      <div className="Dashboard">
         <div className="center">
           <Container>
             <Row>
@@ -41,4 +41,4 @@ class Home extends React.Component<RouteComponentProps, {}> {
     );
   }
 }
-export default Home;
+export default Dashboard;

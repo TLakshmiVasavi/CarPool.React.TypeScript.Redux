@@ -1,4 +1,4 @@
-import React, { ReactFragment } from "react";
+import React from "react";
 import Button from "@material-ui/core/Button";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Grow from "@material-ui/core/Grow";
@@ -6,14 +6,11 @@ import Paper from "@material-ui/core/Paper";
 import Popper from "@material-ui/core/Popper";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuList from "@material-ui/core/MenuList";
-import { makeStyles } from "@material-ui/core/styles";
-import userImg from "../Images/Vasavi.jpg";
 import "../App.css";
-import history from "./Routing/history";
 import { Link } from "react-router-dom";
 import { withRouter } from "react-router";
 import { RouteComponentProps } from "react-router-dom";
-import { connect, DispatchProp } from "react-redux";
+import { connect } from "react-redux";
 import { Logout } from "./Redux/User/UserActions";
 import { AppState } from "./Redux/rootReducer";
 
@@ -45,11 +42,11 @@ class UserMenuList extends React.Component<
     }
   };
 
-  handleClose = (event: any) => {
+  handleClose = () => {
     this.setState({ open: false });
   };
 
-  handleLogout = (event: any) => {
+  handleLogout = () => {
     alert("hi");
     this.props.Logout();
     this.setState({ open: false });
@@ -97,7 +94,7 @@ class UserMenuList extends React.Component<
                         <MenuItem component={Link} to="/MyRides">
                           My Rides
                         </MenuItem>
-                        <MenuItem component={Link} to="/Home">
+                        <MenuItem component={Link} to="/Dashboard">
                           DashBoard
                         </MenuItem>
                         <MenuItem component={Link} to="/Wallet">

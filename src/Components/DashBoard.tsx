@@ -3,9 +3,15 @@ import { Row, Col, Container } from "react-grid-system";
 import { RouteComponentProps } from "react-router-dom";
 import { store } from "./Redux/Store";
 import { connect } from "react-redux";
+import { IAuthDetails } from "./Interfaces";
+import { AppState } from "./Redux/rootReducer";
+import { Redirect } from "react-router-dom";
 
-class Dashboard extends React.Component<RouteComponentProps, {}> {
+class Dashboard extends React.Component<IProps, {}> {
   render() {
+    {
+      this.props.isLoggedIn || <Redirect to="/LoginForm" />;
+    }
     return (
       <div className="Dashboard">
         <div className="center">
@@ -41,4 +47,9 @@ class Dashboard extends React.Component<RouteComponentProps, {}> {
     );
   }
 }
-export default Dashboard;
+
+const mapStateToProps = (state: AppState) => ({
+  isLoggedIn: state.user.isLogedIn,
+});
+interface IProps extends RouteComponentProps, IAuthDetails {}
+export default connect(mapStateToProps, null)(Dashboard);

@@ -16,24 +16,26 @@ import { connect } from "react-redux";
 import { offerRide } from "./Redux/Ride/RideActions";
 import { getVehicles } from "./Redux/User/UserActions";
 import { AppState } from "./Redux/rootReducer";
+import Loader from "react-loader-spinner";
 
 const times = ["5am-9am", "9am-12pm", "12pm-3pm", "3pm-6pm", "6pm-9pm"];
 
 const validationSchema = Yup.object({
   noOfOfferedSeats: Yup.string().required("Required"),
-  // from: Yup.string().required("Required"),
-  // to: Yup.string().required("Required"),
   time: Yup.string().required("Required"),
+  route: Yup.object({
+    from: Yup.string().required("Required"),
+    to: Yup.string().required("Required"),
+  }),
 });
-interface IBool {
+
+interface IProps extends RouteComponentProps, DispatchProps, IVehicles {
+  isLoggedIn: boolean;
   isLoading: boolean;
 }
 
-class OfferRide extends React.Component<
-  RouteComponentProps & DispatchProps & IVehicles & IBool,
-  IOfferRide
-> {
-  constructor(props: RouteComponentProps & DispatchProps & IVehicles & IBool) {
+class OfferRide extends React.Component<IProps, IOfferRide> {
+  constructor(props: IProps) {
     super(props);
     this.state = {
       totalNoOfSeats: 3,
@@ -49,10 +51,9 @@ class OfferRide extends React.Component<
       firstHalf: true,
       cost: 0,
       availableVehicles: [],
-      vehicleNumber: "",
+      vehicleNumber: this.props.vehicles[0].number ?? "",
     };
     this.handleChecked = this.handleChecked.bind(this);
-    this.dateHandler = this.dateHandler.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onStopChange = this.onStopChange.bind(this);
@@ -71,6 +72,7 @@ class OfferRide extends React.Component<
     const { name, value } = e.target;
     this.setState({ [name]: value });
   }
+
   handleVehicleChange(e: any) {
     const { name, value } = e.target;
     this.setState({ [name]: value });
@@ -111,11 +113,6 @@ class OfferRide extends React.Component<
     });
   }
 
-  dateHandler(e: any) {
-    // console.log(e);
-    this.setState({ ["startDate"]: e });
-  }
-
   addStop() {
     this.setState((state) => {
       const route = { ...state.route };
@@ -144,7 +141,13 @@ class OfferRide extends React.Component<
     return (
       <div className="OfferRide">
         {this.props.isLoading ? (
-          <div>loading</div>
+          <Loader
+            type="Puff"
+            color="#00BFFF"
+            height={100}
+            width={100}
+            timeout={3000} //3 secs
+          />
         ) : (
           <Formik
             enableReinitialize
@@ -180,20 +183,16 @@ class OfferRide extends React.Component<
                         <Row>
                           <Col md={8}>
                             <TextField
-                              label="From"
-                              // value={this.state.from}
+                              label={errors.from ?? "From"}
                               onChange={this.handleRouteChange}
                               margin="normal"
                               name="from"
-                              helperText={errors.from}
                             />
                             <TextField
-                              label="To"
-                              //value={this.state.to}
+                              label={errors.to ?? "To"}
                               onChange={this.handleRouteChange}
                               margin="normal"
                               name="to"
-                              helperText={errors.to}
                             />
                           </Col>
                           <Col md={2}>
@@ -211,11 +210,10 @@ class OfferRide extends React.Component<
                             <small>Date</small>
                             <DatePicker
                               dateFormat="MM/dd/yyyy"
-                              //margin="normal"
+                              name="startDate"
                               id="date-picker-inline"
-                              //  label="Date picker inline"
                               selected={this.state.startDate}
-                              onChange={this.dateHandler}
+                              onChange={this.handleChange}
                               minDate={new Date()}
                             />
                           </Col>
@@ -268,14 +266,13 @@ class OfferRide extends React.Component<
                                   .slice(0, -1)
                                   .map((item: string, index: number) => (
                                     <TextField
-                                      label={"Stop " + (index + 1)}
+                                      label={
+                                        errors.from ?? "Stop " + (index + 1)
+                                      }
                                       value={item}
                                       name={"Stop " + (index + 1)}
                                       onChange={this.onStopChange}
                                       margin="normal"
-                                      //   name={index}
-
-                                      helperText={errors.from}
                                     />
                                   ))}
                                 <TextField
@@ -284,7 +281,6 @@ class OfferRide extends React.Component<
                                   }
                                   key={this.state.route.stops.length - 1}
                                   name={"Stop " + this.state.route.stops.length}
-                                  //    name={this.state.stops.length - 1}
                                   value={this.state.route.stops.slice(-1)}
                                   onChange={this.onStopChange}
                                   margin="normal"
@@ -363,16 +359,21 @@ class OfferRide extends React.Component<
     );
   }
 }
+
 const mapStateToProps = (state: AppState) => ({
+  isLoggedIn: state.user.isLoggedIn,
   isLoading: state.user.isLoading,
   vehicles: state.user.vehicles,
 });
+
 interface DispatchProps {
   offerRide: (ride: IOfferRide) => void;
   getVehicles: () => void;
 }
+
 const mapDispatchToProps = {
   offerRide,
   getVehicles,
 };
+
 export default connect(mapStateToProps, mapDispatchToProps)(OfferRide);

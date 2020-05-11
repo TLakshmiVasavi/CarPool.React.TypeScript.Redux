@@ -1,26 +1,17 @@
 import React from "react";
 import { Container, Row, Col } from "react-grid-system";
-import axios from "axios";
-import { MdLocationOn } from "react-icons/md";
-import {
-  IMyRides,
-  IMyOffer,
-  IMyBooking,
-  IMyOffers,
-  IMyBookings,
-} from "./Interfaces";
+import { IAuthDetails } from "./Interfaces";
 import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
 import OfferedRides from "./OfferedRides";
 import BookedRides from "./BookedRides";
-import {
-  getOffers,
-  getBookings,
-  GetMyOffersAction,
-} from "./Redux/Ride/RideActions";
+import { Redirect } from "react-router-dom";
 
-class MyRides extends React.Component {
+class MyRides extends React.Component<IAuthDetails, {}> {
   render() {
+    {
+      this.props.isLoggedIn || <Redirect to="/Dashboard" />;
+    }
     return (
       <Container>
         <Row>
@@ -42,4 +33,7 @@ class MyRides extends React.Component {
   }
 }
 
-export default MyRides;
+const mapStateToProps = (state: AppState) => ({
+  isLoggedIn: state.user.isLogedIn,
+});
+export default connect(mapStateToProps, null)(MyRides);

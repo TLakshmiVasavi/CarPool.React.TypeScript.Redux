@@ -5,7 +5,7 @@ interface IProps {
   show: boolean;
   children: any;
 }
-class Modal extends React.Component<IProps, {}> {
+class PopUpModal extends React.Component<IProps, {}> {
   render() {
     return (
       <div
@@ -22,4 +22,4 @@ class Modal extends React.Component<IProps, {}> {
     );
   }
 }
-export default Modal;
+export default PopUpModal;

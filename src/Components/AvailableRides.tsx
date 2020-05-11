@@ -2,12 +2,7 @@ import React from "react";
 import { Row, Col } from "react-grid-system";
 import { AppState } from "./Redux/rootReducer";
 import { MdLocationOn } from "react-icons/md";
-import {
-  IBookRide,
-  IBookRideResponse,
-  IAvailableRide,
-  IRideRequest,
-} from "./Interfaces";
+import { IBookRide, IBookRideResponse, IAvailableRide } from "./Interfaces";
 import { connect } from "react-redux";
 import { requestRide } from "./Redux/Ride/RideActions";
 import "../App.css";
@@ -18,11 +13,8 @@ interface IState {
   modal: boolean;
   isImageOpen: boolean;
 }
-class AvailableRides extends React.Component<
-  IBookRideResponse & DispatchProps & IBool & IBookRide,
-  IState
-> {
-  constructor(props: IBookRideResponse & DispatchProps & IBool & IBookRide) {
+class AvailableRides extends React.Component<IProps, IState> {
+  constructor(props: IProps) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.state = {
@@ -31,6 +23,7 @@ class AvailableRides extends React.Component<
       isImageOpen: false,
     };
   }
+
   modalOpen() {
     this.setState({ modal: true });
   }
@@ -41,15 +34,19 @@ class AvailableRides extends React.Component<
       modal: false,
     });
   }
+
   openImage() {
     this.setState({ isImageOpen: true });
   }
+
   closeImage() {
     this.setState({ isImageOpen: false });
   }
+
   handleSubmit(rideId: number) {
     this.props.requestRide(this.props, this.state.NumberOfSeats, rideId);
   }
+
   render() {
     var url = "data:image/png;base64,";
     return (
@@ -157,15 +154,13 @@ const mapStateToProps = (state: AppState) => ({
   isLoaded: state.ride.isLoaded,
   availableRides: state.ride.availableRides,
 });
-interface IBool {
+
+interface IProps extends DispatchProps, IBookRideResponse, IBookRide {
   isLoaded: boolean;
 }
 
 interface DispatchProps {
   requestRide(Request: IBookRide, noOfSeats: number, rideId: number): void;
 }
-const mapDispatchToProps = {
-  requestRide,
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(AvailableRides);
+export default connect(mapStateToProps, { requestRide })(AvailableRides);

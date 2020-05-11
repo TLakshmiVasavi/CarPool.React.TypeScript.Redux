@@ -1,12 +1,13 @@
 import React from "react";
 import { Row, Col, Container } from "react-grid-system";
 import { IUser } from "./Interfaces";
-import { connect } from "react-redux";
+import { connect, DispatchProp } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
 import { UpdateUser } from "./Redux/User/UserActions";
+import { Redirect } from "react-router-dom";
 
-class UserProfile extends React.Component<DispatchProps & IUser, {}> {
-  constructor(props: any) {
+class UserProfile extends React.Component<IProps, {}> {
+  constructor(props: IProps) {
     super(props);
     this.enableEdit = this.enableEdit.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -26,6 +27,9 @@ class UserProfile extends React.Component<DispatchProps & IUser, {}> {
   }
 
   render() {
+    {
+      this.props.isLoggedIn || <Redirect to="/Dashboard" />;
+    }
     return (
       <Container>
         <div className="shadowBox Profile center">
@@ -107,17 +111,13 @@ class UserProfile extends React.Component<DispatchProps & IUser, {}> {
     );
   }
 }
+interface IProps extends DispatchProps, IUser {}
 
-const mapStateToProps = (props: AppState) => ({
-  disable: true,
-  user: props.user,
+const mapStateToProps = (state: AppState) => ({
+  user: state.user,
 });
 
 interface DispatchProps {
   updateUser: (user: IUser) => void;
 }
-const mapDispatchToProps = {
-  UpdateUser,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(UserProfile);
+export default connect(mapStateToProps, { UpdateUser })(UserProfile);

@@ -5,9 +5,10 @@ import "../StyleSheets/Colors.css";
 import { RouteComponentProps } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { IVehicle, vehicleType } from "./Interfaces";
+import { IVehicle, vehicleType, IAuthDetails } from "./Interfaces";
 import { addVehicle } from "./Redux/User/UserActions";
-import { connect } from "react-redux";
+import { connect, DispatchProp } from "react-redux";
+import { AppState } from "./Redux/rootReducer";
 
 const validationSchema = Yup.object({
   model: Yup.string().required("Required"),
@@ -15,11 +16,8 @@ const validationSchema = Yup.object({
   capacity: Yup.number().required("Required"),
 });
 
-class AddVehicle extends Component<
-  RouteComponentProps & DispatchProps,
-  IVehicle
-> {
-  constructor(props: RouteComponentProps & DispatchProps) {
+class AddVehicle extends Component<IProps, IVehicle> {
+  constructor(props: IProps) {
     super(props);
     this.state = {
       model: "",
@@ -30,6 +28,9 @@ class AddVehicle extends Component<
   }
 
   render() {
+    {
+      this.props.isLoggedIn || <Redirect to="/Dashboard" />;
+    }
     return (
       <Formik
         enableReinitialize
@@ -64,8 +65,7 @@ class AddVehicle extends Component<
               type="text"
               onChange={handleChange}
               name="model"
-              label="model"
-              helperText={errors.model}
+              label={errors.model ?? "model"}
             />
             <TextField
               margin="normal"
@@ -73,8 +73,7 @@ class AddVehicle extends Component<
               type="text"
               onChange={handleChange}
               name="number"
-              label="number"
-              helperText={errors.number}
+              label={errors.number ?? "number"}
             />
             <TextField
               margin="normal"
@@ -82,8 +81,7 @@ class AddVehicle extends Component<
               type="text"
               onChange={handleChange}
               name="capacity"
-              label="capacity"
-              helperText={errors.capacity}
+              label={errors.capacity ?? "capacity"}
             />
 
             <button type="submit" className="submit bg-darkorange">
@@ -95,11 +93,12 @@ class AddVehicle extends Component<
     );
   }
 }
-
+interface IProps extends DispatchProps, IAuthDetails, RouteComponentProps {}
 interface DispatchProps {
   addVehicle: (vehicle: IVehicle) => void;
 }
-const mapDispatchToProps = {
-  addVehicle,
-};
-export default connect(null, mapDispatchToProps)(AddVehicle);
+const mapStateToProps = (state: AppState) => ({
+  isLoggedIn: state.user.isLogedIn,
+});
+
+export default connect(mapStateToProps, { addVehicle })(AddVehicle);

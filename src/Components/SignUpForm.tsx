@@ -11,38 +11,9 @@ import {
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import IconButton from "@material-ui/core/IconButton";
 import { RouteComponentProps } from "react-router-dom";
-import { INewUser } from "./Interfaces";
+import { INewUser, Gender, hasVehicle, vehicleType } from "./Interfaces";
 import { Signup } from "./Redux/User/UserActions";
 import { connect } from "react-redux";
-
-const Gender = [
-  {
-    label: "Female",
-  },
-  {
-    label: "Male",
-  },
-];
-
-const vehicleType = [
-  {
-    label: " Car ",
-  },
-  {
-    label: " Bike ",
-  },
-];
-
-const hasVehicle = [
-  {
-    label: "Yes",
-    data: "true",
-  },
-  {
-    label: "No",
-    data: "false",
-  },
-];
 
 const validationSchema = Yup.object({
   mail: Yup.string().email("Please enter valid mail").required("Required!"),
@@ -50,7 +21,8 @@ const validationSchema = Yup.object({
     .min(6, "Password has to be longer than 6 characters!")
     .matches(
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-      "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
+      "Please Choose Strong Password"
+      // "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
     ),
   name: Yup.string().required("Required"),
   number: Yup.string()
@@ -81,12 +53,16 @@ class SignUpForm extends Component<
         model: "",
         number: "",
         capacity: 0,
+        type: "Car",
       },
-      vehicleType: "",
       showPassword: true,
     };
     this.handleClickShowPassword = this.handleClickShowPassword.bind(this);
     this.handleMouseDownPassword = this.handleMouseDownPassword.bind(this);
+    this.handlefile = this.handlefile.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleVehicleChange = this.handleVehicleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleClickShowPassword() {
@@ -140,32 +116,29 @@ class SignUpForm extends Component<
                 label="Enter Name"
                 onChange={this.handleChange}
                 margin="normal"
-                name="name"
-                helperText={errors.name}
+                name={errors.name ?? "name"}
               />
               <TextField
                 className="bg-white rounded-corners"
                 label="Enter Mail"
                 onChange={this.handleChange}
                 margin="normal"
-                name="mail"
-                helperText={errors.mail}
+                name={errors.mail ?? "mail"}
               />
               <TextField
                 className="bg-white rounded-corners"
-                label="Enter Phone number"
+                label={errors.number ?? "Enter Phone number"}
                 onChange={this.handleChange}
                 margin="normal"
                 name="number"
-                helperText={errors.number}
               />
               <TextField
                 className="bg-white rounded-corners"
-                label="Enter Age"
+                label={errors.age ?? "Enter Age"}
                 onChange={this.handleChange}
                 margin="normal"
                 name="age"
-                helperText={errors.age}
+                type="number"
               />
               <TextField
                 margin="normal"
@@ -211,7 +184,6 @@ class SignUpForm extends Component<
                   name="password"
                   type={this.state.showPassword ? "text" : "password"}
                   onChange={this.handleChange}
-                  //helperText={errors.password}
                   endAdornment={
                     <InputAdornment position="end">
                       <IconButton
@@ -243,7 +215,7 @@ class SignUpForm extends Component<
                   <TextField
                     margin="normal"
                     className="bg-white rounded-corners"
-                    name="vehicleType"
+                    name="type"
                     select
                     label="Vehicle"
                     onChange={this.handleVehicleChange}
@@ -260,29 +232,27 @@ class SignUpForm extends Component<
 
                   <TextField
                     className="bg-white rounded-corners"
-                    label="Enter Car number"
+                    label={errors.vehicle?.number ?? "Enter Car number"}
                     onChange={this.handleVehicleChange}
                     margin="normal"
                     name="vehicle.number"
-                    helperText={errors.vehicle?.number}
                   />
 
                   <TextField
                     className="bg-white rounded-corners"
-                    label="Enter model"
+                    label={errors.vehicle?.model ?? "Enter model"}
                     onChange={this.handleVehicleChange}
                     margin="normal"
                     name="vehicle.model"
-                    helperText={errors.vehicle?.model}
                   />
 
                   <TextField
                     className="bg-white rounded-corners"
-                    label="Enter capacity"
+                    label={errors.vehicle?.capacity ?? "Enter capacity"}
                     onChange={this.handleVehicleChange}
                     margin="normal"
                     name="vehicle.capacity"
-                    helperText={errors.vehicle?.capacity}
+                    type="number"
                   />
                 </>
               )}

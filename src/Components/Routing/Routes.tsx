@@ -12,6 +12,7 @@ import BookRide from "../BookRide";
 import UserProfile from "../UserProfile";
 import OfferRide from "../OfferRide";
 import AddVehicle from "../AddVehicle";
+import Wallet from "../Wallet";
 
 export default function Routes() {
   return (
@@ -23,7 +24,8 @@ export default function Routes() {
       <Route path="/MyRides" component={MyRides} isPrivate />
       <Route path="/OfferRide" component={OfferRide} isPrivate />
       <Route path="/BookRide" component={BookRide} isPrivate />
-      <Route path="/User/AddVehicle" component={AddVehicle} isPrivate />
+      <Route path="/AddVehicle" component={AddVehicle} isPrivate />
+      <Route path="/Wallet" component={Wallet} isPrivate />
       {/* <Route path="/dashboard" component={Dashboard} isPrivate /> */}
       {/* redirect user to SignIn page if route does not exist and user is not authenticated */}
       {/* <Route component={SignIn} /> */}

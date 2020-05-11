@@ -5,7 +5,7 @@ import "../StyleSheets/Colors.css";
 import { RouteComponentProps } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { IAuthUser, IVehicle } from "./Interfaces";
+import { IVehicle, vehicleType } from "./Interfaces";
 import { addVehicle } from "./Redux/User/UserActions";
 import { connect } from "react-redux";
 
@@ -25,6 +25,7 @@ class AddVehicle extends Component<
       model: "",
       number: "",
       capacity: 0,
+      type: "Car",
     };
   }
 
@@ -40,7 +41,23 @@ class AddVehicle extends Component<
       >
         {({ handleSubmit, handleChange, errors }) => (
           <form onSubmit={handleSubmit}>
-            <div>{this.state.error}</div>
+            <TextField
+              margin="normal"
+              className="bg-white rounded-corners"
+              name="type"
+              select
+              label="Vehicle"
+              onChange={handleChange}
+              SelectProps={{
+                native: true,
+              }}
+            >
+              {vehicleType.map((option) => (
+                <option key={option.label} value={option.label}>
+                  {option.label}
+                </option>
+              ))}
+            </TextField>
             <TextField
               margin="normal"
               className="bg-white rounded-corners"
@@ -68,6 +85,7 @@ class AddVehicle extends Component<
               label="capacity"
               helperText={errors.capacity}
             />
+
             <button type="submit" className="submit bg-darkorange">
               Submit
             </button>

@@ -18,6 +18,9 @@ import {
   GET_USER_IMAGE,
   GET_USER_IMAGE_FAILURE,
   GET_USER_IMAGE_SUCCESS,
+  UPDATE_BALANCE_REQUEST,
+  UPDATE_BALANCE_SUCCESS,
+  UPDATE_BALANCE_FAILURE,
 } from "./UserTypes";
 import {
   UserLoginSuccess,
@@ -39,6 +42,9 @@ import {
   GetUserImage,
   GetUserImageFailure,
   GetUserImageSuccess,
+  UpdateBalanceRequest,
+  UpdateBalanceFailure,
+  UpdateBalanceSuccess,
 } from "./UserTypes";
 import axios from "axios";
 import {
@@ -162,6 +168,39 @@ export function addVehicle(vehicle: IVehicle) {
   };
 }
 
+export function updateBalance(amount: number) {
+  return (
+    dispatch: Dispatch<UpdateBalanceSuccess | UpdateBalanceFailure>,
+    getState: AppState
+  ) => {
+    dispatch(UpdateBalanceAction());
+    axios
+      .post(
+        "https://localhost:5001/api/UserApi/UpdateBalance?userId=" +
+          getState().user.mail,
+        amount
+      )
+      .then(() => dispatch(UpdateBalanceSuccessAction()))
+      .catch(() => dispatch(UpdateBalanceFailureAction()));
+  };
+}
+
+export function UpdateBalanceAction() {
+  return {
+    type: UPDATE_BALANCE_REQUEST,
+  };
+}
+
+export function UpdateBalanceSuccessAction() {
+  return {
+    type: UPDATE_BALANCE_SUCCESS,
+  };
+}
+export function UpdateBalanceFailureAction() {
+  return {
+    type: UPDATE_BALANCE_FAILURE,
+  };
+}
 export function GetVehiclesAction() {
   return {
     type: GET_VEHICLES,

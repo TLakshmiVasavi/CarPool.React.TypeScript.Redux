@@ -19,6 +19,21 @@ export const ADD_VEHICLE_FAILURE = "ADD_VEHICLE_FAILURE";
 export const GET_USER_IMAGE_FAILURE = "GET_USER_IMAGE_FAILURE";
 export const GET_USER_IMAGE_SUCCESS = "GET_USER_IMAGE_SUCCESS";
 export const GET_USER_IMAGE = "GET_USER_IMAGE";
+export const UPDATE_BALANCE_REQUEST = "UPDATE_BALANCE_REQUEST";
+export const UPDATE_BALANCE_SUCCESS = "UPDATE_BALANCE_SUCCESS";
+export const UPDATE_BALANCE_FAILURE = "UPDATE_BALANCE_FAILURE";
+
+export interface UpdateBalanceRequest {
+  type: typeof UPDATE_BALANCE_REQUEST;
+}
+
+export interface UpdateBalanceSuccess {
+  type: typeof UPDATE_BALANCE_SUCCESS;
+}
+
+export interface UpdateBalanceFailure {
+  type: typeof UPDATE_BALANCE_FAILURE;
+}
 
 export interface UserLoginRequest {
   type: typeof USER_LOGIN_REQUEST;

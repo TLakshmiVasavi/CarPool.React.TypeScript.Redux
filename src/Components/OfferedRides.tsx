@@ -49,7 +49,7 @@ class OfferedRides extends React.Component<IMyOffers & DispatchProps, IPopUp> {
               <Row>
                 <Col md={4}>
                   <small>From</small>
-                  <p>{ride.from}Markapur</p>
+                  <p>{ride.from}</p>
                 </Col>
                 <Col md={4}>
                   <div className="dot" />
@@ -59,40 +59,40 @@ class OfferedRides extends React.Component<IMyOffers & DispatchProps, IPopUp> {
                 </Col>
                 <Col md={4}>
                   <small>To</small>
-                  <p>{ride.to}Y.Palem</p>
+                  <p>{ride.to}</p>
                 </Col>
               </Row>
               <Row>
                 <Col md={4}>
                   <small>Date</small>
-                  <p>{ride.startDate}4/15/20</p>
+                  <p>{ride.startDate}</p>
                 </Col>
                 <Col md={4} />
                 <Col md={4}>
                   <small>Time</small>
-                  <p>{ride.time}5-9</p>
+                  <p>{ride.time}</p>
                 </Col>
               </Row>
               <Row>
                 <Col md={4}>
                   <small>Price</small>
-                  <p>{ride.cost}180</p>
+                  <p>{ride.cost}</p>
                 </Col>
                 <Col md={4} />
                 <Col md={4}>
                   <small>Seats Available</small>
-                  <p>{ride.noOfOfferedSeats}5</p>
+                  <p>{ride.noOfOfferedSeats}</p>
                 </Col>
               </Row>
               <Row>
                 <Col md={4}>
                   <small>Ride Status</small>
-                  <p>{ride.rideStatus}Completed</p>
+                  <p>{ride.rideStatus}</p>
                 </Col>
                 <Col md={4} />
                 <Col md={4}>
                   <small>Vehicle Number</small>
-                  <p>{ride.vehicleNumber}12345</p>
+                  <p>{ride.vehicleNumber}</p>
                 </Col>
               </Row>
             </div>

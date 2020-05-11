@@ -53,8 +53,7 @@ class LoginForm extends Component<
                 type="text"
                 onChange={handleChange}
                 name="id"
-                label="id"
-                helperText={errors.id}
+                label={errors.id ?? "id"}
               />
 
               <TextField
@@ -63,8 +62,7 @@ class LoginForm extends Component<
                 type="text"
                 onChange={handleChange}
                 name="password"
-                label="password"
-                helperText={errors.password}
+                label={errors.password ?? "password"}
               />
               <button type="submit" className="submit bg-darkorange">
                 Log In

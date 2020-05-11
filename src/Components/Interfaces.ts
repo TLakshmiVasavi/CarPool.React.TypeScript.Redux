@@ -15,7 +15,6 @@ export interface INewUser {
   gender: string;
   hasVehicle: boolean;
   vehicle: IVehicle;
-  vehicleType: string;
   showPassword: Boolean;
 }
 
@@ -88,6 +87,7 @@ export interface IVehicle {
   model: string;
   number: string;
   capacity: number;
+  type: string;
 }
 
 export interface IVehicles {
@@ -141,30 +141,35 @@ export interface IRideRequests {
   requests: IRideRequest[];
 }
 
-// export interface IMRideDetails {
-//   Id: number;
-//   Source: string;
-//   Destination: string;
-//   StartDate: Date;
-//   Time: string;
-//   IsRideCompleted: string;
-//   VehicleId: string;
-// }
+export interface IWallet {
+  amount: number;
+}
 
-// export interface IOfferedRide {
-//   [key: string]: any;
-//   totalNoOfSeats: number;
-//   noOfSeats: number;
-//   isChecked: Boolean;
-//   selectedDate: Date;
-//   stops: string[];
-//   from: string;
-//   to: string;
-//   time: string;
-//   firstHalf: Boolean;
-// }
+export const Gender = [
+  {
+    label: "Female",
+  },
+  {
+    label: "Male",
+  },
+];
 
-// export interface IRides {
-//   Bookings: IBooking[];
-//   Offers: IOffer[];
-// }
+export const vehicleType = [
+  {
+    label: " Car ",
+  },
+  {
+    label: " Bike ",
+  },
+];
+
+export const hasVehicle = [
+  {
+    label: "Yes",
+    data: "true",
+  },
+  {
+    label: "No",
+    data: "false",
+  },
+];

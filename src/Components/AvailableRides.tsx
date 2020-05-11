@@ -16,6 +16,7 @@ import Modal from "./PopUp";
 interface IState {
   NumberOfSeats: number;
   modal: boolean;
+  isImageOpen: boolean;
 }
 class AvailableRides extends React.Component<
   IBookRideResponse & DispatchProps & IBool & IBookRide,
@@ -27,6 +28,7 @@ class AvailableRides extends React.Component<
     this.state = {
       modal: false,
       NumberOfSeats: 0,
+      isImageOpen: false,
     };
   }
   modalOpen() {
@@ -39,6 +41,12 @@ class AvailableRides extends React.Component<
       modal: false,
     });
   }
+  openImage() {
+    this.setState({ isImageOpen: true });
+  }
+  closeImage() {
+    this.setState({ isImageOpen: false });
+  }
   handleSubmit(rideId: number) {
     this.props.requestRide(this.props, this.state.NumberOfSeats, rideId);
   }
@@ -50,7 +58,7 @@ class AvailableRides extends React.Component<
           <div>Rides Not Available</div>
         ) : (
           this.props.availableRides.map((item: IAvailableRide) => (
-            <div className="shadowBox" onClick={() => this.modalOpen()}>
+            <div className="shadowBox" onClick={this.modalOpen}>
               <Modal
                 show={this.state.modal}
                 handleClose={() => this.modalClose()}
@@ -68,12 +76,22 @@ class AvailableRides extends React.Component<
                   </button>
                 </div>
               </Modal>
+              <Modal
+                show={this.state.isImageOpen}
+                handleClose={this.closeImage}
+              >
+                <img src={url + item.providerPic} onClick={this.closeImage} />
+              </Modal>
               <Row>
                 <Col md={8}>
                   <h2>{item.providerName}</h2>
                 </Col>
                 <Col md={4}>
-                  <img src={url + item.providerPic} className="imgRound" />
+                  <img
+                    src={url + item.providerPic}
+                    className="imgRound"
+                    onClick={this.openImage}
+                  />
                 </Col>
               </Row>
               <Row>

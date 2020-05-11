@@ -17,7 +17,6 @@ import { connect, DispatchProp } from "react-redux";
 import { Logout } from "./Redux/User/UserActions";
 import { AppState } from "./Redux/rootReducer";
 
-const open: Boolean = false;
 interface MenuState {
   open: boolean;
 }
@@ -29,20 +28,29 @@ class UserMenuList extends React.Component<
   constructor(props: RouteComponentProps & DispatchProps & IState) {
     super(props);
     this.state = { open: false };
+    this.handleClose = this.handleClose.bind(this);
+    this.handleListKeyDown = this.handleListKeyDown.bind(this);
+    this.handleToggle = this.handleToggle.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
   }
+
   handleToggle = () => {
     this.setState({ open: !this.state.open });
   };
+
   handleListKeyDown = (event: any) => {
     if (event.key === "Tab") {
       event.preventDefault();
       this.setState({ open: false });
     }
   };
+
   handleClose = (event: any) => {
     this.setState({ open: false });
   };
+
   handleLogout = (event: any) => {
+    alert("hi");
     this.props.Logout();
     this.setState({ open: false });
   };
@@ -52,8 +60,8 @@ class UserMenuList extends React.Component<
     return (
       <>
         {this.props.isLoggedIn && (
-          <div>
-            <div>{this.props.name}</div>
+          <div className="user-menu">
+            <div className="name">{this.props.name}</div>
             <Button
               aria-controls={this.state.open ? "menu-list-grow" : undefined}
               aria-haspopup="true"
@@ -66,6 +74,7 @@ class UserMenuList extends React.Component<
               role={undefined}
               transition
               disablePortal
+              className="list"
             >
               {({ TransitionProps, placement }) => (
                 <Grow
@@ -88,13 +97,16 @@ class UserMenuList extends React.Component<
                         <MenuItem component={Link} to="/MyRides">
                           My Rides
                         </MenuItem>
-                        <MenuItem
-                          onClick={(e) => {
-                            this.handleLogout(e);
-                          }}
-                        >
-                          Logout
+                        <MenuItem component={Link} to="/Home">
+                          DashBoard
                         </MenuItem>
+                        <MenuItem component={Link} to="/Wallet">
+                          Wallet
+                        </MenuItem>
+                        <MenuItem component={Link} to="/AddVehicle">
+                          AddVehicle
+                        </MenuItem>
+                        <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
                       </MenuList>
                     </ClickAwayListener>
                   </Paper>
@@ -107,17 +119,21 @@ class UserMenuList extends React.Component<
     );
   }
 }
+
 interface IState {
   photo: any;
   name: string;
   isLoggedIn: boolean;
 }
+
 const mapStateToProps = (state: AppState) => ({
   photo: state.user.photo,
   name: state.user.name,
   isLoggedIn: state.user.isLoggedIn,
 });
+
 interface DispatchProps {
   Logout: () => void;
 }
+
 export default connect(mapStateToProps, { Logout })(withRouter(UserMenuList));

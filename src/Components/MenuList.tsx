@@ -11,18 +11,14 @@ import { Link } from "react-router-dom";
 import { withRouter } from "react-router";
 import { RouteComponentProps } from "react-router-dom";
 import { connect } from "react-redux";
-import { Logout } from "./Redux/User/UserActions";
+import { Logout } from "./Redux/User/UserServices";
 import { AppState } from "./Redux/rootReducer";
-
 interface MenuState {
   open: boolean;
 }
 
-class UserMenuList extends React.Component<
-  RouteComponentProps & DispatchProps & IState,
-  MenuState
-> {
-  constructor(props: RouteComponentProps & DispatchProps & IState) {
+class UserMenuList extends React.Component<IProps, MenuState> {
+  constructor(props: IProps) {
     super(props);
     this.state = { open: false };
     this.handleClose = this.handleClose.bind(this);
@@ -117,12 +113,6 @@ class UserMenuList extends React.Component<
   }
 }
 
-interface IState {
-  photo: any;
-  name: string;
-  isLoggedIn: boolean;
-}
-
 const mapStateToProps = (state: AppState) => ({
   photo: state.user.photo,
   name: state.user.name,
@@ -132,5 +122,5 @@ const mapStateToProps = (state: AppState) => ({
 interface DispatchProps {
   Logout: () => void;
 }
-
-export default connect(mapStateToProps, { Logout })(withRouter(UserMenuList));
+type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
+export default connect(mapStateToProps, { Logout })(UserMenuList);

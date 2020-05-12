@@ -6,7 +6,7 @@ import { RouteComponentProps } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { IAuthUser, IAuthDetails } from "./Interfaces";
-import { Login } from "./Redux/User/UserActions";
+import { Login } from "./Redux/User/UserServices";
 import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
 import { Redirect } from "react-router-dom";
@@ -80,13 +80,14 @@ class LoginForm extends Component<IProps, IAuthUser> {
   }
 }
 
-interface IProps extends DispatchProps, IAuthDetails, RouteComponentProps {}
+type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
 
 interface DispatchProps {
   Login: (user: IAuthUser) => void;
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
+  history: ownProps.history,
   isLoggedIn: state.user.isLogedIn,
 });
 

@@ -5,13 +5,10 @@ import { Row, Col } from "react-grid-system";
 import { MdLocationOn } from "react-icons/md";
 import { AppState } from "./Redux/rootReducer";
 import { connect, DispatchProp } from "react-redux";
-import { approveRideRequest } from "./Redux/Ride/RideActions";
+import { approveRideRequest } from "./Redux/Ride/RideServices";
 
-class RideRequests extends React.Component<
-  DispatchProps & IBool & IRideRequests,
-  {}
-> {
-  constructor(props: DispatchProps & IBool & IRideRequests) {
+class RideRequests extends React.Component<IProps, {}> {
+  constructor(props: IProps) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -76,15 +73,14 @@ class RideRequests extends React.Component<
     );
   }
 }
-
-const mapStateToProps = (state: AppState) => ({
+interface OwnProps {
+  rideId: number;
+}
+const mapStateToProps = (state: AppState, ownProps: OwnProps) => ({
+  rideId: ownProps.rideId,
   isLoaded: state.ride.isRequestsLoaded,
   requests: state.ride.requests,
 });
-interface IBool {
-  isLoaded: boolean;
-  rideId: number;
-}
 
 interface DispatchProps {
   approveRideRequest: (
@@ -96,5 +92,5 @@ interface DispatchProps {
 const mapDispatchToProps = {
   approveRideRequest,
 };
-
+type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
 export default connect(mapStateToProps, mapDispatchToProps)(RideRequests);

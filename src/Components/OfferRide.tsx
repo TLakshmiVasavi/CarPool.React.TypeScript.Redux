@@ -19,8 +19,8 @@ import {
   times,
 } from "./Interfaces";
 import { connect } from "react-redux";
-import { offerRide } from "./Redux/Ride/RideActions";
-import { getVehicles } from "./Redux/User/UserActions";
+import { offerRide } from "./Redux/Ride/RideServices";
+import { getVehicles } from "./Redux/User/UserServices";
 import { AppState } from "./Redux/rootReducer";
 import Loader from "react-loader-spinner";
 
@@ -32,14 +32,6 @@ const validationSchema = Yup.object({
     to: Yup.string().required("Required"),
   }),
 });
-
-interface IProps
-  extends RouteComponentProps,
-    DispatchProps,
-    IVehicles,
-    IAuthDetails {
-  isLoading: boolean;
-}
 
 class OfferRide extends React.Component<IProps, IOfferRide> {
   constructor(props: IProps) {
@@ -85,7 +77,7 @@ class OfferRide extends React.Component<IProps, IOfferRide> {
     this.setState({ [name]: value });
     this.setState({
       totalNoOfSeats: this.props.vehicles.find(
-        (vehicle) => vehicle.number == value
+        (vehicle: IVehicle) => vehicle.number == value
       )?.capacity,
     });
   }
@@ -370,8 +362,9 @@ class OfferRide extends React.Component<IProps, IOfferRide> {
     );
   }
 }
-
-const mapStateToProps = (state: AppState) => ({
+type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
+const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
+  history: ownProps.history,
   isLoggedIn: state.user.isLoggedIn,
   isLoading: state.user.isLoading,
   vehicles: state.user.vehicles,

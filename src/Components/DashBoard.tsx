@@ -49,8 +49,9 @@ class Dashboard extends React.Component<IProps, {}> {
   }
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
+  history: ownProps.history,
   isLoggedIn: state.user.isLogedIn,
 });
-interface IProps extends RouteComponentProps, IAuthDetails {}
+type IProps = ReturnType<typeof mapStateToProps>;
 export default connect(mapStateToProps, null)(Dashboard);

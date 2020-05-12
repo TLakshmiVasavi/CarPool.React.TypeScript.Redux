@@ -3,10 +3,10 @@ import { Container, Row, Col } from "react-grid-system";
 import { IMyBooking, IMyBookings } from "./Interfaces";
 import { MdLocationOn } from "react-icons/md";
 import { AppState } from "./Redux/rootReducer";
-import { getBookings } from "./Redux/Ride/RideActions";
+import { getBookings } from "./Redux/Ride/RideServices";
 import { connect } from "react-redux";
 
-class BookedRides extends React.Component<IMyBookings & DispatchProps, {}> {
+class BookedRides extends React.Component<IProps, {}> {
   componentWillMount() {
     this.props.getBookings();
   }
@@ -90,6 +90,8 @@ class BookedRides extends React.Component<IMyBookings & DispatchProps, {}> {
     );
   }
 }
+
+type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
 
 interface DispatchProps {
   getBookings: () => void;

@@ -4,7 +4,7 @@ import { AppState } from "./Redux/rootReducer";
 import { MdLocationOn } from "react-icons/md";
 import { IBookRide, IBookRideResponse, IAvailableRide } from "./Interfaces";
 import { connect } from "react-redux";
-import { requestRide } from "./Redux/Ride/RideActions";
+import { requestRide } from "./Redux/Ride/RideServices";
 import "../App.css";
 import Modal from "./PopUp";
 
@@ -13,6 +13,7 @@ interface IState {
   modal: boolean;
   isImageOpen: boolean;
 }
+
 class AvailableRides extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
@@ -44,13 +45,17 @@ class AvailableRides extends React.Component<IProps, IState> {
   }
 
   handleSubmit(rideId: number) {
-    this.props.requestRide(this.props, this.state.NumberOfSeats, rideId);
+    this.props.requestRide(
+      this.props.request,
+      this.state.NumberOfSeats,
+      rideId
+    );
   }
 
   render() {
     var url = "data:image/png;base64,";
     return (
-      <React.Fragment>
+      <>
         {this.props.isLoaded && this.props.availableRides.length == 0 ? (
           <div>Rides Not Available</div>
         ) : (
@@ -94,7 +99,7 @@ class AvailableRides extends React.Component<IProps, IState> {
               <Row>
                 <Col md={4}>
                   <small>From</small>
-                  <p>{this.props.from}</p>
+                  <p>{this.props.request.from}</p>
                 </Col>
                 <Col md={4}>
                   <div className="dot" />
@@ -104,21 +109,18 @@ class AvailableRides extends React.Component<IProps, IState> {
                 </Col>
                 <Col md={4}>
                   <small>To</small>
-                  <p>{this.props.to}</p>
+                  <p>{this.props.request.to}</p>
                 </Col>
               </Row>
               <Row>
                 <Col md={4}>
                   <small>Date</small>
-                  <p>
-                    {/* {new Date(this.props.startDate.toLocaleDateString())} */}
-                    {this.props.startDate.toDateString()}
-                  </p>
+                  <p>{this.props.request.startDate.toDateString()}</p>
                 </Col>
                 <Col md={4} />
                 <Col md={4}>
                   <small>Time</small>
-                  <p>{this.props.time}</p>
+                  <p>{this.props.request.time}</p>
                 </Col>
               </Row>
               <Row>
@@ -146,18 +148,17 @@ class AvailableRides extends React.Component<IProps, IState> {
             </div>
           ))
         )}
-      </React.Fragment>
+      </>
     );
   }
 }
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = (state: AppState, ownProps: IBookRide) => ({
+  request: ownProps,
   isLoaded: state.ride.isLoaded,
   availableRides: state.ride.availableRides,
 });
 
-interface IProps extends DispatchProps, IBookRideResponse, IBookRide {
-  isLoaded: boolean;
-}
+type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
 
 interface DispatchProps {
   requestRide(Request: IBookRide, noOfSeats: number, rideId: number): void;

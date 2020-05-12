@@ -11,7 +11,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { RouteComponentProps, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { IBookRide, IAuthDetails } from "./Interfaces";
-import { bookRide } from "./Redux/Ride/RideActions";
+import { bookRide } from "./Redux/Ride/RideServices";
 import { AppState } from "./Redux/rootReducer";
 import AvailableRides from "./AvailableRides";
 import { vehicleType, times } from "./Interfaces";

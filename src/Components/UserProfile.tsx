@@ -3,8 +3,9 @@ import { Row, Col, Container } from "react-grid-system";
 import { IUser } from "./Interfaces";
 import { connect, DispatchProp } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
-import { UpdateUser } from "./Redux/User/UserActions";
+import { UpdateUser } from "./Redux/User/UserServices";
 import { Redirect } from "react-router-dom";
+import { RouteComponentProps } from "react-router-dom";
 
 class UserProfile extends React.Component<IProps, {}> {
   constructor(props: IProps) {
@@ -27,7 +28,7 @@ class UserProfile extends React.Component<IProps, {}> {
   }
 
   render() {
-    if (!this.props.isLoggedIn) {
+    if (!this.props.user.isLoggedIn) {
       this.props.history.push("/Login");
     }
 
@@ -112,13 +113,15 @@ class UserProfile extends React.Component<IProps, {}> {
     );
   }
 }
-interface IProps extends DispatchProps, IUser {}
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
+  history: ownProps.history,
+  disable: false,
   user: state.user,
 });
 
 interface DispatchProps {
   updateUser: (user: IUser) => void;
 }
+type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
 export default connect(mapStateToProps, { UpdateUser })(UserProfile);

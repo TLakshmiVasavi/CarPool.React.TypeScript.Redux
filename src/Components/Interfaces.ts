@@ -1,3 +1,7 @@
+export interface IImage {
+  image: any;
+}
+
 export interface IAuthUser {
   [key: string]: string;
   id: string;

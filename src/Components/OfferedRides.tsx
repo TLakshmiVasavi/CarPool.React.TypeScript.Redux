@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Row, Col } from "react-grid-system";
 import { IMyOffers, IMyOffer, IRideRequests, IRideRequest } from "./Interfaces";
 import { MdLocationOn } from "react-icons/md";
-import { getRequests, getOffers } from "./Redux/Ride/RideActions";
+import { getRequests, getOffers } from "./Redux/Ride/RideServices";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router-dom";
 import Modal from "./PopUp";
@@ -11,8 +11,8 @@ import { AppState } from "./Redux/rootReducer";
 interface IPopUp {
   open: boolean;
 }
-class OfferedRides extends React.Component<IMyOffers & DispatchProps, IPopUp> {
-  constructor(props: IMyOffers & DispatchProps) {
+class OfferedRides extends React.Component<IProps, IPopUp> {
+  constructor(props: IProps) {
     super(props);
     this.state = {
       open: false,
@@ -117,5 +117,5 @@ const mapDispatchToProps = {
 const mapStateToProps = (state: AppState) => ({
   offers: state.ride.offers,
 });
-
+type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
 export default connect(mapStateToProps, mapDispatchToProps)(OfferedRides);

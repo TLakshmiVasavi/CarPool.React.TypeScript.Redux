@@ -12,7 +12,7 @@ import { Visibility, VisibilityOff } from "@material-ui/icons";
 import IconButton from "@material-ui/core/IconButton";
 import { RouteComponentProps } from "react-router-dom";
 import { INewUser, Gender, hasVehicle, vehicleType } from "./Interfaces";
-import { Signup } from "./Redux/User/UserActions";
+import { Signup } from "./Redux/User/UserServices";
 import { connect } from "react-redux";
 import { IAuthDetails } from "./Interfaces";
 import { AppState } from "./Redux/rootReducer";
@@ -266,9 +266,9 @@ interface DispatchProps {
   Signup: (user: INewUser) => void;
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
+  history: ownProps.history,
   isLoggedIn: state.user.isLogedIn,
 });
-interface IProps extends DispatchProps, IAuthDetails, RouteComponentProps {}
-
+type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
 export default connect(mapStateToProps, { Signup })(SignUpForm);

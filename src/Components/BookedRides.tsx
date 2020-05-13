@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Row, Col } from "react-grid-system";
-import { IMyBooking, IMyBookings } from "./Interfaces";
+import { Types } from "./Interfaces";
 import { MdLocationOn } from "react-icons/md";
 import { AppState } from "./Redux/rootReducer";
 import { getBookings } from "./Redux/Ride/RideServices";
@@ -14,7 +14,7 @@ class BookedRides extends React.Component<IProps, {}> {
     var url = "data:image/png;base64,";
     return (
       <>
-        {this.props.bookings.map((ride: IMyBooking) => (
+        {this.props.bookings.map((ride: Types.IMyBooking) => (
           <div className="shadowBox">
             <Row>
               <Col md={8}>

@@ -8,8 +8,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 import MenuList from "@material-ui/core/MenuList";
 import "../App.css";
 import { Link } from "react-router-dom";
-import { withRouter } from "react-router";
-import { RouteComponentProps } from "react-router-dom";
 import { connect } from "react-redux";
 import { Logout } from "./Redux/User/UserServices";
 import { AppState } from "./Redux/rootReducer";

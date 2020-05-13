@@ -11,13 +11,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../StyleSheets/OfferRide.css";
 import "../StyleSheets/Toogle.css";
-import {
-  IOfferRide,
-  IVehicles,
-  IVehicle,
-  IAuthDetails,
-  times,
-} from "./Interfaces";
+import { Types } from "./Interfaces";
 import { connect } from "react-redux";
 import { offerRide } from "./Redux/Ride/RideServices";
 import { getVehicles } from "./Redux/User/UserServices";
@@ -33,7 +27,7 @@ const validationSchema = Yup.object({
   }),
 });
 
-class OfferRide extends React.Component<IProps, IOfferRide> {
+class OfferRide extends React.Component<IProps, Types.IOfferRide> {
   constructor(props: IProps) {
     super(props);
     this.state = {
@@ -77,7 +71,7 @@ class OfferRide extends React.Component<IProps, IOfferRide> {
     this.setState({ [name]: value });
     this.setState({
       totalNoOfSeats: this.props.vehicles.find(
-        (vehicle: IVehicle) => vehicle.number == value
+        (vehicle: Types.IVehicle) => vehicle.number == value
       )?.capacity,
     });
   }
@@ -228,7 +222,7 @@ class OfferRide extends React.Component<IProps, IOfferRide> {
                               role="group"
                               aria-label="Basic example"
                             >
-                              {times.map((item, index) => (
+                              {Types.times.map((item, index) => (
                                 <button
                                   type="button"
                                   key={index}
@@ -311,11 +305,16 @@ class OfferRide extends React.Component<IProps, IOfferRide> {
                               native: true,
                             }}
                           >
-                            {this.props.vehicles.map((option: IVehicle) => (
-                              <option key={option.number} value={option.number}>
-                                {option.number}
-                              </option>
-                            ))}
+                            {this.props.vehicles.map(
+                              (option: Types.IVehicle) => (
+                                <option
+                                  key={option.number}
+                                  value={option.number}
+                                >
+                                  {option.number}
+                                </option>
+                              )
+                            )}
                           </TextField>
                         </Row>
                         <Row>
@@ -362,7 +361,9 @@ class OfferRide extends React.Component<IProps, IOfferRide> {
     );
   }
 }
+
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
+
 const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   history: ownProps.history,
   isLoggedIn: state.user.isLoggedIn,
@@ -371,7 +372,7 @@ const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
 });
 
 interface DispatchProps {
-  offerRide: (ride: IOfferRide) => void;
+  offerRide: (ride: Types.IOfferRide) => void;
   getVehicles: () => void;
 }
 

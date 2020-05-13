@@ -1,11 +1,9 @@
 import React from "react";
 import { Row, Col, Container } from "react-grid-system";
 import { RouteComponentProps } from "react-router-dom";
-import { store } from "./Redux/Store";
 import { connect } from "react-redux";
-import { IAuthDetails } from "./Interfaces";
 import { AppState } from "./Redux/rootReducer";
-import { Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 class Dashboard extends React.Component<IProps, {}> {
   render() {
@@ -18,28 +16,18 @@ class Dashboard extends React.Component<IProps, {}> {
         <div className="center">
           <Container>
             <Row>
-              <div className="name">Hey {store.getState().user.name} !</div>
+              <div className="name">Hey {this.props.userName} !</div>
             </Row>
             <Row>
               <Col md={6}>
-                <div
-                  className="box bg-darkviolet"
-                  onClick={() => {
-                    this.props.history.push("/BookRide");
-                  }}
-                >
-                  Book a Ride
-                </div>
+                <Link className="box bg-darkviolet" to="/BookRide">
+                  Book Ride
+                </Link>
               </Col>
               <Col md={6}>
-                <div
-                  className="box bg-darkorange"
-                  onClick={() => {
-                    this.props.history.push("/OfferRide");
-                  }}
-                >
-                  Offer a Ride
-                </div>
+                <Link className="box bg-darkorange" to="/OfferRide">
+                  Offer Ride
+                </Link>
               </Col>
             </Row>
           </Container>
@@ -51,6 +39,7 @@ class Dashboard extends React.Component<IProps, {}> {
 
 const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   history: ownProps.history,
+  userName: state.user.name,
   isLoggedIn: state.user.isLogedIn,
 });
 type IProps = ReturnType<typeof mapStateToProps>;

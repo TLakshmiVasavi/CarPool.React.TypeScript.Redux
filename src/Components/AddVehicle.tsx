@@ -5,7 +5,7 @@ import "../StyleSheets/Colors.css";
 import { RouteComponentProps, Redirect } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { IVehicle, vehicleType, IAuthDetails } from "./Interfaces";
+import { Types } from "./Interfaces";
 import { addVehicle } from "./Redux/User/UserServices";
 import { connect, DispatchProp } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
@@ -16,7 +16,7 @@ const validationSchema = Yup.object({
   capacity: Yup.number().required("Required"),
 });
 
-class AddVehicle extends Component<IProps, IVehicle> {
+class AddVehicle extends Component<IProps, Types.IVehicle> {
   constructor(props: IProps) {
     super(props);
     this.state = {
@@ -54,7 +54,7 @@ class AddVehicle extends Component<IProps, IVehicle> {
                 native: true,
               }}
             >
-              {vehicleType.map((option) => (
+              {Types.vehicleType.map((option) => (
                 <option key={option.label} value={option.label}>
                   {option.label}
                 </option>
@@ -98,7 +98,7 @@ class AddVehicle extends Component<IProps, IVehicle> {
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
 
 interface DispatchProps {
-  addVehicle: (vehicle: IVehicle) => void;
+  addVehicle: (vehicle: Types.IVehicle) => void;
 }
 
 const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({

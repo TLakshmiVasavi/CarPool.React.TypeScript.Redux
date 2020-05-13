@@ -1,6 +1,5 @@
 import React from "react";
 import { Container, Row, Col } from "react-grid-system";
-import { IAuthDetails } from "./Interfaces";
 import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
 import OfferedRides from "./OfferedRides";

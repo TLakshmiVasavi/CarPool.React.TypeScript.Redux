@@ -8,13 +8,12 @@ import { MdLocationOn } from "react-icons/md";
 import TextField from "@material-ui/core/TextField";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { RouteComponentProps, Redirect } from "react-router-dom";
+import { RouteComponentProps } from "react-router-dom";
 import { connect } from "react-redux";
-import { IBookRide, IAuthDetails } from "./Interfaces";
+import { Types } from "./Interfaces";
 import { bookRide } from "./Redux/Ride/RideServices";
 import { AppState } from "./Redux/rootReducer";
 import AvailableRides from "./AvailableRides";
-import { vehicleType, times } from "./Interfaces";
 
 const validationSchema = Yup.object({
   from: Yup.string().required("Required"),
@@ -22,7 +21,7 @@ const validationSchema = Yup.object({
   time: Yup.string().required("Required"),
 });
 
-class BookRide extends React.Component<IProps, IBookRide> {
+class BookRide extends React.Component<IProps, Types.IBookRide> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -124,7 +123,7 @@ class BookRide extends React.Component<IProps, IBookRide> {
                               native: true,
                             }}
                           >
-                            {vehicleType.map((option) => (
+                            {Types.vehicleType.map((option) => (
                               <option key={option.label} value={option.label}>
                                 {option.label}
                               </option>
@@ -154,7 +153,7 @@ class BookRide extends React.Component<IProps, IBookRide> {
                             role="group"
                             aria-label="Basic example"
                           >
-                            {times.map((item, index) => (
+                            {Types.times.map((item, index) => (
                               <button
                                 name="time"
                                 type="button"
@@ -197,13 +196,13 @@ class BookRide extends React.Component<IProps, IBookRide> {
 }
 
 interface DispatchProps {
-  bookRide: (ride: IBookRide) => void;
+  bookRide: (ride: Types.IBookRide) => void;
 }
-interface IProps extends IAuthDetails, RouteComponentProps, DispatchProps {
-  isRequested: boolean;
-  isLoaded: boolean;
-}
-const mapStateToProps = (state: AppState) => ({
+
+type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
+
+const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
+  history: ownProps.history,
   isLoggedIn: state.user.isLoggedIn,
   isRequested: state.ride.isRequested,
   isLoaded: state.ride.isLoaded,

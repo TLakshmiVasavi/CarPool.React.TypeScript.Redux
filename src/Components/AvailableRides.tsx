@@ -2,7 +2,7 @@ import React from "react";
 import { Row, Col } from "react-grid-system";
 import { AppState } from "./Redux/rootReducer";
 import { MdLocationOn } from "react-icons/md";
-import { IBookRide, IBookRideResponse, IAvailableRide } from "./Interfaces";
+import { Types } from "./Interfaces";
 import { connect } from "react-redux";
 import { requestRide } from "./Redux/Ride/RideServices";
 import "../App.css";
@@ -59,7 +59,7 @@ class AvailableRides extends React.Component<IProps, IState> {
         {this.props.isLoaded && this.props.availableRides.length == 0 ? (
           <div>Rides Not Available</div>
         ) : (
-          this.props.availableRides.map((item: IAvailableRide) => (
+          this.props.availableRides.map((item: Types.IAvailableRide) => (
             <div className="shadowBox" onClick={this.modalOpen}>
               <Modal
                 show={this.state.modal}
@@ -152,7 +152,7 @@ class AvailableRides extends React.Component<IProps, IState> {
     );
   }
 }
-const mapStateToProps = (state: AppState, ownProps: IBookRide) => ({
+const mapStateToProps = (state: AppState, ownProps: Types.IBookRide) => ({
   request: ownProps,
   isLoaded: state.ride.isLoaded,
   availableRides: state.ride.availableRides,
@@ -161,7 +161,11 @@ const mapStateToProps = (state: AppState, ownProps: IBookRide) => ({
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
 
 interface DispatchProps {
-  requestRide(Request: IBookRide, noOfSeats: number, rideId: number): void;
+  requestRide(
+    Request: Types.IBookRide,
+    noOfSeats: number,
+    rideId: number
+  ): void;
 }
 
 export default connect(mapStateToProps, { requestRide })(AvailableRides);

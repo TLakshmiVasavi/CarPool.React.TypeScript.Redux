@@ -1,10 +1,9 @@
 import React from "react";
-import axios from "axios";
-import { IRideRequests, IRideRequest } from "./Interfaces";
+import { Types } from "./Interfaces";
 import { Row, Col } from "react-grid-system";
 import { MdLocationOn } from "react-icons/md";
 import { AppState } from "./Redux/rootReducer";
-import { connect, DispatchProp } from "react-redux";
+import { connect } from "react-redux";
 import { approveRideRequest } from "./Redux/Ride/RideServices";
 
 class RideRequests extends React.Component<IProps, {}> {
@@ -19,7 +18,7 @@ class RideRequests extends React.Component<IProps, {}> {
     return (
       <React.Fragment>
         {this.props.isLoaded &&
-          this.props.requests.map((item: IRideRequest) => (
+          this.props.requests.map((item: Types.IRideRequest) => (
             <div className="shadowBox">
               <Row>
                 <Col md={4}>

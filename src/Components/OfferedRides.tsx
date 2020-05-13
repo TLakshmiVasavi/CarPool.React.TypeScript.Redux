@@ -1,10 +1,9 @@
 import React from "react";
-import { Container, Row, Col } from "react-grid-system";
-import { IMyOffers, IMyOffer, IRideRequests, IRideRequest } from "./Interfaces";
+import { Row, Col } from "react-grid-system";
+import { Types } from "./Interfaces";
 import { MdLocationOn } from "react-icons/md";
 import { getRequests, getOffers } from "./Redux/Ride/RideServices";
 import { connect } from "react-redux";
-import { RouteComponentProps } from "react-router-dom";
 import Modal from "./PopUp";
 import RideRequests from "./RideRequests";
 import { AppState } from "./Redux/rootReducer";
@@ -40,7 +39,7 @@ class OfferedRides extends React.Component<IProps, IPopUp> {
   render() {
     return (
       <>
-        {this.props.offers.map((ride: IMyOffer) => (
+        {this.props.offers.map((ride: Types.IMyOffer) => (
           <>
             <div
               className="shadowBox"

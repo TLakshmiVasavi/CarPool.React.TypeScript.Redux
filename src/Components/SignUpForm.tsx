@@ -11,10 +11,9 @@ import {
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import IconButton from "@material-ui/core/IconButton";
 import { RouteComponentProps } from "react-router-dom";
-import { INewUser, Gender, hasVehicle, vehicleType } from "./Interfaces";
+import { Types } from "./Interfaces";
 import { Signup } from "./Redux/User/UserServices";
 import { connect } from "react-redux";
-import { IAuthDetails } from "./Interfaces";
 import { AppState } from "./Redux/rootReducer";
 import { Redirect } from "react-router-dom";
 
@@ -37,7 +36,7 @@ const validationSchema = Yup.object({
   age: Yup.string().required("Required").min(0).max(100),
 });
 
-class SignUpForm extends Component<IProps, INewUser> {
+class SignUpForm extends Component<IProps, Types.INewUser> {
   constructor(props: IProps) {
     super(props);
     this.state = {
@@ -149,7 +148,7 @@ class SignUpForm extends Component<IProps, INewUser> {
                   native: true,
                 }}
               >
-                {Gender.map((option) => (
+                {Types.Gender.map((option) => (
                   <option value={option.label}>{option.label}</option>
                 ))}
                 />
@@ -165,7 +164,7 @@ class SignUpForm extends Component<IProps, INewUser> {
                   native: true,
                 }}
               >
-                {hasVehicle.map((option) => (
+                {Types.hasVehicle.map((option) => (
                   <option key={option.label} value={option.data}>
                     {option.label}
                   </option>
@@ -214,7 +213,7 @@ class SignUpForm extends Component<IProps, INewUser> {
                       native: true,
                     }}
                   >
-                    {vehicleType.map((option) => (
+                    {Types.vehicleType.map((option) => (
                       <option key={option.label} value={option.label}>
                         {option.label}
                       </option>
@@ -263,7 +262,7 @@ class SignUpForm extends Component<IProps, INewUser> {
   }
 }
 interface DispatchProps {
-  Signup: (user: INewUser) => void;
+  Signup: (user: Types.INewUser) => void;
 }
 
 const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({

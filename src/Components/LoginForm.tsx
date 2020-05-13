@@ -5,7 +5,7 @@ import "../StyleSheets/Colors.css";
 import { RouteComponentProps } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { IAuthUser, IAuthDetails } from "./Interfaces";
+import { Types } from "./Interfaces";
 import { Login } from "./Redux/User/UserServices";
 import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
@@ -16,7 +16,7 @@ const validationSchema = Yup.object({
   password: Yup.string().required("Required"),
 });
 
-class LoginForm extends Component<IProps, IAuthUser> {
+class LoginForm extends Component<IProps, Types.IAuthUser> {
   constructor(props: IProps) {
     super(props);
     this.state = {
@@ -83,7 +83,7 @@ class LoginForm extends Component<IProps, IAuthUser> {
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
 
 interface DispatchProps {
-  Login: (user: IAuthUser) => void;
+  Login: (user: Types.IAuthUser) => void;
 }
 
 const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({

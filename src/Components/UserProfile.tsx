@@ -1,6 +1,6 @@
 import React from "react";
 import { Row, Col, Container } from "react-grid-system";
-import { IUser } from "./Interfaces";
+import { Types } from "./Interfaces";
 import { connect, DispatchProp } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
 import { UpdateUser } from "./Redux/User/UserServices";
@@ -121,7 +121,7 @@ const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
 });
 
 interface DispatchProps {
-  updateUser: (user: IUser) => void;
+  updateUser: (user: Types.IUser) => void;
 }
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
 export default connect(mapStateToProps, { UpdateUser })(UserProfile);

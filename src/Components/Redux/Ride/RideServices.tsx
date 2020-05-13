@@ -1,12 +1,7 @@
 import { Dispatch } from "redux";
 import axios from "axios";
 import { RideEvents } from "./RideTypes";
-import {
-  IOfferRide,
-  IBookRideResponse,
-  IMyOffer,
-  IBookRide,
-} from "../../Interfaces";
+import { Types } from "../../Interfaces";
 import { AppState } from "../rootReducer";
 import actions from "./RideActions";
 let RideActions = new actions();
@@ -29,7 +24,7 @@ interface OfferRideFailure {
 
 interface BookRideResponse {
   type: typeof RideEvents.BOOK_RIDE_RESPONSE;
-  payload: IBookRideResponse;
+  payload: Types.IBookRideResponse;
 }
 
 interface BookRideFailure {
@@ -47,14 +42,14 @@ interface RequestRideFailure {
 
 interface GetMyOffersSuccess {
   type: typeof RideEvents.GET_MY_OFFERS_SUCCESS;
-  payload: IMyOffer[];
+  payload: Types.IMyOffer[];
 }
 
 interface GetMyOffersFailure {
   type: typeof RideEvents.GET_MY_OFFERS_FAILURE;
   error: string;
 }
-export function offerRide(offerRide: IOfferRide) {
+export function offerRide(offerRide: Types.IOfferRide) {
   return (
     dispatch: Dispatch<OfferRideSuccess | OfferRideFailure>,
     getState: AppState
@@ -72,7 +67,7 @@ export function offerRide(offerRide: IOfferRide) {
   };
 }
 
-export function bookRide(Request: IBookRide) {
+export function bookRide(Request: Types.IBookRide) {
   return (
     dispatch: Dispatch<BookRideResponse | BookRideFailure>,
     getState: any
@@ -92,7 +87,7 @@ export function bookRide(Request: IBookRide) {
 }
 
 export function requestRide(
-  Request: IBookRide,
+  Request: Types.IBookRide,
   noOfSeats: number,
   rideId: number
 ) {

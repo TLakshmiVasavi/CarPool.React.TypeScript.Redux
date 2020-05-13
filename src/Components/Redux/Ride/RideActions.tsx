@@ -1,10 +1,5 @@
 import { RideEvents } from "./RideTypes";
-import {
-  IBookRideResponse,
-  IMyBookings,
-  IMyOffers,
-  IRideRequests,
-} from "../../Interfaces";
+import { Types } from "../../Interfaces";
 import { createAction } from "typesafe-actions";
 
 export default class RideActions {
@@ -27,7 +22,7 @@ export default class RideActions {
   >();
 
   BookRideResponseAction = createAction(RideEvents.BOOK_RIDE_RESPONSE)<
-    IBookRideResponse
+    Types.IBookRideResponse
   >();
 
   BookRideFailureAction = createAction(RideEvents.BOOK_RIDE_FAILURE)<string>();
@@ -42,7 +37,7 @@ export default class RideActions {
   GetMyBookingsAction = createAction(RideEvents.GET_MY_BOOKINGS)<void>();
 
   GetMyBookingsSuccessAction = createAction(RideEvents.GET_MY_BOOKINGS_SUCCESS)<
-    IMyBookings
+    Types.IMyBookings
   >();
 
   GetMyBookingsFailureAction = createAction(RideEvents.GET_MY_BOOKINGS_FAILURE)<
@@ -50,7 +45,7 @@ export default class RideActions {
   >();
 
   GetMyOffersSuccessAction = createAction(RideEvents.GET_MY_OFFERS_SUCCESS)<
-    IMyOffers
+    Types.IMyOffers
   >();
 
   GetMyOffersFailureAction = createAction(RideEvents.GET_MY_OFFERS_FAILURE)<
@@ -59,7 +54,7 @@ export default class RideActions {
 
   GetRideRequestsSuccessAction = createAction(
     RideEvents.GET_RIDE_REQUESTS_SUCCESS
-  )<IRideRequests>();
+  )<Types.IRideRequests>();
 
   GetRideRequestsFailureAction = createAction(
     RideEvents.GET_RIDE_REQUESTS_FAILURE

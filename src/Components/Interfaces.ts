@@ -1,4 +1,4 @@
-export module Types {
+export declare module Types {
   export interface IImage {
     image: any;
   }
@@ -150,44 +150,38 @@ export module Types {
     amount: number;
   }
 
-  export const Gender = [
-    {
-      label: "Female",
-    },
-    {
-      label: "Male",
-    },
-  ];
-
-  export const vehicleType = [
-    {
-      label: " Car ",
-    },
-    {
-      label: " Bike ",
-    },
-  ];
-
-  export const hasVehicle = [
-    {
-      label: "Yes",
-      data: "true",
-    },
-    {
-      label: "No",
-      data: "false",
-    },
-  ];
-
-  export const times = [
-    "5am-9am",
-    "9am-12pm",
-    "12pm-3pm",
-    "3pm-6pm",
-    "6pm-9pm",
-  ];
-
   export interface IAuthDetails {
     isLoggedIn: boolean;
   }
 }
+
+export const Gender = [
+  {
+    label: "Female",
+  },
+  {
+    label: "Male",
+  },
+];
+
+export const vehicleType = [
+  {
+    label: " Car ",
+  },
+  {
+    label: " Bike ",
+  },
+];
+
+export const hasVehicle = [
+  {
+    label: "Yes",
+    data: "true",
+  },
+  {
+    label: "No",
+    data: "false",
+  },
+];
+
+export const times = ["5am-9am", "9am-12pm", "12pm-3pm", "3pm-6pm", "6pm-9pm"];

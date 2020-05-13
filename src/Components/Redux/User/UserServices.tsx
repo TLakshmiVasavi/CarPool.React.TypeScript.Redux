@@ -1,18 +1,11 @@
 import axios from "axios";
 import { UserEvents } from "./UserTypes";
-import {
-  IUser,
-  INewUser,
-  IAuthUser,
-  IVehicles,
-  IVehicle,
-} from "../../Interfaces";
+import { Types } from "../../Interfaces";
 import { Dispatch } from "redux";
 import { AppState } from "../rootReducer";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
-import actions from "./UserActions";
-let userActions = new actions();
+import userActions from "./UserActions";
 
 interface UpdateBalanceSuccess {
   type: typeof UserEvents.UPDATE_BALANCE_SUCCESS;
@@ -24,7 +17,7 @@ interface UpdateBalanceFailure {
 
 interface UserLoginSuccess {
   type: typeof UserEvents.USER_LOGIN_SUCCESS;
-  payload: IUser;
+  payload: Types.IUser;
 }
 
 interface UserLoginFailure {
@@ -34,7 +27,7 @@ interface UserLoginFailure {
 
 interface UserSignupSuccess {
   type: typeof UserEvents.USER_SIGNUP_SUCCESS;
-  payload: IUser;
+  payload: Types.IUser;
 }
 
 interface UserSignupFailure {
@@ -44,7 +37,7 @@ interface UserSignupFailure {
 
 interface UpdateUserSuccess {
   type: typeof UserEvents.UPDATE_USER_SUCCESS;
-  payload: IUser;
+  payload: Types.IUser;
 }
 
 interface UpdateUserFailure {
@@ -58,7 +51,7 @@ interface LogoutUser {
 
 interface GetVehiclesSuccess {
   type: typeof UserEvents.GET_VEHICLES_SUCCESS;
-  payload: IVehicles;
+  payload: Types.IVehicles;
 }
 
 interface GetVehiclesFailure {
@@ -75,9 +68,9 @@ interface AddVehicleFailure {
   error: string;
 }
 
-export function Login(user: IAuthUser) {
+export function Login(user: Types.IAuthUser) {
   return (dispatch: Dispatch<UserLoginSuccess | UserLoginFailure>) => {
-    dispatch(userActions.UserLoginRequestAction());
+    //dispatch(userActions.UserLoginRequestAction());
     axios
       .post("https://localhost:5001/api/UserApi/Login", user)
       .then((response) => {
@@ -120,7 +113,7 @@ export function Logout() {
   };
 }
 
-export function Signup(user: INewUser) {
+export function Signup(user: Types.INewUser) {
   return (dispatch: Dispatch<UserSignupSuccess | UserSignupFailure>) => {
     dispatch(userActions.UserSignupRequestAction(user));
     const data = new FormData();
@@ -134,7 +127,7 @@ export function Signup(user: INewUser) {
   };
 }
 
-export function UpdateUser(user: IUser) {
+export function UpdateUser(user: Types.IUser) {
   return (
     dispatch: Dispatch<UpdateUserSuccess | UpdateUserFailure>,
     getState: AppState
@@ -174,7 +167,7 @@ export function getVehicles() {
   };
 }
 
-export function addVehicle(vehicle: IVehicle) {
+export function addVehicle(vehicle: Types.IVehicle) {
   return (
     dispatch: Dispatch<AddVehicleSuccess | AddVehicleFailure>,
     getState: AppState

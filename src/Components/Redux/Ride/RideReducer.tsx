@@ -1,66 +1,36 @@
 import { RideEvents } from "./RideTypes";
-
-import {
-  IBookRideResponse,
-  IMyBooking,
-  IMyOffer,
-  IMyOffers,
-  IMyBookings,
-  IAvailableRide,
-  IOfferRide,
-  IRideRequest,
-  IBookRide,
-  IRideRequests,
-} from "../../Interfaces";
+import { Types } from "../../Interfaces";
 import { Reducer } from "redux";
 
-interface IBool {
+interface ILoadingState {
   isLoaded: boolean;
-  isRequested: boolean;
-  isRequestsLoaded: boolean;
 }
 
-const intialState: IMyOffers & IBookRideResponse & IMyBookings & IBool = {
-  isRequested: false,
+const intialState: IRideReducerState = {
   isLoaded: false,
-  isRequestsLoaded: false,
   offers: [],
   bookings: [],
   availableRides: [],
 };
+
 interface IRideAction {
   type: string;
   payload: any;
 }
+
 interface IRideReducerState
-  extends IMyOffers,
-    IBookRideResponse,
-    IMyBookings,
-    IBool {}
+  extends Types.IMyOffers,
+    Types.IBookRideResponse,
+    Types.IMyBookings,
+    ILoadingState {}
 
 export const rideReducer: Reducer<any> = (state = intialState, action) => {
   switch (action.type) {
-    case RideEvents.OFFER_RIDE_REQUEST:
-      return {
-        ...state,
-      };
-    case RideEvents.OFFER_RIDE_SUCCESS:
-      return {
-        ...state,
-      };
-    case RideEvents.OFFER_RIDE_FAILURE:
-      return {
-        ...state,
-      };
     case RideEvents.BOOK_RIDE_REQUEST:
       return {
         ...state,
         isLoaded: false,
         isRequested: true,
-      };
-    case RideEvents.BOOK_RIDE_FAILURE:
-      return {
-        ...state,
       };
     case RideEvents.BOOK_RIDE_RESPONSE:
       return {
@@ -68,38 +38,10 @@ export const rideReducer: Reducer<any> = (state = intialState, action) => {
         availableRides: action.payload,
         isLoaded: true,
       };
-    case RideEvents.REQUEST_RIDE:
-      return {
-        ...state,
-      };
-    case RideEvents.REQUEST_RIDE_SUCCESS:
-      return {
-        ...state,
-      };
-    case RideEvents.REQUEST_RIDE_FAILURE:
-      return {
-        ...state,
-      };
-    case RideEvents.GET_MY_BOOKINGS:
-      return {
-        ...state,
-      };
     case RideEvents.GET_MY_BOOKINGS_SUCCESS:
       return {
         ...state,
         bookings: action.payload == undefined ? [] : action.payload,
-      };
-    case RideEvents.GET_MY_BOOKINGS_FAILURE:
-      return {
-        ...state,
-      };
-    case RideEvents.GET_MY_OFFERS:
-      return {
-        ...state,
-      };
-    case RideEvents.GET_MY_OFFERS_FAILURE:
-      return {
-        ...state,
       };
     case RideEvents.GET_MY_OFFERS_SUCCESS:
       return {
@@ -111,16 +53,24 @@ export const rideReducer: Reducer<any> = (state = intialState, action) => {
         ...state,
         isRequestsLoaded: false,
       };
-    case RideEvents.GET_RIDE_REQUESTS_FAILURE:
-      return {
-        ...state,
-      };
     case RideEvents.GET_RIDE_REQUESTS_SUCCESS:
       return {
         ...state,
         requests: action.payload == undefined ? [] : action.payload,
         isRequestsLoaded: true,
       };
+    case RideEvents.OFFER_RIDE_REQUEST:
+    case RideEvents.OFFER_RIDE_SUCCESS:
+    case RideEvents.OFFER_RIDE_FAILURE:
+    case RideEvents.BOOK_RIDE_FAILURE:
+    case RideEvents.REQUEST_RIDE:
+    case RideEvents.REQUEST_RIDE_SUCCESS:
+    case RideEvents.REQUEST_RIDE_FAILURE:
+    case RideEvents.GET_MY_BOOKINGS:
+    case RideEvents.GET_MY_BOOKINGS_FAILURE:
+    case RideEvents.GET_MY_OFFERS:
+    case RideEvents.GET_MY_OFFERS_FAILURE:
+    case RideEvents.GET_RIDE_REQUESTS_FAILURE:
     default:
       return state;
   }

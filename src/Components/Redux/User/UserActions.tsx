@@ -1,17 +1,14 @@
 import React from "react";
 import { UserEvents } from "./UserTypes";
 import { createAction } from "typesafe-actions";
-import {
-  IUser,
-  INewUser,
-  IAuthUser,
-  IVehicles,
-  IVehicle,
-  IImage,
-} from "../../Interfaces";
-export default class userActions {
+import { Types } from "../../Interfaces";
+
+class userActions {
   UpdateBalanceAction = createAction(UserEvents.UPDATE_BALANCE_REQUEST)<void>();
-  UserLoginRequestAction = createAction(UserEvents.USER_LOGIN_REQUEST)<void>();
+  UserLoginRequestAction = createAction(
+    UserEvents.USER_LOGIN_REQUEST,
+    (action) => alert("yes")
+  )<void>();
   UserLoginFailureAction = createAction(UserEvents.USER_LOGIN_FAILURE)<
     string
   >();
@@ -23,25 +20,27 @@ export default class userActions {
   >();
   GetVehiclesAction = createAction(UserEvents.GET_VEHICLES)<void>();
   GetVehiclesSuccessAction = createAction(UserEvents.GET_VEHICLES_SUCCESS)<
-    IVehicles
+    Types.IVehicles
   >();
   GetVehiclesFailureAction = createAction(UserEvents.GET_VEHICLES_FAILURE)<
     string
   >();
-  UserLoginSuccessAction = createAction(UserEvents.USER_LOGIN_SUCCESS)<IUser>();
+  UserLoginSuccessAction = createAction(UserEvents.USER_LOGIN_SUCCESS)<
+    Types.IUser
+  >();
   GetUserImageAction = createAction(UserEvents.GET_USER_IMAGE)<void>();
   GetUserImageSuccessAction = createAction(UserEvents.GET_USER_IMAGE_SUCCESS)<
-    IImage
+    Types.IImage
   >();
   GetUserImageFailureAction = createAction(UserEvents.GET_USER_IMAGE_FAILURE)<
     string
   >();
   LogoutUserAction = createAction(UserEvents.LOGOUT_USER)<void>();
   UserSignupRequestAction = createAction(UserEvents.USER_SIGNUP_REQUEST)<
-    INewUser
+    Types.INewUser
   >();
   UserSignupSuccessAction = createAction(UserEvents.USER_SIGNUP_SUCCESS)<
-    IUser
+    Types.IUser
   >();
   UserSignupFailureAction = createAction(UserEvents.USER_SIGNUP_FAILURE)<
     string
@@ -50,7 +49,7 @@ export default class userActions {
     void
   >();
   UpdateUserSuccessAction = createAction(UserEvents.UPDATE_USER_SUCCESS)<
-    IUser
+    Types.IUser
   >();
   UpdateUserFailureAction = createAction(UserEvents.UPDATE_USER_FAILURE)<
     string
@@ -63,3 +62,5 @@ export default class userActions {
     string
   >();
 }
+let UserActions = new userActions();
+export default UserActions;

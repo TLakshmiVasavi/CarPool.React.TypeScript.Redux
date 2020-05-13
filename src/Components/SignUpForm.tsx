@@ -11,11 +11,10 @@ import {
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import IconButton from "@material-ui/core/IconButton";
 import { RouteComponentProps } from "react-router-dom";
-import { Types } from "./Interfaces";
+import { Types, hasVehicle, vehicleType, Gender } from "./Interfaces";
 import { Signup } from "./Redux/User/UserServices";
 import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
-import { Redirect } from "react-router-dom";
 
 const validationSchema = Yup.object({
   mail: Yup.string().email("Please enter valid mail").required("Required!"),
@@ -148,7 +147,7 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
                   native: true,
                 }}
               >
-                {Types.Gender.map((option) => (
+                {Gender.map((option) => (
                   <option value={option.label}>{option.label}</option>
                 ))}
                 />
@@ -164,7 +163,7 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
                   native: true,
                 }}
               >
-                {Types.hasVehicle.map((option) => (
+                {hasVehicle.map((option) => (
                   <option key={option.label} value={option.data}>
                     {option.label}
                   </option>
@@ -213,7 +212,7 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
                       native: true,
                     }}
                   >
-                    {Types.vehicleType.map((option) => (
+                    {vehicleType.map((option) => (
                       <option key={option.label} value={option.label}>
                         {option.label}
                       </option>

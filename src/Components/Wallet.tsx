@@ -7,7 +7,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { updateBalance } from "./Redux/User/UserServices";
 import { connect } from "react-redux";
-import { IAuthDetails } from "./Interfaces";
+import { Types } from "./Interfaces";
 import { AppState } from "./Redux/rootReducer";
 
 const validationSchema = Yup.object({
@@ -56,7 +56,7 @@ class Wallet extends Component<IProps, IState> {
   }
 }
 
-interface IProps extends DispatchProps, IAuthDetails {}
+type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
 
 const mapStateToProps = (state: AppState) => ({
   isLoggedIn: state.user.isLoggedIN,

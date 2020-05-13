@@ -10,7 +10,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { RouteComponentProps } from "react-router-dom";
 import { connect } from "react-redux";
-import { Types } from "./Interfaces";
+import { Types, vehicleType, times } from "./Interfaces";
 import { bookRide } from "./Redux/Ride/RideServices";
 import { AppState } from "./Redux/rootReducer";
 import AvailableRides from "./AvailableRides";
@@ -123,7 +123,7 @@ class BookRide extends React.Component<IProps, Types.IBookRide> {
                               native: true,
                             }}
                           >
-                            {Types.vehicleType.map((option) => (
+                            {vehicleType.map((option) => (
                               <option key={option.label} value={option.label}>
                                 {option.label}
                               </option>
@@ -153,7 +153,7 @@ class BookRide extends React.Component<IProps, Types.IBookRide> {
                             role="group"
                             aria-label="Basic example"
                           >
-                            {Types.times.map((item, index) => (
+                            {times.map((item, index) => (
                               <button
                                 name="time"
                                 type="button"

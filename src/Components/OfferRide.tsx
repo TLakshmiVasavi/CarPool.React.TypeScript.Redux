@@ -11,7 +11,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../StyleSheets/OfferRide.css";
 import "../StyleSheets/Toogle.css";
-import { Types } from "./Interfaces";
+import { Types, times } from "./Interfaces";
 import { connect } from "react-redux";
 import { offerRide } from "./Redux/Ride/RideServices";
 import { getVehicles } from "./Redux/User/UserServices";
@@ -222,7 +222,7 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
                               role="group"
                               aria-label="Basic example"
                             >
-                              {Types.times.map((item, index) => (
+                              {times.map((item, index) => (
                                 <button
                                   type="button"
                                   key={index}

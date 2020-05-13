@@ -1,16 +1,16 @@
 import { UserEvents } from "./UserTypes";
 import { Reducer } from "redux";
-import { INewUser, IUser, IAuthUser, IVehicles } from "../../Interfaces";
+import { Types } from "../../Interfaces";
 import * as actions from "./UserActions";
 import { ActionType } from "typesafe-actions";
 
 export type TestAction = ActionType<typeof actions>;
 
-interface IBool {
+interface IUserReducerState extends Types.IUser, Types.IVehicles {
   isLoading: boolean;
 }
 
-const user: IUser & IVehicles & IBool = {
+const user: IUserReducerState = {
   isLoading: true,
   name: "",
   mail: "",

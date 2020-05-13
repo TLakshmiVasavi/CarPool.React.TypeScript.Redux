@@ -10,6 +10,7 @@ import { Login } from "./Redux/User/UserServices";
 import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
 import { Redirect } from "react-router-dom";
+import userActions from "./Redux/User/UserActions";
 
 const validationSchema = Yup.object({
   id: Yup.string().required("Required"),
@@ -90,5 +91,6 @@ const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   history: ownProps.history,
   isLoggedIn: state.user.isLogedIn,
 });
-
-export default connect(mapStateToProps, { Login })(LoginForm);
+export default connect(mapStateToProps, {
+  Login: userActions.UserLoginRequestAction,
+})(LoginForm);

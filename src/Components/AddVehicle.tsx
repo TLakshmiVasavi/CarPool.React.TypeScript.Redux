@@ -5,9 +5,9 @@ import "../StyleSheets/Colors.css";
 import { RouteComponentProps, Redirect } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { Types } from "./Interfaces";
+import { Types, vehicleType } from "./Interfaces";
 import { addVehicle } from "./Redux/User/UserServices";
-import { connect, DispatchProp } from "react-redux";
+import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
 
 const validationSchema = Yup.object({
@@ -54,7 +54,7 @@ class AddVehicle extends Component<IProps, Types.IVehicle> {
                 native: true,
               }}
             >
-              {Types.vehicleType.map((option) => (
+              {vehicleType.map((option) => (
                 <option key={option.label} value={option.label}>
                   {option.label}
                 </option>

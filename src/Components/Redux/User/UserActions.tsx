@@ -2,13 +2,20 @@ import React from "react";
 import { UserEvents } from "./UserTypes";
 import { createAction } from "typesafe-actions";
 import { Types } from "../../Interfaces";
+import userServices from "./UserServices";
 
 class userActions {
-  UpdateBalanceAction = createAction(UserEvents.UPDATE_BALANCE_REQUEST)<void>();
-  UserLoginRequestAction = createAction(
-    UserEvents.USER_LOGIN_REQUEST,
-    (action) => alert("yes")
-  )<void>();
+  UpdateBalanceAction = createAction(
+    UserEvents.UPDATE_BALANCE_REQUEST,
+    (data) => userServices.updateBalance(data)
+  )();
+
+  UserLoginRequestAction = createAction(UserEvents.USER_LOGIN_REQUEST, (data) =>
+    userServices.Login(data)
+  )();
+  GetVehiclesAction = createAction(UserEvents.GET_VEHICLES, () =>
+    userServices.getVehicles()
+  )();
   UserLoginFailureAction = createAction(UserEvents.USER_LOGIN_FAILURE)<
     string
   >();
@@ -18,7 +25,7 @@ class userActions {
   UpdateBalanceFailureAction = createAction(UserEvents.UPDATE_BALANCE_FAILURE)<
     string
   >();
-  GetVehiclesAction = createAction(UserEvents.GET_VEHICLES)<void>();
+
   GetVehiclesSuccessAction = createAction(UserEvents.GET_VEHICLES_SUCCESS)<
     Types.IVehicles
   >();
@@ -28,33 +35,42 @@ class userActions {
   UserLoginSuccessAction = createAction(UserEvents.USER_LOGIN_SUCCESS)<
     Types.IUser
   >();
-  GetUserImageAction = createAction(UserEvents.GET_USER_IMAGE)<void>();
+  GetUserImageAction = createAction(UserEvents.GET_USER_IMAGE, () =>
+    userServices.getImage()
+  )();
   GetUserImageSuccessAction = createAction(UserEvents.GET_USER_IMAGE_SUCCESS)<
     Types.IImage
   >();
   GetUserImageFailureAction = createAction(UserEvents.GET_USER_IMAGE_FAILURE)<
     string
   >();
-  LogoutUserAction = createAction(UserEvents.LOGOUT_USER)<void>();
-  UserSignupRequestAction = createAction(UserEvents.USER_SIGNUP_REQUEST)<
-    Types.INewUser
-  >();
+  LogoutUserAction = createAction(UserEvents.LOGOUT_USER, () =>
+    userServices.Logout()
+  )();
+  LogoutUserSuccess = createAction(UserEvents.LOGOUT_USER_SUCCESS)<void>();
+  UserSignupRequestAction = createAction(
+    UserEvents.USER_SIGNUP_REQUEST,
+    (data) => userServices.Signup(data)
+  )();
   UserSignupSuccessAction = createAction(UserEvents.USER_SIGNUP_SUCCESS)<
     Types.IUser
   >();
   UserSignupFailureAction = createAction(UserEvents.USER_SIGNUP_FAILURE)<
     string
   >();
-  UpdateUserRequestAction = createAction(UserEvents.UPDATE_USER_REQUEST)<
-    void
-  >();
+  UpdateUserRequestAction = createAction(
+    UserEvents.UPDATE_USER_REQUEST,
+    (data) => userServices.UpdateUser(data)
+  )();
   UpdateUserSuccessAction = createAction(UserEvents.UPDATE_USER_SUCCESS)<
     Types.IUser
   >();
   UpdateUserFailureAction = createAction(UserEvents.UPDATE_USER_FAILURE)<
     string
   >();
-  AddVehicleAction = createAction(UserEvents.ADD_VEHICLE)<void>();
+  AddVehicleAction = createAction(UserEvents.ADD_VEHICLE, (data) =>
+    userServices.addVehicle(data)
+  )();
   AddVehicleSuccessAction = createAction(UserEvents.ADD_VEHICLE_SUCCESS)<
     void
   >();

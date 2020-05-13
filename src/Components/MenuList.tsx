@@ -9,7 +9,7 @@ import MenuList from "@material-ui/core/MenuList";
 import "../App.css";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { Logout } from "./Redux/User/UserServices";
+import userActions from "./Redux/User/UserActions";
 import { AppState } from "./Redux/rootReducer";
 interface MenuState {
   open: boolean;
@@ -121,4 +121,6 @@ interface DispatchProps {
   Logout: () => void;
 }
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
-export default connect(mapStateToProps, { Logout })(UserMenuList);
+export default connect(mapStateToProps, {
+  Logout: userActions.LogoutUserAction,
+})(UserMenuList);

@@ -11,7 +11,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { RouteComponentProps } from "react-router-dom";
 import { connect } from "react-redux";
 import { Types, vehicleType, times } from "./Interfaces";
-import { bookRide } from "./Redux/Ride/RideServices";
+import rideActions from "./Redux/Ride/RideActions";
 import { AppState } from "./Redux/rootReducer";
 import AvailableRides from "./AvailableRides";
 
@@ -208,4 +208,6 @@ const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   isLoaded: state.ride.isLoaded,
 });
 
-export default connect(mapStateToProps, { bookRide })(BookRide);
+export default connect(mapStateToProps, {
+  bookRide: rideActions.BookRideRequestAction,
+})(BookRide);

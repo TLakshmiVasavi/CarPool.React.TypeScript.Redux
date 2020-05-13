@@ -3,7 +3,7 @@ import { Row, Col, Container } from "react-grid-system";
 import { Types } from "./Interfaces";
 import { connect, DispatchProp } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
-import { UpdateUser } from "./Redux/User/UserServices";
+import userActions from "./Redux/User/UserActions";
 import { Redirect } from "react-router-dom";
 import { RouteComponentProps } from "react-router-dom";
 
@@ -124,4 +124,6 @@ interface DispatchProps {
   updateUser: (user: Types.IUser) => void;
 }
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
-export default connect(mapStateToProps, { UpdateUser })(UserProfile);
+export default connect(mapStateToProps, {
+  UpdateUser: userActions.UpdateUserRequestAction,
+})(UserProfile);

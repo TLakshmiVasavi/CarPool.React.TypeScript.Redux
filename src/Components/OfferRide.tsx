@@ -13,8 +13,8 @@ import "../StyleSheets/OfferRide.css";
 import "../StyleSheets/Toogle.css";
 import { Types, times } from "./Interfaces";
 import { connect } from "react-redux";
-import { offerRide } from "./Redux/Ride/RideServices";
-import { getVehicles } from "./Redux/User/UserServices";
+import rideActions from "./Redux/Ride/RideActions";
+import userActions from "./Redux/User/UserActions";
 import { AppState } from "./Redux/rootReducer";
 import Loader from "react-loader-spinner";
 
@@ -377,8 +377,8 @@ interface DispatchProps {
 }
 
 const mapDispatchToProps = {
-  offerRide,
-  getVehicles,
+  offerRide: rideActions.OfferRideRequestAction,
+  getVehicles: userActions.GetVehiclesAction,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(OfferRide);

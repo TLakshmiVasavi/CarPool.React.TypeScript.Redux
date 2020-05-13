@@ -6,7 +6,6 @@ import { RouteComponentProps } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Types } from "./Interfaces";
-import { Login } from "./Redux/User/UserServices";
 import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
 import { Redirect } from "react-router-dom";

@@ -2,7 +2,7 @@ import React from "react";
 import { Row, Col } from "react-grid-system";
 import { Types } from "./Interfaces";
 import { MdLocationOn } from "react-icons/md";
-import { getRequests, getOffers } from "./Redux/Ride/RideServices";
+import rideActions from "./Redux/Ride/RideActions";
 import { connect } from "react-redux";
 import Modal from "./PopUp";
 import RideRequests from "./RideRequests";
@@ -109,8 +109,8 @@ interface DispatchProps {
   getRequests: (rideId: number) => void;
 }
 const mapDispatchToProps = {
-  getOffers,
-  getRequests,
+  getOffers: rideActions.GetMyOffersAction,
+  getRequests: rideActions.GetRideRequestsAction,
 };
 
 const mapStateToProps = (state: AppState) => ({

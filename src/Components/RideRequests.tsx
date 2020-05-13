@@ -4,7 +4,7 @@ import { Row, Col } from "react-grid-system";
 import { MdLocationOn } from "react-icons/md";
 import { AppState } from "./Redux/rootReducer";
 import { connect } from "react-redux";
-import { approveRideRequest } from "./Redux/Ride/RideServices";
+import rideActions from "./Redux/Ride/RideActions";
 
 class RideRequests extends React.Component<IProps, {}> {
   constructor(props: IProps) {
@@ -89,7 +89,7 @@ interface DispatchProps {
   ) => void;
 }
 const mapDispatchToProps = {
-  approveRideRequest,
+  approveRideRequest: rideActions.ApproveRequestAction,
 };
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
 export default connect(mapStateToProps, mapDispatchToProps)(RideRequests);

@@ -12,9 +12,9 @@ import { Visibility, VisibilityOff } from "@material-ui/icons";
 import IconButton from "@material-ui/core/IconButton";
 import { RouteComponentProps } from "react-router-dom";
 import { Types, hasVehicle, vehicleType, Gender } from "./Interfaces";
-import { Signup } from "./Redux/User/UserServices";
 import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
+import userActions from "./Redux/User/UserActions";
 
 const validationSchema = Yup.object({
   mail: Yup.string().email("Please enter valid mail").required("Required!"),
@@ -269,4 +269,6 @@ const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   isLoggedIn: state.user.isLogedIn,
 });
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
-export default connect(mapStateToProps, { Signup })(SignUpForm);
+export default connect(mapStateToProps, {
+  Signup: userActions.UserSignupRequestAction,
+})(SignUpForm);

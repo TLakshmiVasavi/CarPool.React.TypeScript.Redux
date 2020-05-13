@@ -5,7 +5,7 @@ import "../StyleSheets/Colors.css";
 import { RouteComponentProps } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { updateBalance } from "./Redux/User/UserServices";
+import userActions from "./Redux/User/UserActions";
 import { connect } from "react-redux";
 import { Types } from "./Interfaces";
 import { AppState } from "./Redux/rootReducer";
@@ -66,4 +66,6 @@ interface DispatchProps {
   updateBalance: (amount: number) => void;
 }
 
-export default connect(null, { updateBalance })(Wallet);
+export default connect(null, {
+  updateBalance: userActions.UpdateBalanceAction,
+})(Wallet);

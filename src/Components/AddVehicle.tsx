@@ -6,7 +6,7 @@ import { RouteComponentProps, Redirect } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Types, vehicleType } from "./Interfaces";
-import { addVehicle } from "./Redux/User/UserServices";
+import userActions from "./Redux/User/UserActions";
 import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
 
@@ -106,4 +106,6 @@ const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   isLoggedIn: state.user.isLogedIn,
 });
 
-export default connect(mapStateToProps, { addVehicle })(AddVehicle);
+export default connect(mapStateToProps, {
+  addVehicle: userActions.AddVehicleAction,
+})(AddVehicle);

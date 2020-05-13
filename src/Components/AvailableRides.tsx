@@ -4,7 +4,7 @@ import { AppState } from "./Redux/rootReducer";
 import { MdLocationOn } from "react-icons/md";
 import { Types } from "./Interfaces";
 import { connect } from "react-redux";
-import { requestRide } from "./Redux/Ride/RideServices";
+import rideActions from "./Redux/Ride/RideActions";
 import "../App.css";
 import Modal from "./PopUp";
 
@@ -168,4 +168,6 @@ interface DispatchProps {
   ): void;
 }
 
-export default connect(mapStateToProps, { requestRide })(AvailableRides);
+export default connect(mapStateToProps, {
+  requestRide: rideActions.RequestRideAction,
+})(AvailableRides);

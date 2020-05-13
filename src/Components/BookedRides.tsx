@@ -3,7 +3,7 @@ import { Container, Row, Col } from "react-grid-system";
 import { Types } from "./Interfaces";
 import { MdLocationOn } from "react-icons/md";
 import { AppState } from "./Redux/rootReducer";
-import { getBookings } from "./Redux/Ride/RideServices";
+import rideActions from "./Redux/Ride/RideActions";
 import { connect } from "react-redux";
 
 class BookedRides extends React.Component<IProps, {}> {
@@ -96,12 +96,11 @@ type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
 interface DispatchProps {
   getBookings: () => void;
 }
-const mapDispatchToProps = {
-  getBookings,
-};
 
 const mapStateToProps = (state: AppState) => ({
   bookings: state.ride.bookings,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(BookedRides);
+export default connect(mapStateToProps, {
+  getBookings: rideActions.GetMyBookingsAction,
+})(BookedRides);

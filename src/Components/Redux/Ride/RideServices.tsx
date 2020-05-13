@@ -4,6 +4,7 @@ import { RideEvents } from "./RideTypes";
 import { Types } from "../../Interfaces";
 import { AppState } from "../rootReducer";
 import RideActions from "./RideActions";
+import { store } from "../Store";
 
 interface ApproveRequestSuccess {
   type: typeof RideEvents.APPROVE_REQUEST_SUCCESS;
@@ -49,151 +50,112 @@ interface GetMyOffersFailure {
   error: string;
 }
 class RideService {
-  offerRide = function (offerRide: Types.IOfferRide) {
-    return (
-      dispatch: Dispatch<OfferRideSuccess | OfferRideFailure>,
-      getState: AppState
-    ) => {
-      axios
-        .post(
-          "https://localhost:5001/api/RideApi/OfferRide?userId=" +
-            getState().user.mail,
-          offerRide
-        )
-        .then(() => dispatch(RideActions.OfferRideSuccessAction()))
-        .catch((error) => dispatch(RideActions.OfferRideFailureAction(error)));
-    };
-  };
+  offerRide(offerRide: Types.IOfferRide) {
+    axios
+      .post(
+        "https://localhost:5001/api/RideApi/OfferRide?userId=" +
+          store.getState().user.mail,
+        offerRide
+      )
+      .then(() => store.dispatch(RideActions.OfferRideSuccessAction()))
+      .catch((error) =>
+        store.dispatch(RideActions.OfferRideFailureAction(error))
+      );
+  }
 
-  bookRide = function (Request: Types.IBookRide) {
-    return (
-      dispatch: Dispatch<BookRideResponse | BookRideFailure>,
-      getState: any
-    ) => {
-      axios
-        .post(
-          "https://localhost:5001/api/RideApi/BookRide?userId=" +
-            getState().user.mail,
-          Request
-        )
-        .then((response) => {
-          dispatch(RideActions.BookRideResponseAction(response.data));
-        })
-        .catch((error) => dispatch(RideActions.BookRideFailureAction(error)));
-    };
-  };
+  bookRide(Request: Types.IBookRide) {
+    axios
+      .post(
+        "https://localhost:5001/api/RideApi/BookRide?userId=" +
+          store.getState().user.mail,
+        Request
+      )
+      .then((response) => {
+        store.dispatch(RideActions.BookRideResponseAction(response.data));
+      })
+      .catch((error) =>
+        store.dispatch(RideActions.BookRideFailureAction(error))
+      );
+  }
 
-  requestRide = function (
-    Request: Types.IBookRide,
-    noOfSeats: number,
-    rideId: number
-  ) {
-    return (
-      dispatch: Dispatch<RequestRideSuccess | RequestRideFailure>,
-      getState: any
-    ) => {
-      axios
-        .post(
-          "https://localhost:5001/api/RideApi/RequestRide?userId=" +
-            getState().user.mail +
-            "&rideId=" +
-            rideId +
-            "&noOfSeats" +
-            noOfSeats,
-          Request
-        )
-        .then(() => dispatch(RideActions.RequestRideSuccessAction()))
-        .catch((error) =>
-          dispatch(RideActions.RequestRideFailureAction(error))
-        );
-    };
-  };
+  requestRide(Request: Types.IBookRide, noOfSeats: number, rideId: number) {
+    axios
+      .post(
+        "https://localhost:5001/api/RideApi/RequestRide?userId=" +
+          store.getState().user.mail +
+          "&rideId=" +
+          rideId +
+          "&noOfSeats" +
+          noOfSeats,
+        Request
+      )
+      .then(() => store.dispatch(RideActions.RequestRideSuccessAction()))
+      .catch((error) =>
+        store.dispatch(RideActions.RequestRideFailureAction(error))
+      );
+  }
 
-  getOffers = function () {
-    return (
-      dispatch: Dispatch<GetMyOffersSuccess | GetMyOffersFailure>,
-      getState: any
-    ) => {
-      axios
-        .get(
-          "https://localhost:5001/api/RideApi/GetOfferedRides?userId=" +
-            getState().user.mail
-        )
-        .then((response) =>
-          dispatch(RideActions.GetMyOffersSuccessAction(response.data))
-        )
-        .catch((error) =>
-          dispatch(RideActions.GetMyOffersFailureAction(error))
-        );
-    };
-  };
+  getOffers() {
+    axios
+      .get(
+        "https://localhost:5001/api/RideApi/GetOfferedRides?userId=" +
+          store.getState().user.mail
+      )
+      .then((response) =>
+        store.dispatch(RideActions.GetMyOffersSuccessAction(response.data))
+      )
+      .catch((error) =>
+        store.dispatch(RideActions.GetMyOffersFailureAction(error))
+      );
+  }
 
-  getBookings = function () {
-    return (
-      dispatch: Dispatch<GetMyOffersSuccess | GetMyOffersFailure>,
-      getState: any
-    ) => {
-      axios
-        .get(
-          "https://localhost:5001/api/RideApi/GetBookings?userId=" +
-            getState().user.mail
-        )
-        .then((response) =>
-          dispatch(RideActions.GetMyBookingsSuccessAction(response.data))
-        )
-        .catch((error) =>
-          dispatch(RideActions.GetMyBookingsFailureAction(error))
-        );
-    };
-  };
+  getBookings() {
+    axios
+      .get(
+        "https://localhost:5001/api/RideApi/GetBookings?userId=" +
+          store.getState().user.mail
+      )
+      .then((response) =>
+        store.dispatch(RideActions.GetMyBookingsSuccessAction(response.data))
+      )
+      .catch((error) =>
+        store.dispatch(RideActions.GetMyBookingsFailureAction(error))
+      );
+  }
 
-  approveRideRequest = function (
-    requestId: number,
-    rideId: number,
-    isApprove: boolean
-  ) {
-    return (
-      dispatch: Dispatch<ApproveRequestSuccess | ApproveRequestFailure>,
-      getState: any
-    ) => {
-      axios
-        .post(
-          "https://localhost:5001/api/RideApi/ApproveRequest?rideId=" +
-            rideId +
-            "&requestId" +
-            requestId +
-            "&isApprove" +
-            isApprove +
-            "&providerId" +
-            getState().user.mail
-        )
-        .then(() => dispatch(RideActions.ApproveRequestSuccessAction()))
-        .catch((error) =>
-          dispatch(RideActions.ApproveRequestFailureAction(error))
-        );
-    };
-  };
+  approveRideRequest(requestId: number, rideId: number, isApprove: boolean) {
+    axios
+      .post(
+        "https://localhost:5001/api/RideApi/ApproveRequest?rideId=" +
+          rideId +
+          "&requestId" +
+          requestId +
+          "&isApprove" +
+          isApprove +
+          "&providerId" +
+          store.getState().user.mail
+      )
+      .then(() => store.dispatch(RideActions.ApproveRequestSuccessAction()))
+      .catch((error) =>
+        store.dispatch(RideActions.ApproveRequestFailureAction(error))
+      );
+  }
 
-  getRequests = function (rideId: number) {
-    return (
-      dispatch: Dispatch<ApproveRequestSuccess | ApproveRequestFailure>,
-      getState: any
-    ) => {
-      axios
-        .get(
-          "https://localhost:5001/api/RideApi/GetRequests?userId=" +
-            getState().user.mail +
-            "&rideId=" +
-            rideId
-        )
-        .then((response) =>
-          dispatch(RideActions.GetRideRequestsSuccessAction(response.data))
-        )
-        .catch((error) =>
-          dispatch(RideActions.GetRideRequestsFailureAction(error))
-        );
-    };
-  };
+  getRequests(rideId: number) {
+    axios
+      .get(
+        "https://localhost:5001/api/RideApi/GetRequests?userId=" +
+          store.getState().user.mail +
+          "&rideId=" +
+          rideId
+      )
+      .then((response) =>
+        store.dispatch(RideActions.GetRideRequestsSuccessAction(response.data))
+      )
+      .catch((error) =>
+        store.dispatch(RideActions.GetRideRequestsFailureAction(error))
+      );
+  }
 }
 let rideService = new RideService();
 export default rideService;

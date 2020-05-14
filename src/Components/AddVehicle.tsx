@@ -42,53 +42,55 @@ class AddVehicle extends Component<IProps, Types.IVehicle> {
         }}
       >
         {({ handleSubmit, handleChange, errors }) => (
-          <form onSubmit={handleSubmit}>
-            <TextField
-              margin="normal"
-              className="bg-white rounded-corners"
-              name="type"
-              select
-              label="Vehicle"
-              onChange={handleChange}
-              SelectProps={{
-                native: true,
-              }}
-            >
-              {vehicleType.map((option) => (
-                <option key={option.label} value={option.label}>
-                  {option.label}
-                </option>
-              ))}
-            </TextField>
-            <TextField
-              margin="normal"
-              className="bg-white rounded-corners"
-              type="text"
-              onChange={handleChange}
-              name="model"
-              label={errors.model ?? "model"}
-            />
-            <TextField
-              margin="normal"
-              className="bg-white rounded-corners"
-              type="text"
-              onChange={handleChange}
-              name="number"
-              label={errors.number ?? "number"}
-            />
-            <TextField
-              margin="normal"
-              className="bg-white rounded-corners"
-              type="text"
-              onChange={handleChange}
-              name="capacity"
-              label={errors.capacity ?? "capacity"}
-            />
+          <div className="form-center">
+            <form onSubmit={handleSubmit}>
+              <TextField
+                margin="normal"
+                className="bg-white rounded-corners"
+                name="type"
+                select
+                label="Vehicle"
+                onChange={handleChange}
+                SelectProps={{
+                  native: true,
+                }}
+              >
+                {vehicleType.map((option) => (
+                  <option key={option.label} value={option.label}>
+                    {option.label}
+                  </option>
+                ))}
+              </TextField>
+              <TextField
+                margin="normal"
+                className="bg-white rounded-corners"
+                type="text"
+                onChange={handleChange}
+                name="model"
+                label={errors.model ?? "model"}
+              />
+              <TextField
+                margin="normal"
+                className="bg-white rounded-corners"
+                type="text"
+                onChange={handleChange}
+                name="number"
+                label={errors.number ?? "number"}
+              />
+              <TextField
+                margin="normal"
+                className="bg-white rounded-corners"
+                type="text"
+                onChange={handleChange}
+                name="capacity"
+                label={errors.capacity ?? "capacity"}
+              />
 
-            <button type="submit" className="submit bg-darkorange">
-              Submit
-            </button>
-          </form>
+              <button type="submit" className="submit bg-darkorange">
+                Submit
+              </button>
+            </form>
+          </div>
         )}
       </Formik>
     );

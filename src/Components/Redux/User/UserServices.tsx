@@ -1,88 +1,10 @@
 import axios from "axios";
 import { UserEvents } from "./UserTypes";
 import { Types } from "../../Interfaces";
-import { Dispatch } from "redux";
-import { useSelector, useDispatch } from "react-redux";
-import { AppState } from "../rootReducer";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import userActions from "./UserActions";
 import { store } from "../Store";
-interface UpdateBalanceSuccess {
-  type: typeof UserEvents.UPDATE_BALANCE_SUCCESS;
-}
-
-interface UpdateBalanceFailure {
-  type: typeof UserEvents.UPDATE_BALANCE_FAILURE;
-}
-
-interface UserLoginSuccess {
-  type: typeof UserEvents.USER_LOGIN_SUCCESS;
-  payload: Types.IUser;
-}
-
-interface UserLoginFailure {
-  type: typeof UserEvents.USER_LOGIN_FAILURE;
-  error: string;
-}
-
-interface UserSignupSuccess {
-  type: typeof UserEvents.USER_SIGNUP_SUCCESS;
-  payload: Types.IUser;
-}
-
-interface UserSignupFailure {
-  type: typeof UserEvents.USER_SIGNUP_FAILURE;
-  error: string;
-}
-
-interface UpdateUserSuccess {
-  type: typeof UserEvents.UPDATE_USER_SUCCESS;
-  payload: Types.IUser;
-}
-
-interface UpdateUserFailure {
-  type: typeof UserEvents.UPDATE_USER_FAILURE;
-  error: string;
-}
-
-interface LogoutUser {
-  type: typeof UserEvents.LOGOUT_USER;
-}
-
-interface GetVehiclesSuccess {
-  type: typeof UserEvents.GET_VEHICLES_SUCCESS;
-  payload: Types.IVehicles;
-}
-
-interface GetVehiclesFailure {
-  type: typeof UserEvents.GET_VEHICLES_FAILURE;
-  error: string;
-}
-
-interface AddVehicleSuccess {
-  type: typeof UserEvents.ADD_VEHICLE_SUCCESS;
-}
-
-interface AddVehicleFailure {
-  type: typeof UserEvents.ADD_VEHICLE_FAILURE;
-  error: string;
-}
-
-interface GetImage {
-  type: typeof UserEvents.GET_USER_IMAGE;
-}
-
-interface GetImageSuccess {
-  type: typeof UserEvents.GET_USER_IMAGE_SUCCESS;
-  payload: any;
-}
-
-interface GetImageFailure {
-  type: typeof UserEvents.GET_USER_IMAGE_FAILURE;
-  error: string;
-}
-
 class UserServices {
   Login(user: Types.IAuthUser) {
     axios
@@ -93,19 +15,6 @@ class UserServices {
             userActions.UserLoginSuccessAction(response.data.user)
           );
           store.dispatch(userActions.GetUserImageAction());
-          axios
-            .get(
-              "https://localhost:5001/api/UserApi/GetImage?userId=" +
-                response.data.user.mail
-            )
-            .then((response) =>
-              store.dispatch(
-                userActions.GetUserImageSuccessAction(response.data)
-              )
-            )
-            .catch((error) =>
-              store.dispatch(userActions.GetUserImageFailureAction(error))
-            );
         } else {
           toast.error(response.data.errorMessage);
           store.dispatch(
@@ -142,14 +51,9 @@ class UserServices {
   }
 
   UpdateUser(user: Types.IUser) {
-    const data = new FormData();
-    Object.keys(user).map((i) => data.append(i, user[i]));
+    user.photo = null;
     axios
-      .post(
-        "https://localhost:5001/api/UserApi/Update?userId=" +
-          store.getState().user.mail,
-        data
-      )
+      .post("https://localhost:5001/api/UserApi/UpdateUser", user)
       .then((response) =>
         store.dispatch(userActions.UpdateUserSuccessAction(response.data.user))
       )
@@ -186,12 +90,12 @@ class UserServices {
       );
   }
 
-  updateBalance(amount: number) {
+  updateBalance(data: Types.IWallet) {
     axios
       .post(
         "https://localhost:5001/api/UserApi/UpdateBalance?userId=" +
           store.getState().user.mail,
-        amount
+        data
       )
       .then(() => store.dispatch(userActions.UpdateBalanceSuccessAction()))
       .catch((error) =>
@@ -202,7 +106,7 @@ class UserServices {
   getImage() {
     axios
       .get(
-        "https://localhost:5001/api/UserApi/GetVehicles?userId=" +
+        "https://localhost:5001/api/UserApi/GetImage?userId=" +
           store.getState().user.mail
       )
       .then((response) => {

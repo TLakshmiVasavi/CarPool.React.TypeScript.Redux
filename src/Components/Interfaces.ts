@@ -1,4 +1,8 @@
 export declare module Types {
+  export interface IWallet {
+    [key: string]: number;
+    balance: number;
+  }
   export interface IImage {
     image: any;
   }
@@ -32,7 +36,6 @@ export declare module Types {
     gender: string;
     photo?: any;
     isLoggedIn: boolean;
-    disable: boolean;
   }
 
   export interface IRoute {
@@ -51,7 +54,7 @@ export declare module Types {
     route: IRoute;
     time: string;
     cost: number;
-    vehicleNumber: string;
+    vehicleId: string;
     availableVehicles: IVehicle[];
     firstHalf: boolean;
   }
@@ -64,8 +67,8 @@ export declare module Types {
     to: string;
     time: string;
     cost: number;
-    vehicleNumber: string;
-    rideStatus: string;
+    vehicleId: string;
+    status: string;
   }
 
   export interface IMyBooking {
@@ -144,10 +147,6 @@ export declare module Types {
 
   export interface IRideRequests {
     requests: IRideRequest[];
-  }
-
-  export interface IWallet {
-    amount: number;
   }
 
   export interface IAuthDetails {

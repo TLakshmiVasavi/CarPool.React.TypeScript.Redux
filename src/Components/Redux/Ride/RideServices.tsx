@@ -1,54 +1,9 @@
-import { Dispatch } from "redux";
 import axios from "axios";
 import { RideEvents } from "./RideTypes";
 import { Types } from "../../Interfaces";
-import { AppState } from "../rootReducer";
 import RideActions from "./RideActions";
 import { store } from "../Store";
 
-interface ApproveRequestSuccess {
-  type: typeof RideEvents.APPROVE_REQUEST_SUCCESS;
-}
-
-interface ApproveRequestFailure {
-  type: typeof RideEvents.APPROVE_REQUEST_FAILURE;
-}
-
-interface OfferRideSuccess {
-  type: typeof RideEvents.OFFER_RIDE_SUCCESS;
-}
-
-interface OfferRideFailure {
-  type: typeof RideEvents.OFFER_RIDE_FAILURE;
-}
-
-interface BookRideResponse {
-  type: typeof RideEvents.BOOK_RIDE_RESPONSE;
-  payload: Types.IBookRideResponse;
-}
-
-interface BookRideFailure {
-  type: typeof RideEvents.BOOK_RIDE_FAILURE;
-}
-
-interface RequestRideSuccess {
-  type: typeof RideEvents.REQUEST_RIDE_SUCCESS;
-}
-
-interface RequestRideFailure {
-  type: typeof RideEvents.REQUEST_RIDE_FAILURE;
-  error: string;
-}
-
-interface GetMyOffersSuccess {
-  type: typeof RideEvents.GET_MY_OFFERS_SUCCESS;
-  payload: Types.IMyOffer[];
-}
-
-interface GetMyOffersFailure {
-  type: typeof RideEvents.GET_MY_OFFERS_FAILURE;
-  error: string;
-}
 class RideService {
   offerRide(offerRide: Types.IOfferRide) {
     axios

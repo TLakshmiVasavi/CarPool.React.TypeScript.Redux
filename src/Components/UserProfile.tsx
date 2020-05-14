@@ -6,25 +6,43 @@ import { AppState } from "./Redux/rootReducer";
 import userActions from "./Redux/User/UserActions";
 import { Redirect } from "react-router-dom";
 import { RouteComponentProps } from "react-router-dom";
-
-class UserProfile extends React.Component<IProps, {}> {
+interface IState extends Types.IUser {
+  disable: boolean;
+}
+class UserProfile extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
+    this.state = {
+      disable: true,
+      ...this.props.user,
+    };
     this.enableEdit = this.enableEdit.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.disableEdit = this.disableEdit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
+  handleChange(e: any) {
+    const { name, value } = e.target;
+    this.setState({
+      [name]: value,
+    });
+    this.setState({ [e.target.name]: e.target.value });
+  }
   enableEdit(e: any) {
     this.setState({ disable: false });
   }
 
   handleSubmit(e: any) {
     this.setState({ disable: true });
+    console.log(this.state);
+    this.props.updateUser(this.state);
   }
 
   disableEdit(e: any) {
+    alert("disabled");
     this.setState({ disable: true });
+    this.setState({ ...this.props.user });
   }
 
   render() {
@@ -40,8 +58,10 @@ class UserProfile extends React.Component<IProps, {}> {
             <Col md={6}>
               <input
                 type="text"
-                value={this.props.user.name}
-                disabled={this.props.disable}
+                name="name"
+                value={this.state.name}
+                onChange={this.handleChange}
+                disabled={this.state.disable}
               />
             </Col>
           </Row>
@@ -50,8 +70,10 @@ class UserProfile extends React.Component<IProps, {}> {
             <Col md={6}>
               <input
                 type="number"
-                value={this.props.user.age}
-                disabled={this.props.disable}
+                name="age"
+                value={this.state.age}
+                onChange={this.handleChange}
+                disabled={this.state.disable}
               />
             </Col>
           </Row>
@@ -60,8 +82,10 @@ class UserProfile extends React.Component<IProps, {}> {
             <Col md={6}>
               <input
                 type="text"
-                value={this.props.user.mail}
-                disabled={this.props.disable}
+                name="mail"
+                value={this.state.mail}
+                onChange={this.handleChange}
+                disabled={this.state.disable}
               />
             </Col>
           </Row>
@@ -70,8 +94,10 @@ class UserProfile extends React.Component<IProps, {}> {
             <Col md={6}>
               <input
                 type="text"
-                value={this.props.user.number}
-                disabled={this.props.disable}
+                name="number"
+                value={this.state.number}
+                onChange={this.handleChange}
+                disabled={this.state.disable}
               />
             </Col>
           </Row>
@@ -79,8 +105,10 @@ class UserProfile extends React.Component<IProps, {}> {
             <Col md={6}>Gender</Col>
             <Col md={6}>
               <select
-                value={this.props.user.gender}
-                disabled={this.props.disable}
+                name="gender"
+                defaultValue={this.state.gender}
+                onChange={this.handleChange}
+                disabled={this.state.disable}
               >
                 <option value="Female">Female</option>
                 <option value="Male">Male</option>
@@ -88,7 +116,7 @@ class UserProfile extends React.Component<IProps, {}> {
             </Col>
           </Row>
           <Row>
-            {this.props.disable ? (
+            {this.state.disable ? (
               <button id="edit" value="edit" onClick={this.enableEdit}>
                 edit
               </button>
@@ -116,7 +144,6 @@ class UserProfile extends React.Component<IProps, {}> {
 
 const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   history: ownProps.history,
-  disable: false,
   user: state.user,
 });
 
@@ -125,5 +152,5 @@ interface DispatchProps {
 }
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
 export default connect(mapStateToProps, {
-  UpdateUser: userActions.UpdateUserRequestAction,
+  updateUser: userActions.UpdateUserRequestAction,
 })(UserProfile);

@@ -31,8 +31,8 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      totalNoOfSeats: 3,
-      noOfOfferedSeats: 2,
+      totalNoOfSeats: 0,
+      noOfOfferedSeats: 0,
       isChecked: false,
       startDate: new Date(),
       route: {
@@ -40,11 +40,11 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
         from: "",
         to: "",
       },
-      time: "",
+      time: "5am-9am",
       firstHalf: true,
       cost: 0,
       availableVehicles: [],
-      vehicleNumber: this.props.vehicles[0].number ?? "",
+      vehicleId: this.props.vehicles[0]?.number,
     };
     this.handleChecked = this.handleChecked.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -55,6 +55,7 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
     this.handleChange = this.handleChange.bind(this);
     this.handleVehicleChange = this.handleVehicleChange.bind(this);
     this.handleRouteChange = this.handleRouteChange.bind(this);
+    this.handleDateChange = this.handleDateChange.bind(this);
   }
 
   componentWillMount() {
@@ -64,6 +65,9 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
   handleChange(e: any) {
     const { name, value } = e.target;
     this.setState({ [name]: value });
+  }
+  handleDateChange(e: any) {
+    this.setState({ ["startDate"]: e });
   }
 
   handleVehicleChange(e: any) {
@@ -82,8 +86,14 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
     route[name] = value;
     this.setState({ route });
   }
+  componentWillReceiveProps() {
+    this.setState({ ["vehicleId"]: this.props.vehicles[0]?.number });
+    this.setState({ ["totalNoOfSeats"]: this.props.vehicles[0]?.capacity });
+    this.setState({ ["noOfOfferedSeats"]: this.props.vehicles[0]?.capacity });
+  }
 
   handleSubmit(e: any) {
+    this.setState(["vehicleId"]);
     e.preventDefault();
     this.props.offerRide(this.state);
   }
@@ -134,6 +144,9 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
       if (this.props.vehicles == []) {
         this.props.history.push("/User/AddVehicle");
       }
+      //  else {
+      //   this.setState({ vehicleNumber: this.props.vehicles[0].number ?? "" });
+      // }
     }
     return (
       <div className="OfferRide">
@@ -210,7 +223,7 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
                               name="startDate"
                               id="date-picker-inline"
                               selected={this.state.startDate}
-                              onChange={this.handleChange}
+                              onChange={this.handleDateChange}
                               minDate={new Date()}
                             />
                           </Col>
@@ -253,7 +266,7 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
                       <div id="second">
                         <Row>
                           <Col md={8}>
-                            {this.state.route.stops == [] ? (
+                            {this.state.route.stops.length == 0 ? (
                               <button type="button" onClick={this.addStop}>
                                 Add
                               </button>
@@ -294,53 +307,68 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
                           </Col>
                         </Row>
                         <Row>
-                          <TextField
-                            margin="normal"
-                            className="bg-white"
-                            name="vehicleNumber"
-                            select
-                            label="vehicleNumber"
-                            onChange={this.handleVehicleChange}
-                            SelectProps={{
-                              native: true,
-                            }}
-                          >
-                            {this.props.vehicles.map(
-                              (option: Types.IVehicle) => (
-                                <option
-                                  key={option.number}
-                                  value={option.number}
-                                >
-                                  {option.number}
-                                </option>
-                              )
-                            )}
-                          </TextField>
+                          <Col>
+                            <TextField
+                              margin="normal"
+                              className="bg-white"
+                              name="vehicleId"
+                              select
+                              label="vehicle Number"
+                              onChange={this.handleVehicleChange}
+                              defaultValue={this.props.vehicles[0].number}
+                              SelectProps={{
+                                native: true,
+                              }}
+                            >
+                              {this.props.vehicles.map(
+                                (option: Types.IVehicle) => (
+                                  <option
+                                    key={option.number}
+                                    value={option.number}
+                                  >
+                                    {option.number}
+                                  </option>
+                                )
+                              )}
+                            </TextField>
+                          </Col>
                         </Row>
                         <Row>
-                          <small>Available Seats</small>
-                          <div className="btn-group" role="group">
-                            {Array.from(
-                              { length: this.state.totalNoOfSeats },
-                              (_, k) => (
-                                <button
-                                  key={k}
-                                  name="noOfOfferedSeats"
-                                  type="button"
-                                  className={
-                                    this.state.totalNoOfSeats === k + 1
-                                      ? "selected"
-                                      : "" + "number"
-                                  }
-                                  onClick={this.handleChange}
-                                  value={k + 1}
-                                >
-                                  {k + 1}
-                                </button>
-                              )
-                            )}
-                          </div>
+                          <Col>
+                            <small>Available Seats</small>
+                            <div className="btn-group" role="group">
+                              {Array.from(
+                                { length: this.state.totalNoOfSeats },
+                                (_, k) => (
+                                  <button
+                                    key={k}
+                                    name="noOfOfferedSeats"
+                                    type="button"
+                                    className={
+                                      this.state.noOfOfferedSeats == k + 1
+                                        ? "selected number"
+                                        : "number"
+                                    }
+                                    onClick={this.handleChange}
+                                    value={k + 1}
+                                  >
+                                    {k + 1}
+                                  </button>
+                                )
+                              )}
+                            </div>
+                          </Col>
+                          <Col>
+                            <small>Price</small>
+                            <TextField
+                              label={errors.cost ?? "Cost"}
+                              onChange={this.handleChange}
+                              margin="normal"
+                              name="cost"
+                            />
+                          </Col>
                         </Row>
+
                         <div className="form-group">
                           <button
                             type="submit"

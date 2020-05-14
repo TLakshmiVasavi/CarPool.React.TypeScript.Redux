@@ -103,7 +103,7 @@ interface DispatchProps {
 
 const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   history: ownProps.history,
-  isLoggedIn: state.user.isLogedIn,
+  isLoggedIn: state.user.isLoggedIn,
 });
 
 export default connect(mapStateToProps, {

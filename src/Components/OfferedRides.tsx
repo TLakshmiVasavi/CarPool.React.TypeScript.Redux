@@ -64,7 +64,7 @@ class OfferedRides extends React.Component<IProps, IPopUp> {
               <Row>
                 <Col md={4}>
                   <small>Date</small>
-                  <p>{ride.startDate}</p>
+                  <p>{ride.startDate.toString()}</p>
                 </Col>
                 <Col md={4} />
                 <Col md={4}>
@@ -86,12 +86,12 @@ class OfferedRides extends React.Component<IProps, IPopUp> {
               <Row>
                 <Col md={4}>
                   <small>Ride Status</small>
-                  <p>{ride.rideStatus}</p>
+                  <p>{ride.status}</p>
                 </Col>
                 <Col md={4} />
                 <Col md={4}>
                   <small>Vehicle Number</small>
-                  <p>{ride.vehicleNumber}</p>
+                  <p>{ride.vehicleId}</p>
                 </Col>
               </Row>
             </div>

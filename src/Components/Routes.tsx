@@ -14,12 +14,12 @@ export default function Routes() {
     <Switch>
       <Route path="/(Login|SignUp|)/" component={LoginSignUp} />
       <Route path="/Profile" component={UserProfile} />
-      <Route path="/Dashboard" component={Dashboard} />
       <Route path="/MyRides" component={MyRides} />
       <Route path="/OfferRide" component={OfferRide} />
       <Route path="/BookRide" component={BookRide} />
       <Route path="/AddVehicle" component={AddVehicle} />
       <Route path="/Wallet" component={Wallet} />
+      <Route path="/Dashboard" component={Dashboard} />
     </Switch>
   );
 }

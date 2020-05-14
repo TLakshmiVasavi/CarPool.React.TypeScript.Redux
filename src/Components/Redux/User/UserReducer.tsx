@@ -20,16 +20,18 @@ const user: IUserReducerState = {
   gender: "Female",
   isLoggedIn: false,
   error: "",
-  disable: false,
   vehicles: [],
 };
 
 interface IUserAction {
   type: string;
-  payload: any;
+  payload?: any;
 }
 
-export const userReducer: Reducer<any> = (state = user, action) => {
+export const userReducer: Reducer<IUserReducerState> = (
+  state = user,
+  action: IUserAction
+) => {
   switch (action.type) {
     case UserEvents.USER_LOGIN_SUCCESS:
       return {
@@ -61,7 +63,7 @@ export const userReducer: Reducer<any> = (state = user, action) => {
     case UserEvents.GET_VEHICLES_SUCCESS:
       return {
         ...state,
-        vehicles: action.payload.vehicles,
+        vehicles: action.payload,
         isLoading: false,
       };
     case UserEvents.GET_VEHICLES_FAILURE:

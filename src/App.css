@@ -1,4 +1,28 @@
+form {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+.form-center {
+  display: flex;
+  justify-content: center;
+}
+
+.matches {
+  color: darkviolet;
+  font-weight: bold;
+
+  font-size: xx-large;
+}
+
+.links > *:hover {
+  background-color: rgb(118, 83, 252) !important;
+  font-weight: unset;
+  color: white;
+}
+
 .user-menu {
+  margin-right: 1%;
   display: flex;
   justify-content: flex-end;
 }
@@ -6,12 +30,13 @@
 .user-menu > .name {
   font-size: unset;
   font-weight: bold;
-  padding-top: 0.5%;
+  padding-top: 1%;
 }
 
 .list {
+  z-index: 2;
   left: unset !important;
-  top: 8%;
+  top: 8% !important;
   position: fixed;
 }
 
@@ -29,8 +54,8 @@
   justify-content: center;
   color: white;
   border-radius: 10px;
-  width: 250px;
-  height: 150px;
+  width: 20vw;
+  height: 25vh;
   margin: 10px;
 }
 
@@ -111,7 +136,7 @@ select:disabled {
   background: url(./Images/img3.png) no-repeat bottom fixed;
   position: absolute;
   background-size: 100% 50%;
-  height: 92vh;
+  height: 93.5vh;
   width: 100%;
 }
 

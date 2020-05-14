@@ -41,7 +41,6 @@ class UserMenuList extends React.Component<IProps, MenuState> {
   };
 
   handleLogout = () => {
-    alert("hi");
     this.props.Logout();
     this.setState({ open: false });
   };
@@ -78,6 +77,7 @@ class UserMenuList extends React.Component<IProps, MenuState> {
                   <Paper>
                     <ClickAwayListener onClickAway={this.handleClose}>
                       <MenuList
+                        className="links"
                         autoFocusItem={this.state.open}
                         id="menu-list-grow"
                         onKeyDown={this.handleListKeyDown}

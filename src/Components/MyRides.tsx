@@ -35,6 +35,6 @@ class MyRides extends React.Component<IProps, {}> {
 type IProps = ReturnType<typeof mapStateToProps>;
 const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   history: ownProps.history,
-  isLoggedIn: state.user.isLogedIn,
+  isLoggedIn: state.user.isLoggedIn,
 });
 export default connect(mapStateToProps, null)(MyRides);

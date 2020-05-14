@@ -11,19 +11,19 @@ import { Types } from "./Interfaces";
 import { AppState } from "./Redux/rootReducer";
 
 const validationSchema = Yup.object({
-  amount: Yup.number().required("Required"),
+  balance: Yup.number().required("Required"),
 });
 
-interface IState {
-  amount: number;
-}
-
-class Wallet extends Component<IProps, IState> {
+class Wallet extends Component<IProps, Types.IWallet> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      amount: 0,
+      balance: 0,
     };
+    this.handleChange = this.handleChange.bind(this);
+  }
+  handleChange(e: any) {
+    this.setState({ [e.target.name]: e.target.value });
   }
 
   render() {
@@ -33,7 +33,7 @@ class Wallet extends Component<IProps, IState> {
         initialValues={this.state}
         validationSchema={validationSchema}
         onSubmit={(values) => {
-          this.props.updateBalance(values.amount);
+          this.props.updateBalance(this.state);
         }}
       >
         {({ handleSubmit, handleChange, errors }) => (
@@ -42,8 +42,8 @@ class Wallet extends Component<IProps, IState> {
               margin="normal"
               className="bg-white rounded-corners"
               type="number"
-              onChange={handleChange}
-              name={errors.amount ?? "amount"}
+              onChange={this.handleChange}
+              name={errors.balance ?? "balance"}
               label="Amount"
             />
             <button type="submit" className="submit bg-darkorange">
@@ -59,11 +59,11 @@ class Wallet extends Component<IProps, IState> {
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
 
 const mapStateToProps = (state: AppState) => ({
-  isLoggedIn: state.user.isLoggedIN,
+  isLoggedIn: state.user.isLoggedIn,
 });
 
 interface DispatchProps {
-  updateBalance: (amount: number) => void;
+  updateBalance: (data: Types.IWallet) => void;
 }
 
 export default connect(null, {

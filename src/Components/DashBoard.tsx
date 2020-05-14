@@ -28,6 +28,9 @@ class Dashboard extends React.Component<IProps, {}> {
                 <Link className="box bg-darkorange" to="/OfferRide">
                   Offer Ride
                 </Link>
+                {/* <Link to="/MyRides" />
+                <Link to="/Wallet" />
+                <Link to="/AddVehicle" /> */}
               </Col>
             </Row>
           </Container>
@@ -40,7 +43,7 @@ class Dashboard extends React.Component<IProps, {}> {
 const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   history: ownProps.history,
   userName: state.user.name,
-  isLoggedIn: state.user.isLogedIn,
+  isLoggedIn: state.user.isLoggedIn,
 });
 type IProps = ReturnType<typeof mapStateToProps>;
 export default connect(mapStateToProps, null)(Dashboard);

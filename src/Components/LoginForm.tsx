@@ -10,7 +10,6 @@ import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
 import { Redirect } from "react-router-dom";
 import userActions from "./Redux/User/UserActions";
-//import userServices from "./Redux/User/UserServices";
 const validationSchema = Yup.object({
   id: Yup.string().required("Required"),
   password: Yup.string().required("Required"),
@@ -88,9 +87,8 @@ interface DispatchProps {
 
 const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   history: ownProps.history,
-  isLoggedIn: state.user.isLogedIn,
+  isLoggedIn: state.user.isLoggedIn,
 });
 export default connect(mapStateToProps, {
-  //Login: userServices.Login,
   Login: userActions.UserLoginRequestAction,
 })(LoginForm);

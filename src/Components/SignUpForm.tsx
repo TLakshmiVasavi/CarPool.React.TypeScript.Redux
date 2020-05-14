@@ -266,7 +266,7 @@ interface DispatchProps {
 
 const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   history: ownProps.history,
-  isLoggedIn: state.user.isLogedIn,
+  isLoggedIn: state.user.isLoggedIn,
 });
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
 export default connect(mapStateToProps, {

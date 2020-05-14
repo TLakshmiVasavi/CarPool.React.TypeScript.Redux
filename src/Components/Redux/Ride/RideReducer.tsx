@@ -2,10 +2,6 @@ import { RideEvents } from "./RideTypes";
 import { Types } from "../../Interfaces";
 import { Reducer } from "redux";
 
-interface ILoadingState {
-  isLoaded: boolean;
-}
-
 const intialState: IRideReducerState = {
   isLoaded: false,
   offers: [],
@@ -13,18 +9,21 @@ const intialState: IRideReducerState = {
   availableRides: [],
 };
 
-interface IRideAction {
-  type: string;
-  payload: any;
-}
-
 interface IRideReducerState
   extends Types.IMyOffers,
     Types.IBookRideResponse,
-    Types.IMyBookings,
-    ILoadingState {}
+    Types.IMyBookings {
+  isLoaded: boolean;
+}
+interface IRideAction {
+  type: string;
+  payload?: any;
+}
 
-export const rideReducer: Reducer<any> = (state = intialState, action) => {
+export const rideReducer: Reducer<IRideReducerState> = (
+  state = intialState,
+  action: IRideAction
+) => {
   switch (action.type) {
     case RideEvents.BOOK_RIDE_REQUEST:
       return {
@@ -41,12 +40,12 @@ export const rideReducer: Reducer<any> = (state = intialState, action) => {
     case RideEvents.GET_MY_BOOKINGS_SUCCESS:
       return {
         ...state,
-        bookings: action.payload == undefined ? [] : action.payload,
+        bookings: action.payload ?? [],
       };
     case RideEvents.GET_MY_OFFERS_SUCCESS:
       return {
         ...state,
-        offers: action.payload == undefined ? [] : action.payload,
+        offers: action.payload ?? [],
       };
     case RideEvents.GET_RIDE_REQUESTS:
       return {
@@ -56,7 +55,7 @@ export const rideReducer: Reducer<any> = (state = intialState, action) => {
     case RideEvents.GET_RIDE_REQUESTS_SUCCESS:
       return {
         ...state,
-        requests: action.payload == undefined ? [] : action.payload,
+        requests: action.payload ?? [],
         isRequestsLoaded: true,
       };
     case RideEvents.OFFER_RIDE_REQUEST:

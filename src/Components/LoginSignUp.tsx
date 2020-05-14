@@ -3,9 +3,16 @@ import LoginForm from "./LoginForm";
 import SignUpForm from "./SignUpForm";
 import "../StyleSheets/LoginSignUp.css";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { connect } from "react-redux";
+import { AppState } from "./Redux/rootReducer";
+import { RouteComponentProps } from "react-router-dom";
 
-class LoginSignUp extends Component {
+class LoginSignUp extends Component<IProps, {}> {
   render() {
+    if (this.props.isLoggedIn) {
+      this.props.history.push("/Dashboard");
+    }
+
     return (
       <React.Fragment>
         <div className="leftHalf">
@@ -27,4 +34,10 @@ class LoginSignUp extends Component {
   }
 }
 
-export default LoginSignUp;
+type IProps = ReturnType<typeof mapStateToProps>;
+
+const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
+  history: ownProps.history,
+  isLoggedIn: state.user.isLoggedIn,
+});
+export default connect(mapStateToProps, null)(LoginSignUp);

@@ -37,19 +37,21 @@ class Wallet extends Component<IProps, Types.IWallet> {
         }}
       >
         {({ handleSubmit, handleChange, errors }) => (
-          <form onSubmit={handleSubmit}>
-            <TextField
-              margin="normal"
-              className="bg-white rounded-corners"
-              type="number"
-              onChange={this.handleChange}
-              name={errors.balance ?? "balance"}
-              label="Amount"
-            />
-            <button type="submit" className="submit bg-darkorange">
-              Submit
-            </button>
-          </form>
+          <div className="form-center">
+            <form onSubmit={handleSubmit}>
+              <TextField
+                margin="normal"
+                className="bg-white rounded-corners"
+                type="number"
+                onChange={this.handleChange}
+                name={errors.balance ?? "balance"}
+                label="Amount"
+              />
+              <button type="submit" className="submit bg-darkorange">
+                Submit
+              </button>
+            </form>
+          </div>
         )}
       </Formik>
     );

@@ -8,6 +8,7 @@ import UserProfile from "./UserProfile";
 import OfferRide from "./OfferRide";
 import AddVehicle from "./AddVehicle";
 import Wallet from "./Wallet";
+import { Redirect } from "react-router-dom";
 
 export default function Routes() {
   return (
@@ -20,6 +21,7 @@ export default function Routes() {
       <Route path="/AddVehicle" component={AddVehicle} />
       <Route path="/Wallet" component={Wallet} />
       <Route path="/Dashboard" component={Dashboard} />
+      <Redirect to="/" />
     </Switch>
   );
 }

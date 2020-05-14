@@ -64,7 +64,7 @@ class OfferedRides extends React.Component<IProps, IPopUp> {
               <Row>
                 <Col md={4}>
                   <small>Date</small>
-                  <p>{ride.startDate.toString()}</p>
+                  <p>{ride.startDate.toString().split("T")[0]}</p>
                 </Col>
                 <Col md={4} />
                 <Col md={4}>

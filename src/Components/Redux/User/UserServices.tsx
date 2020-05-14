@@ -45,9 +45,10 @@ class UserServices {
       .then((response) =>
         store.dispatch(userActions.UserSignupSuccessAction(response.data.user))
       )
-      .catch((error) =>
-        store.dispatch(userActions.UserSignupFailureAction(error))
-      );
+      .catch((error) => {
+        toast.error("Server Not Responding");
+        store.dispatch(userActions.UserSignupFailureAction(error));
+      });
   }
 
   UpdateUser(user: Types.IUser) {
@@ -57,9 +58,10 @@ class UserServices {
       .then((response) =>
         store.dispatch(userActions.UpdateUserSuccessAction(response.data.user))
       )
-      .catch((error) =>
-        store.dispatch(userActions.UpdateUserFailureAction(error))
-      );
+      .catch((error) => {
+        toast.error("Server Not Responding");
+        store.dispatch(userActions.UpdateUserFailureAction(error));
+      });
   }
 
   getVehicles() {
@@ -72,9 +74,10 @@ class UserServices {
         console.log(response.data);
         store.dispatch(userActions.GetVehiclesSuccessAction(response.data));
       })
-      .catch((error) =>
-        store.dispatch(userActions.GetVehiclesFailureAction(error))
-      );
+      .catch((error) => {
+        toast.error("Server Not Responding");
+        store.dispatch(userActions.GetVehiclesFailureAction(error));
+      });
   }
 
   addVehicle(vehicle: Types.IVehicle) {
@@ -85,9 +88,10 @@ class UserServices {
         vehicle
       )
       .then(() => store.dispatch(userActions.AddVehicleSuccessAction()))
-      .catch((error) =>
-        store.dispatch(userActions.AddVehicleFailureAction(error))
-      );
+      .catch((error) => {
+        toast.error("Server Not Responding");
+        store.dispatch(userActions.AddVehicleFailureAction(error));
+      });
   }
 
   updateBalance(data: Types.IWallet) {
@@ -98,9 +102,10 @@ class UserServices {
         data
       )
       .then(() => store.dispatch(userActions.UpdateBalanceSuccessAction()))
-      .catch((error) =>
-        store.dispatch(userActions.UpdateBalanceFailureAction(error))
-      );
+      .catch((error) => {
+        toast.error("Server Not Responding");
+        store.dispatch(userActions.UpdateBalanceFailureAction(error));
+      });
   }
 
   getImage() {
@@ -113,6 +118,7 @@ class UserServices {
         store.dispatch(userActions.GetUserImageSuccessAction(response.data));
       })
       .catch((error) => {
+        toast.error("Server Not Responding");
         store.dispatch(userActions.GetUserImageFailureAction(error));
       });
   }

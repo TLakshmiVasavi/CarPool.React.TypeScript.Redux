@@ -119,7 +119,7 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
   addStop() {
     this.setState((state) => {
       const route = { ...state.route };
-      const stops = state.route.stops.concat("stop");
+      const stops = state.route.stops.concat("");
       route["stops"] = stops;
       return {
         route,
@@ -128,6 +128,7 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
   }
 
   handleChecked() {
+    this.props.history.push("/BookRide");
     this.setState({ isChecked: !this.state.isChecked });
   }
 
@@ -211,7 +212,7 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
                               <div className="dot" />
                               <div className="dot" />
                               <div className="dot" />
-                              <MdLocationOn className="bg-darkviolet" />
+                              <MdLocationOn className="darkviolet" />
                             </div>
                           </Col>
                         </Row>

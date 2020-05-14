@@ -82,19 +82,39 @@ class UserMenuList extends React.Component<IProps, MenuState> {
                         id="menu-list-grow"
                         onKeyDown={this.handleListKeyDown}
                       >
-                        <MenuItem component={Link} to="/Profile">
+                        <MenuItem
+                          component={Link}
+                          to="/Profile"
+                          onClick={this.handleClose}
+                        >
                           Profile
                         </MenuItem>
-                        <MenuItem component={Link} to="/MyRides">
+                        <MenuItem
+                          component={Link}
+                          to="/MyRides"
+                          onClick={this.handleClose}
+                        >
                           My Rides
                         </MenuItem>
-                        <MenuItem component={Link} to="/Dashboard">
+                        <MenuItem
+                          component={Link}
+                          to="/Dashboard"
+                          onClick={this.handleClose}
+                        >
                           DashBoard
                         </MenuItem>
-                        <MenuItem component={Link} to="/Wallet">
+                        <MenuItem
+                          component={Link}
+                          to="/Wallet"
+                          onClick={this.handleClose}
+                        >
                           Wallet
                         </MenuItem>
-                        <MenuItem component={Link} to="/AddVehicle">
+                        <MenuItem
+                          component={Link}
+                          to="/AddVehicle"
+                          onClick={this.handleClose}
+                        >
                           AddVehicle
                         </MenuItem>
                         <MenuItem onClick={this.handleLogout}>Logout</MenuItem>

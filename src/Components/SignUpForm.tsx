@@ -16,8 +16,10 @@ import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
 import userActions from "./Redux/User/UserActions";
 
-const validationSchema = Yup.object({
-  mail: Yup.string().email("Please enter valid mail").required("Required!"),
+const validationSchema = Yup.object().shape({
+  mail: Yup.string()
+    .email("Please enter valid mail")
+    .required("Name is Required"),
   password: Yup.string()
     .min(6, "Password has to be longer than 6 characters!")
     .matches(
@@ -25,14 +27,17 @@ const validationSchema = Yup.object({
       "Please Choose Strong Password"
       // "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
     ),
-  name: Yup.string().required("Required"),
+  name: Yup.string().required("Name is Required"),
   number: Yup.string()
-    .required("Required")
+    .required("Number is Required")
     .matches(
       /^[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-/\s.]?[0-9]{4}$/,
       "Please enter valid number"
     ),
-  age: Yup.string().required("Required").min(0).max(100),
+  age: Yup.string()
+    .required("Age is Required")
+    .min(0, "Enter Valid Value")
+    .max(100, "Enter Valid Value"),
 });
 
 class SignUpForm extends Component<IProps, Types.INewUser> {
@@ -80,7 +85,13 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
   }
 
   handleChange(e: any) {
-    const { name, value } = e.target;
+    let { name, value } = e.target;
+    if (value == "true") {
+      value = true;
+    }
+    if (value == "false") {
+      value = false;
+    }
     this.setState({
       [name]: value,
     });
@@ -109,30 +120,30 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
           validationSchema={validationSchema}
           onSubmit={this.handleSubmit}
         >
-          {({ handleSubmit, errors }) => (
+          {({ handleSubmit, handleChange, errors }) => (
             <form onSubmit={handleSubmit}>
               <h1 className="form-heading underline">SignUp</h1>
               <TextField
-                label="Enter Name"
-                onChange={this.handleChange}
+                label={errors.name ?? "Enter Name"}
+                onChange={(this.handleChange, handleChange)}
                 margin="normal"
-                name={errors.name ?? "name"}
+                name="name"
               />
               <TextField
-                label="Enter Mail"
-                onChange={this.handleChange}
+                label={errors.mail ?? "Enter Mail"}
+                onChange={(this.handleChange, handleChange)}
                 margin="normal"
-                name={errors.mail ?? "mail"}
+                name="mail"
               />
               <TextField
                 label={errors.number ?? "Enter Phone number"}
-                onChange={this.handleChange}
+                onChange={(this.handleChange, handleChange)}
                 margin="normal"
                 name="number"
               />
               <TextField
                 label={errors.age ?? "Enter Age"}
-                onChange={this.handleChange}
+                onChange={(this.handleChange, handleChange)}
                 margin="normal"
                 name="age"
                 type="number"
@@ -142,31 +153,13 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
                 select
                 label="Gender"
                 //value={Gender}
-                onChange={this.handleChange}
+                onChange={(this.handleChange, handleChange)}
                 SelectProps={{
                   native: true,
                 }}
               >
                 {Gender.map((option) => (
                   <option value={option.label}>{option.label}</option>
-                ))}
-                />
-              </TextField>
-
-              <TextField
-                margin="normal"
-                select
-                name="hasVehicle"
-                label="Has Car"
-                onChange={this.handleChange}
-                SelectProps={{
-                  native: true,
-                }}
-              >
-                {hasVehicle.map((option) => (
-                  <option key={option.label} value={option.data}>
-                    {option.label}
-                  </option>
                 ))}
                 />
               </TextField>
@@ -178,7 +171,7 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
                 <OutlinedInput
                   name="password"
                   type={this.state.showPassword ? "text" : "password"}
-                  onChange={this.handleChange}
+                  onChange={(this.handleChange, handleChange)}
                   endAdornment={
                     <InputAdornment position="end">
                       <IconButton
@@ -200,49 +193,70 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
               </FormControl>
 
               <input type="file" name="photo" onChange={this.handlefile} />
-              {this.state.hasVehicle && (
-                <>
-                  <TextField
-                    margin="normal"
-                    name="type"
-                    select
-                    label="Vehicle"
-                    onChange={this.handleVehicleChange}
-                    SelectProps={{
-                      native: true,
-                    }}
-                  >
-                    {vehicleType.map((option) => (
-                      <option key={option.label} value={option.label}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </TextField>
-                  <TextField
-                    label={errors.vehicle?.number ?? "Enter Car number"}
-                    onChange={this.handleVehicleChange}
-                    margin="normal"
-                    name="vehicle.number"
-                  />
-                  <TextField
-                    label={errors.vehicle?.model ?? "Enter model"}
-                    onChange={this.handleVehicleChange}
-                    margin="normal"
-                    name="vehicle.model"
-                  />
-                  <TextField
-                    label={errors.vehicle?.capacity ?? "Enter capacity"}
-                    onChange={this.handleVehicleChange}
-                    margin="normal"
-                    name="vehicle.capacity"
-                    type="number"
-                  />
-                </>
-              )}
+              <TextField
+                margin="normal"
+                select
+                name="hasVehicle"
+                label="Has Vehicle"
+                onChange={(this.handleChange, handleChange)}
+                SelectProps={{
+                  native: true,
+                }}
+              >
+                {hasVehicle.map((option) => (
+                  <option key={option.label} value={option.data}>
+                    {option.label}
+                  </option>
+                ))}
+                />
+              </TextField>
+              <>
+                {this.state.hasVehicle && (
+                  <>
+                    <TextField
+                      margin="normal"
+                      name="type"
+                      select
+                      label="Vehicle"
+                      onChange={this.handleVehicleChange}
+                      SelectProps={{
+                        native: true,
+                      }}
+                    >
+                      {vehicleType.map((option) => (
+                        <option key={option.label} value={option.label}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </TextField>
+                    <TextField
+                      label={errors.vehicle?.number ?? "Enter Car number"}
+                      onChange={this.handleVehicleChange}
+                      margin="normal"
+                      name="vehicle.number"
+                    />
+                    <TextField
+                      label={errors.vehicle?.model ?? "Enter model"}
+                      onChange={this.handleVehicleChange}
+                      margin="normal"
+                      name="vehicle.model"
+                    />
+                    {this.state.vehicle.type == "Bike" && (
+                      <TextField
+                        label={errors.vehicle?.capacity ?? "Enter capacity"}
+                        onChange={this.handleVehicleChange}
+                        margin="normal"
+                        name="vehicle.capacity"
+                        type="number"
+                      />
+                    )}
+                  </>
+                )}
+              </>
               <button type="submit" className="submit bg-darkorange">
                 SignUp
               </button>
-              <div className="form-group white">
+              <div className="form-group white link">
                 Not a member yet?
                 <a
                   className="underline white"

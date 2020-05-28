@@ -6,9 +6,11 @@ import { AppState } from "./Redux/rootReducer";
 import userActions from "./Redux/User/UserActions";
 import { Redirect } from "react-router-dom";
 import { RouteComponentProps } from "react-router-dom";
+
 interface IState extends Types.IUser {
   disable: boolean;
 }
+
 class UserProfile extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
@@ -20,6 +22,20 @@ class UserProfile extends React.Component<IProps, IState> {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.disableEdit = this.disableEdit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.updateImage = this.updateImage.bind(this);
+  }
+  updateImage(e: any) {
+    console.log(e.target);
+    console.log(e.target.files[0]);
+    this.setState({
+      [e.target.name]: e.target.files[0],
+    });
+    console.log(this.state.photo);
+    //this.props.updateImage(e.target.files[0]);
+  }
+
+  componentWillMount() {
+    this.props.getVehicles();
   }
 
   handleChange(e: any) {
@@ -122,21 +138,41 @@ class UserProfile extends React.Component<IProps, IState> {
               </button>
             ) : (
               <React.Fragment>
-                <button
-                  type="submit"
-                  id="save"
-                  value="save"
-                  onClick={this.handleSubmit}
-                >
-                  save
-                </button>
-                <button id="cancel" value="cancel" onClick={this.disableEdit}>
-                  cancel
-                </button>
+                <Row>
+                  <small>Update Image</small>
+                  <input type="file" name="photo" onChange={this.updateImage} />
+                </Row>
+                <Row>
+                  <button
+                    type="submit"
+                    id="save"
+                    value="save"
+                    onClick={this.handleSubmit}
+                  >
+                    save
+                  </button>
+                  <button id="cancel" value="cancel" onClick={this.disableEdit}>
+                    cancel
+                  </button>
+                </Row>
               </React.Fragment>
             )}
           </Row>
         </div>
+        {this.props.vehicles.map((item: Types.IVehicle) => (
+          <div className="shadowBox">
+            <Row>
+              <Col md={4}>
+                <small>Number</small>
+                <p>{item.number}</p>
+                <small>Model</small>
+                <p>{item.model}</p>
+                <small>type</small>
+                <p>{item.type}</p>
+              </Col>
+            </Row>
+          </div>
+        ))}
       </Container>
     );
   }
@@ -145,12 +181,17 @@ class UserProfile extends React.Component<IProps, IState> {
 const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   history: ownProps.history,
   user: state.user,
+  vehicles: state.user.vehicles,
 });
 
 interface DispatchProps {
   updateUser: (user: Types.IUser) => void;
+  getVehicles: () => void;
+  updateImage: (Photo: Types.IImage) => void;
 }
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
 export default connect(mapStateToProps, {
   updateUser: userActions.UpdateUserRequestAction,
+  getVehicles: userActions.GetVehiclesAction,
+  updateImage: userActions.UpdateImageAction,
 })(UserProfile);

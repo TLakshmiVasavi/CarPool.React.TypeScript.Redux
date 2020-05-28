@@ -165,10 +165,10 @@ export const Gender = [
 
 export const vehicleType = [
   {
-    label: " Car ",
+    label: "Car",
   },
   {
-    label: " Bike ",
+    label: "Bike",
   },
 ];
 

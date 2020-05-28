@@ -3,10 +3,12 @@ import * as Yup from "yup";
 import React, { Component } from "react";
 import {
   TextField,
+  FilledInput,
   OutlinedInput,
   InputLabel,
   InputAdornment,
   FormControl,
+  Input,
 } from "@material-ui/core";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import IconButton from "@material-ui/core/IconButton";
@@ -15,7 +17,22 @@ import { Types, hasVehicle, vehicleType, Gender } from "./Interfaces";
 import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
 import userActions from "./Redux/User/UserActions";
-
+import "../StyleSheets/Colors.css";
+const styles = {
+  root: {
+    "& $notchedOutline": {
+      borderWidth: 0,
+    },
+    "&:hover $notchedOutline": {
+      borderWidth: 0,
+    },
+    "&$focused $notchedOutline": {
+      borderWidth: 0,
+    },
+  },
+  focused: {},
+  notchedOutline: {},
+};
 const validationSchema = Yup.object().shape({
   mail: Yup.string()
     .email("Please enter valid mail")
@@ -75,6 +92,8 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
   }
 
   handlefile(e: any) {
+    console.log(e.target);
+    console.log(e.target.files[0]);
     this.setState({
       [e.target.name]: e.target.files[0],
     });
@@ -86,6 +105,7 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
 
   handleChange(e: any) {
     let { name, value } = e.target;
+    console.log(e);
     if (value == "true") {
       value = true;
     }
@@ -118,6 +138,8 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
           enableReinitialize
           initialValues={this.state}
           validationSchema={validationSchema}
+          validateOnChange={false}
+          validateOnBlur={false}
           onSubmit={this.handleSubmit}
         >
           {({ handleSubmit, handleChange, errors }) => (
@@ -125,25 +147,25 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
               <h1 className="form-heading underline">SignUp</h1>
               <TextField
                 label={errors.name ?? "Enter Name"}
-                onChange={(this.handleChange, handleChange)}
+                onChange={this.handleChange}
                 margin="normal"
                 name="name"
               />
               <TextField
                 label={errors.mail ?? "Enter Mail"}
-                onChange={(this.handleChange, handleChange)}
+                onChange={this.handleChange}
                 margin="normal"
                 name="mail"
               />
               <TextField
                 label={errors.number ?? "Enter Phone number"}
-                onChange={(this.handleChange, handleChange)}
+                onChange={this.handleChange}
                 margin="normal"
                 name="number"
               />
               <TextField
                 label={errors.age ?? "Enter Age"}
-                onChange={(this.handleChange, handleChange)}
+                onChange={this.handleChange}
                 margin="normal"
                 name="age"
                 type="number"
@@ -153,7 +175,7 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
                 select
                 label="Gender"
                 //value={Gender}
-                onChange={(this.handleChange, handleChange)}
+                onChange={this.handleChange}
                 SelectProps={{
                   native: true,
                 }}
@@ -164,21 +186,21 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
                 />
               </TextField>
 
-              <FormControl margin="normal">
-                <InputLabel htmlFor="filled-adornment-password">
+              <FormControl>
+                <InputLabel htmlFor="standard-adornment-password">
                   Password
                 </InputLabel>
-                <OutlinedInput
+                <Input
+                  className="margin"
                   name="password"
                   type={this.state.showPassword ? "text" : "password"}
-                  onChange={(this.handleChange, handleChange)}
+                  onChange={this.handleChange}
                   endAdornment={
                     <InputAdornment position="end">
                       <IconButton
                         aria-label="toggle password visibility"
                         onClick={this.handleClickShowPassword}
                         onMouseDown={this.handleMouseDownPassword}
-                        edge="end"
                       >
                         {this.state.showPassword ? (
                           <Visibility />
@@ -188,17 +210,15 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
                       </IconButton>
                     </InputAdornment>
                   }
-                  labelWidth={70}
                 />
               </FormControl>
-
               <input type="file" name="photo" onChange={this.handlefile} />
               <TextField
                 margin="normal"
                 select
                 name="hasVehicle"
                 label="Has Vehicle"
-                onChange={(this.handleChange, handleChange)}
+                onChange={this.handleChange}
                 SelectProps={{
                   native: true,
                 }}
@@ -241,7 +261,7 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
                       margin="normal"
                       name="vehicle.model"
                     />
-                    {this.state.vehicle.type == "Bike" && (
+                    {this.state.vehicle.type != "Bike" && (
                       <TextField
                         label={errors.vehicle?.capacity ?? "Enter capacity"}
                         onChange={this.handleVehicleChange}

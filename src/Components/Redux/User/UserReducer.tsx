@@ -8,10 +8,12 @@ export type TestAction = ActionType<typeof actions>;
 
 interface IUserReducerState extends Types.IUser, Types.IVehicles {
   isLoading: boolean;
+  isLoaded: boolean;
 }
 
 const user: IUserReducerState = {
-  isLoading: true,
+  isLoading: false,
+  isLoaded: false,
   name: "",
   mail: "",
   age: 20,
@@ -63,8 +65,9 @@ export const userReducer: Reducer<IUserReducerState> = (
     case UserEvents.GET_VEHICLES_SUCCESS:
       return {
         ...state,
-        vehicles: action.payload,
+        vehicles: action.payload ?? [],
         isLoading: false,
+        isLoaded: true,
       };
     case UserEvents.GET_VEHICLES_FAILURE:
       return {
@@ -91,6 +94,17 @@ export const userReducer: Reducer<IUserReducerState> = (
         ...state,
         error: action.payload,
       };
+    case UserEvents.UPDATE_USER_IMAGE_SUCCESS:
+      return {
+        ...state,
+        photo: action.payload,
+      };
+    case UserEvents.UPDATE_USER_IMAGE_FAILURE:
+      return {
+        ...state,
+        error: action.payload,
+      };
+    case UserEvents.UPDATE_USER_IMAGE:
     case UserEvents.GET_USER_IMAGE:
     case UserEvents.USER_LOGIN_REQUEST:
     case UserEvents.USER_SIGNUP_REQUEST:

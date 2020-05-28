@@ -52,12 +52,14 @@ class UserServices {
   }
 
   UpdateUser(user: Types.IUser) {
-    user.photo = null;
+    const data = new FormData();
+    Object.keys(user).map((i) => data.append(i, user[i]));
     axios
-      .post("https://localhost:5001/api/UserApi/UpdateUser", user)
-      .then((response) =>
-        store.dispatch(userActions.UpdateUserSuccessAction(response.data.user))
-      )
+      .post("https://localhost:5001/api/UserApi/UpdateUser", data)
+      .then((response) => {
+        store.dispatch(userActions.UpdateUserSuccessAction(response.data.user));
+        store.dispatch(userActions.GetUserImageAction());
+      })
       .catch((error) => {
         toast.error("Server Not Responding");
         store.dispatch(userActions.UpdateUserFailureAction(error));
@@ -120,6 +122,24 @@ class UserServices {
       .catch((error) => {
         toast.error("Server Not Responding");
         store.dispatch(userActions.GetUserImageFailureAction(error));
+      });
+  }
+
+  updateImage(Photo: Types.IImage) {
+    console.log(Photo.image);
+    alert("hi");
+    axios
+      .post(
+        "https://localhost:5001/api/UserApi/UpdateImage?userId=" +
+          store.getState().user.mail,
+        Photo.image
+      )
+      .then((response) => {
+        store.dispatch(userActions.UpdateImageSuccessAction(response.data));
+      })
+      .catch((error) => {
+        toast.error("Server Not Responding");
+        store.dispatch(userActions.UpdateImageFailureAction(error));
       });
   }
 }

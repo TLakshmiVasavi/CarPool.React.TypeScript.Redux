@@ -3,6 +3,7 @@ import { UserEvents } from "./UserTypes";
 import { createAction } from "typesafe-actions";
 import { Types } from "../../Interfaces";
 import userServices from "./UserServices";
+import { store } from "../Store";
 
 class userActions {
   UserLoginRequestAction = createAction(UserEvents.USER_LOGIN_REQUEST, (data) =>
@@ -19,13 +20,24 @@ class userActions {
 
   GetVehiclesAction = createAction(UserEvents.GET_VEHICLES, () =>
     userServices.getVehicles()
-  )();
+  )<void>();
 
   GetVehiclesSuccessAction = createAction(UserEvents.GET_VEHICLES_SUCCESS)<
     Types.IVehicles
   >();
 
   GetVehiclesFailureAction = createAction(UserEvents.GET_VEHICLES_FAILURE)<
+    string
+  >();
+
+  UpdateImageAction = createAction(UserEvents.UPDATE_USER_IMAGE, (data) => {
+    console.log(data);
+    userServices.updateImage(data);
+  });
+  UpdateImageSuccessAction = createAction(UserEvents.UPDATE_USER_IMAGE_SUCCESS)<
+    any
+  >();
+  UpdateImageFailureAction = createAction(UserEvents.UPDATE_USER_IMAGE_FAILURE)<
     string
   >();
 
@@ -100,3 +112,16 @@ class userActions {
 }
 let UserActions = new userActions();
 export default UserActions;
+export function getVehicles(
+  isLoading: boolean,
+  isLoaded: boolean
+): Types.IVehicle[] {
+  let x: Types.IVehicle[] = [];
+  if (window.location.pathname == "/OfferRide" && !isLoaded && !isLoading) {
+    store.dispatch(UserActions.GetVehiclesAction());
+  } else if (isLoaded) {
+    x =
+      store.getState().user == undefined ? [] : store.getState().user?.vehicles;
+  }
+  return x;
+}

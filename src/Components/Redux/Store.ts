@@ -8,7 +8,7 @@ import rootReducer from "./rootReducer";
 export default function configureStore() {
   const store = createStore(
     rootReducer,
-    composeWithDevTools(applyMiddleware(logger, thunk))
+    composeWithDevTools(applyMiddleware(thunk, logger))
   );
 
   return store;

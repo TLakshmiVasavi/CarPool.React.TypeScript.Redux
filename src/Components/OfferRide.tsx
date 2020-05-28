@@ -17,6 +17,7 @@ import rideActions from "./Redux/Ride/RideActions";
 import userActions from "./Redux/User/UserActions";
 import { AppState } from "./Redux/rootReducer";
 import Loader from "react-loader-spinner";
+import { getVehicles } from "./Redux/User/UserActions";
 
 const validationSchema = Yup.object({
   noOfOfferedSeats: Yup.string().required("Required"),
@@ -44,7 +45,8 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
       firstHalf: true,
       cost: 0,
       availableVehicles: [],
-      vehicleId: this.props.vehicles[0]?.number,
+      vehicleId: "0",
+      //this.props.vehicles == [] ? "0" : this.props.vehicles[0].number,
     };
     this.handleChecked = this.handleChecked.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -58,9 +60,9 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
     this.handleDateChange = this.handleDateChange.bind(this);
   }
 
-  componentWillMount() {
-    this.props.getVehicles();
-  }
+  // componentWillMount() {
+  //   this.props.getVehicles();
+  // }
 
   handleChange(e: any) {
     const { name, value } = e.target;
@@ -87,9 +89,17 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
     this.setState({ route });
   }
   componentWillReceiveProps() {
-    this.setState({ ["vehicleId"]: this.props.vehicles[0]?.number });
-    this.setState({ ["totalNoOfSeats"]: this.props.vehicles[0]?.capacity });
-    this.setState({ ["noOfOfferedSeats"]: this.props.vehicles[0]?.capacity });
+    if (this.props.isLoaded) {
+      if (this.props.vehicles == []) {
+        this.props.history.push("/User/AddVehicle");
+      } else {
+        this.setState({ ["vehicleId"]: this.props.vehicles[0]?.number });
+        this.setState({ ["totalNoOfSeats"]: this.props.vehicles[0]?.capacity });
+        this.setState({
+          ["noOfOfferedSeats"]: this.props.vehicles[0]?.capacity,
+        });
+      }
+    }
   }
 
   handleSubmit(e: any) {
@@ -145,9 +155,6 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
       if (this.props.vehicles == []) {
         this.props.history.push("/User/AddVehicle");
       }
-      //  else {
-      //   this.setState({ vehicleNumber: this.props.vehicles[0].number ?? "" });
-      // }
     }
     return (
       <div className="OfferRide">
@@ -362,7 +369,7 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
                           <Col>
                             <small>Price</small>
                             <TextField
-                              label={errors.cost ?? "Cost"}
+                              label=""
                               onChange={this.handleChange}
                               margin="normal"
                               name="cost"
@@ -397,17 +404,22 @@ const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   history: ownProps.history,
   isLoggedIn: state.user.isLoggedIn,
   isLoading: state.user.isLoading,
-  vehicles: state.user.vehicles,
+  isLoaded: state.user.isLoaded,
+  // vehicles: state.user.isLoaded
+  //   ? state.user.vehicles
+  vehicles: getVehicles(state.user.isLoading, state.user.isLoaded),
+  // executeQueryAndExtractData()
+  //await getVehicles(),
 });
 
 interface DispatchProps {
   offerRide: (ride: Types.IOfferRide) => void;
-  getVehicles: () => void;
+  //getVehicles: () => void;
 }
 
 const mapDispatchToProps = {
   offerRide: rideActions.OfferRideRequestAction,
-  getVehicles: userActions.GetVehiclesAction,
+  //getVehicles: userActions.GetVehiclesAction,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(OfferRide);

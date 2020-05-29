@@ -9,8 +9,11 @@ import MenuList from "@material-ui/core/MenuList";
 import "../App.css";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import userActions from "./Redux/User/UserActions";
 import { AppState } from "./Redux/rootReducer";
+import { container } from "../inversify.config";
+import userAction from "./Redux/User/UserActions";
+import { TYPES } from "./Types";
+let userActions = container.get<userAction>(TYPES.UserActions);
 interface MenuState {
   open: boolean;
 }

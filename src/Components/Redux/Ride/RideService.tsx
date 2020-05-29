@@ -1,12 +1,22 @@
 import axios from "axios";
 import { RideEvents } from "./RideTypes";
 import { Types } from "../../Interfaces";
-import RideActions from "./RideActions";
+//import RideActions from "./RideActions";
 import { store } from "../Store";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
+import "reflect-metadata";
+import { injectable, inject } from "inversify";
+//import { injectable } from "../../../../node_modules/inversify";
+import { container } from "../../../inversify.config";
+//import { TYPES } from "./Types";
+import { TYPES } from "../../Types";
+import RideActions from "./RideActions";
+//let RideActions = container.get<rideAction>(TYPES.RideActions);
 
-class RideService {
+@injectable()
+class RideService implements Types.IRideService {
+  @inject(TYPES.RideActions) private RideActions: RideActions;
   offerRide(offerRide: Types.IOfferRide) {
     axios
       .post(
@@ -14,10 +24,10 @@ class RideService {
           store.getState().user.mail,
         offerRide
       )
-      .then(() => store.dispatch(RideActions.OfferRideSuccessAction()))
+      .then(() => store.dispatch(this.RideActions.OfferRideSuccessAction()))
       .catch((error) => {
         toast.error("Server Not Responding");
-        store.dispatch(RideActions.OfferRideFailureAction(error));
+        store.dispatch(this.RideActions.OfferRideFailureAction(error));
       });
   }
 
@@ -29,11 +39,11 @@ class RideService {
         Request
       )
       .then((response) => {
-        store.dispatch(RideActions.BookRideResponseAction(response.data));
+        store.dispatch(this.RideActions.BookRideResponseAction(response.data));
       })
       .catch((error) => {
         toast.error("Server Not Responding");
-        store.dispatch(RideActions.BookRideFailureAction(error));
+        store.dispatch(this.RideActions.BookRideFailureAction(error));
       });
   }
 
@@ -48,10 +58,10 @@ class RideService {
           noOfSeats,
         Request
       )
-      .then(() => store.dispatch(RideActions.RequestRideSuccessAction()))
+      .then(() => store.dispatch(this.RideActions.RequestRideSuccessAction()))
       .catch((error) => {
         toast.error("Server Not Responding");
-        store.dispatch(RideActions.RequestRideFailureAction(error));
+        store.dispatch(this.RideActions.RequestRideFailureAction(error));
       });
   }
 
@@ -62,11 +72,11 @@ class RideService {
           store.getState().user.mail
       )
       .then((response) =>
-        store.dispatch(RideActions.GetMyOffersSuccessAction(response.data))
+        store.dispatch(this.RideActions.GetMyOffersSuccessAction(response.data))
       )
       .catch((error) => {
         toast.error("Server Not Responding");
-        store.dispatch(RideActions.GetMyOffersFailureAction(error));
+        store.dispatch(this.RideActions.GetMyOffersFailureAction(error));
       });
   }
 
@@ -77,11 +87,13 @@ class RideService {
           store.getState().user.mail
       )
       .then((response) =>
-        store.dispatch(RideActions.GetMyBookingsSuccessAction(response.data))
+        store.dispatch(
+          this.RideActions.GetMyBookingsSuccessAction(response.data)
+        )
       )
       .catch((error) => {
         toast.error("Server Not Responding");
-        store.dispatch(RideActions.GetMyBookingsFailureAction(error));
+        store.dispatch(this.RideActions.GetMyBookingsFailureAction(error));
       });
   }
 
@@ -97,10 +109,12 @@ class RideService {
           "&providerId" +
           store.getState().user.mail
       )
-      .then(() => store.dispatch(RideActions.ApproveRequestSuccessAction()))
+      .then(() =>
+        store.dispatch(this.RideActions.ApproveRequestSuccessAction())
+      )
       .catch((error) => {
         toast.error("Server Not Responding");
-        store.dispatch(RideActions.ApproveRequestFailureAction(error));
+        store.dispatch(this.RideActions.ApproveRequestFailureAction(error));
       });
   }
 
@@ -113,13 +127,17 @@ class RideService {
           rideId
       )
       .then((response) =>
-        store.dispatch(RideActions.GetRideRequestsSuccessAction(response.data))
+        store.dispatch(
+          this.RideActions.GetRideRequestsSuccessAction(response.data)
+        )
       )
       .catch((error) => {
         toast.error("Server Not Responding");
-        store.dispatch(RideActions.GetRideRequestsFailureAction(error));
+        store.dispatch(this.RideActions.GetRideRequestsFailureAction(error));
       });
   }
 }
-let rideService = new RideService();
-export default rideService;
+// let rideService = new RideService();
+// export default rideService;
+
+export { RideService };

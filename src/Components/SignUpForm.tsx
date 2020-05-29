@@ -16,23 +16,12 @@ import { RouteComponentProps } from "react-router-dom";
 import { Types, hasVehicle, vehicleType, Gender } from "./Interfaces";
 import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
-import userActions from "./Redux/User/UserActions";
 import "../StyleSheets/Colors.css";
-const styles = {
-  root: {
-    "& $notchedOutline": {
-      borderWidth: 0,
-    },
-    "&:hover $notchedOutline": {
-      borderWidth: 0,
-    },
-    "&$focused $notchedOutline": {
-      borderWidth: 0,
-    },
-  },
-  focused: {},
-  notchedOutline: {},
-};
+import { container } from "../inversify.config";
+import userAction from "./Redux/User/UserActions";
+import { TYPES } from "./Types";
+let userActions = container.get<userAction>(TYPES.UserActions);
+
 const validationSchema = Yup.object().shape({
   mail: Yup.string()
     .email("Please enter valid mail")

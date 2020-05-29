@@ -152,6 +152,41 @@ export declare module Types {
   export interface IAuthDetails {
     isLoggedIn: boolean;
   }
+
+  export interface IRideService {
+    offerRide(offerRide: Types.IOfferRide): void;
+    bookRide(Request: Types.IBookRide): void;
+    requestRide(
+      Request: Types.IBookRide,
+      noOfSeats: number,
+      rideId: number
+    ): void;
+    getOffers(): void;
+    getBookings(): void;
+    approveRideRequest(
+      requestId: number,
+      rideId: number,
+      isApprove: boolean
+    ): void;
+    getRequests(rideId: number): void;
+  }
+  export interface IUserService {
+    Login(user: Types.IAuthUser): void;
+    Logout(): void;
+    Signup(user: Types.INewUser): void;
+    UpdateUser(user: Types.IUser): void;
+    getVehicles(): void;
+    addVehicle(vehicle: Types.IVehicle): void;
+    updateBalance(data: Types.IWallet): void;
+    getImage(): void;
+    updateImage(Photo: Types.IImage): void;
+  }
+  export interface IUserAction {
+    UserLoginRequestAction(data: any): any;
+  }
+  export interface IRideAction {
+    RequestRideFailureAction(data: any): any;
+  }
 }
 
 export const Gender = [

@@ -5,11 +5,13 @@ import "../StyleSheets/Colors.css";
 import { RouteComponentProps } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import userActions from "./Redux/User/UserActions";
 import { connect } from "react-redux";
 import { Types } from "./Interfaces";
 import { AppState } from "./Redux/rootReducer";
-
+import { container } from "../inversify.config";
+import userAction from "./Redux/User/UserActions";
+import { TYPES } from "./Types";
+let userActions = container.get<userAction>(TYPES.UserActions);
 const validationSchema = Yup.object({
   balance: Yup.number().required("Required"),
 });

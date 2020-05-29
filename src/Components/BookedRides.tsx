@@ -3,9 +3,11 @@ import { Container, Row, Col } from "react-grid-system";
 import { Types } from "./Interfaces";
 import { MdLocationOn } from "react-icons/md";
 import { AppState } from "./Redux/rootReducer";
-import rideActions from "./Redux/Ride/RideActions";
 import { connect } from "react-redux";
-
+import { container } from "../inversify.config";
+import rideAction from "./Redux/Ride/RideActions";
+import { TYPES } from "./Types";
+let rideActions = container.get<rideAction>(TYPES.RideActions);
 class BookedRides extends React.Component<IProps, {}> {
   componentWillMount() {
     this.props.getBookings();

@@ -9,19 +9,23 @@ import { Provider } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import createHistory from "history/createBrowserHistory";
 import "react-toastify/dist/ReactToastify.css";
+import { Provider as IProvider } from "inversify-react";
+import { container } from "./inversify.config";
 
 class App extends React.Component {
   render() {
     return (
-      <div className="App">
-        <Provider store={store}>
-          <Router>
-            <ToastContainer hideProgressBar={true} />
-            <MenuListComposition />
-            <Routes />
-          </Router>
-        </Provider>
-      </div>
+      <IProvider container={container}>
+        <div className="App">
+          <Provider store={store}>
+            <Router>
+              <ToastContainer hideProgressBar={true} />
+              <MenuListComposition />
+              <Routes />
+            </Router>
+          </Provider>
+        </div>
+      </IProvider>
     );
   }
 }

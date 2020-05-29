@@ -6,10 +6,12 @@ import { RouteComponentProps, Redirect } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Types, vehicleType } from "./Interfaces";
-import userActions from "./Redux/User/UserActions";
 import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
-
+import { container } from "../inversify.config";
+import userAction from "./Redux/User/UserActions";
+import { TYPES } from "./Types";
+let userActions = container.get<userAction>(TYPES.UserActions);
 const validationSchema = Yup.object({
   model: Yup.string().required("Required"),
   number: Yup.string().required("Required"),

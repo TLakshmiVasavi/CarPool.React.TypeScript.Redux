@@ -3,28 +3,35 @@ import { UserEvents } from "./UserTypes";
 import { Types } from "../../Interfaces";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
-import userActions from "./UserActions";
 import { store } from "../Store";
-class UserServices {
+import "reflect-metadata";
+import { injectable, inject } from "inversify";
+import { container } from "../../../inversify.config";
+import { TYPES } from "../../Types";
+import UserActions from "./UserActions";
+
+@injectable()
+class UserService implements Types.IUserService {
+  @inject(TYPES.UserActions) private userActions: UserActions;
   Login(user: Types.IAuthUser) {
     axios
       .post("https://localhost:5001/api/UserApi/Login", user)
       .then((response) => {
         if (response.data.isSuccess) {
           store.dispatch(
-            userActions.UserLoginSuccessAction(response.data.user)
+            this.userActions.UserLoginSuccessAction(response.data.user)
           );
-          store.dispatch(userActions.GetUserImageAction());
+          store.dispatch(this.userActions.GetUserImageAction());
         } else {
           toast.error(response.data.errorMessage);
           store.dispatch(
-            userActions.UserLoginFailureAction(response.data.errorMessage)
+            this.userActions.UserLoginFailureAction(response.data.errorMessage)
           );
         }
       })
       .catch((error) => {
         toast.error("Server Not Responding");
-        store.dispatch(userActions.UserLoginFailureAction(error));
+        store.dispatch(this.userActions.UserLoginFailureAction(error));
       });
   }
 
@@ -34,7 +41,7 @@ class UserServices {
         "https://localhost:5001/api/UserApi/Logout?userId=" +
           store.getState().user.mail
       )
-      .then(() => store.dispatch(userActions.LogoutUserSuccess()));
+      .then(() => store.dispatch(this.userActions.LogoutUserSuccess()));
   }
 
   Signup(user: Types.INewUser) {
@@ -43,11 +50,13 @@ class UserServices {
     axios
       .post("https://localhost:5001/api/UserApi/SignUp", data)
       .then((response) =>
-        store.dispatch(userActions.UserSignupSuccessAction(response.data.user))
+        store.dispatch(
+          this.userActions.UserSignupSuccessAction(response.data.user)
+        )
       )
       .catch((error) => {
         toast.error("Server Not Responding");
-        store.dispatch(userActions.UserSignupFailureAction(error));
+        store.dispatch(this.userActions.UserSignupFailureAction(error));
       });
   }
 
@@ -57,12 +66,14 @@ class UserServices {
     axios
       .post("https://localhost:5001/api/UserApi/UpdateUser", data)
       .then((response) => {
-        store.dispatch(userActions.UpdateUserSuccessAction(response.data.user));
-        store.dispatch(userActions.GetUserImageAction());
+        store.dispatch(
+          this.userActions.UpdateUserSuccessAction(response.data.user)
+        );
+        store.dispatch(this.userActions.GetUserImageAction());
       })
       .catch((error) => {
         toast.error("Server Not Responding");
-        store.dispatch(userActions.UpdateUserFailureAction(error));
+        store.dispatch(this.userActions.UpdateUserFailureAction(error));
       });
   }
 
@@ -74,11 +85,13 @@ class UserServices {
       )
       .then((response) => {
         console.log(response.data);
-        store.dispatch(userActions.GetVehiclesSuccessAction(response.data));
+        store.dispatch(
+          this.userActions.GetVehiclesSuccessAction(response.data)
+        );
       })
       .catch((error) => {
         toast.error("Server Not Responding");
-        store.dispatch(userActions.GetVehiclesFailureAction(error));
+        store.dispatch(this.userActions.GetVehiclesFailureAction(error));
       });
   }
 
@@ -89,10 +102,10 @@ class UserServices {
           store.getState().user.mail,
         vehicle
       )
-      .then(() => store.dispatch(userActions.AddVehicleSuccessAction()))
+      .then(() => store.dispatch(this.userActions.AddVehicleSuccessAction()))
       .catch((error) => {
         toast.error("Server Not Responding");
-        store.dispatch(userActions.AddVehicleFailureAction(error));
+        store.dispatch(this.userActions.AddVehicleFailureAction(error));
       });
   }
 
@@ -103,10 +116,10 @@ class UserServices {
           store.getState().user.mail,
         data
       )
-      .then(() => store.dispatch(userActions.UpdateBalanceSuccessAction()))
+      .then(() => store.dispatch(this.userActions.UpdateBalanceSuccessAction()))
       .catch((error) => {
         toast.error("Server Not Responding");
-        store.dispatch(userActions.UpdateBalanceFailureAction(error));
+        store.dispatch(this.userActions.UpdateBalanceFailureAction(error));
       });
   }
 
@@ -117,11 +130,13 @@ class UserServices {
           store.getState().user.mail
       )
       .then((response) => {
-        store.dispatch(userActions.GetUserImageSuccessAction(response.data));
+        store.dispatch(
+          this.userActions.GetUserImageSuccessAction(response.data)
+        );
       })
       .catch((error) => {
         toast.error("Server Not Responding");
-        store.dispatch(userActions.GetUserImageFailureAction(error));
+        store.dispatch(this.userActions.GetUserImageFailureAction(error));
       });
   }
 
@@ -135,13 +150,18 @@ class UserServices {
         Photo.image
       )
       .then((response) => {
-        store.dispatch(userActions.UpdateImageSuccessAction(response.data));
+        store.dispatch(
+          this.userActions.UpdateImageSuccessAction(response.data)
+        );
       })
       .catch((error) => {
         toast.error("Server Not Responding");
-        store.dispatch(userActions.UpdateImageFailureAction(error));
+        store.dispatch(this.userActions.UpdateImageFailureAction(error));
       });
   }
 }
-let userServices = new UserServices();
-export default userServices;
+
+export { UserService };
+
+// let userService = new UserService();
+// export default userService;

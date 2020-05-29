@@ -9,7 +9,10 @@ import { Types } from "./Interfaces";
 import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
 import { Redirect } from "react-router-dom";
-import userActions from "./Redux/User/UserActions";
+import { container } from "../inversify.config";
+import userAction from "./Redux/User/UserActions";
+import { TYPES } from "./Types";
+let userActions = container.get<userAction>(TYPES.UserActions);
 
 const validationSchema = Yup.object({
   id: Yup.string().required("Required"),

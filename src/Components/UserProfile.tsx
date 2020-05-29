@@ -3,10 +3,12 @@ import { Row, Col, Container } from "react-grid-system";
 import { Types } from "./Interfaces";
 import { connect, DispatchProp } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
-import userActions from "./Redux/User/UserActions";
 import { Redirect } from "react-router-dom";
 import { RouteComponentProps } from "react-router-dom";
-
+import { container } from "../inversify.config";
+import userAction from "./Redux/User/UserActions";
+import { TYPES } from "./Types";
+let userActions = container.get<userAction>(TYPES.UserActions);
 interface IState extends Types.IUser {
   disable: boolean;
 }

@@ -2,12 +2,30 @@ import React from "react";
 import { UserEvents } from "./UserTypes";
 import { createAction } from "typesafe-actions";
 import { Types } from "../../Interfaces";
-import userServices from "./UserServices";
+import { UserService } from "./UserService";
 import { store } from "../Store";
+import { container } from "../../../inversify.config";
+import "reflect-metadata";
+import { inject, injectable } from "inversify";
+import { TYPES } from "../../Types";
 
-class userActions {
-  UserLoginRequestAction = createAction(UserEvents.USER_LOGIN_REQUEST, (data) =>
-    userServices.Login(data)
+//import userServices from "./UserService";
+//const userServices: UserService = container.get<UserService>(TYPES.UserService);
+//get(UserService);
+// import getDecorators from "inversify-inject-decorators";
+// const { lazyInject } = getDecorators(container);
+
+@injectable()
+class UserActions implements Types.IUserAction {
+  //constructor(@inject(TYPES.UserService) private userService: UserService) {}
+  @inject(TYPES.UserService) private userService: UserService;
+  //let service:any=this.userService;
+  UserLoginRequestAction = createAction(
+    UserEvents.USER_LOGIN_REQUEST,
+    (data) => {
+      console.log(this);
+      this.userService.Login(data);
+    }
   )();
 
   UserLoginFailureAction = createAction(UserEvents.USER_LOGIN_FAILURE)<
@@ -19,7 +37,7 @@ class userActions {
   >();
 
   GetVehiclesAction = createAction(UserEvents.GET_VEHICLES, () =>
-    userServices.getVehicles()
+    this.userService.getVehicles()
   )<void>();
 
   GetVehiclesSuccessAction = createAction(UserEvents.GET_VEHICLES_SUCCESS)<
@@ -32,7 +50,7 @@ class userActions {
 
   UpdateImageAction = createAction(UserEvents.UPDATE_USER_IMAGE, (data) => {
     console.log(data);
-    userServices.updateImage(data);
+    this.userService.updateImage(data);
   });
   UpdateImageSuccessAction = createAction(UserEvents.UPDATE_USER_IMAGE_SUCCESS)<
     any
@@ -43,7 +61,7 @@ class userActions {
 
   UpdateBalanceAction = createAction(
     UserEvents.UPDATE_BALANCE_REQUEST,
-    (data) => userServices.updateBalance(data)
+    (data) => this.userService.updateBalance(data)
   )();
 
   UpdateBalanceSuccessAction = createAction(UserEvents.UPDATE_BALANCE_SUCCESS)<
@@ -55,7 +73,7 @@ class userActions {
   >();
 
   GetUserImageAction = createAction(UserEvents.GET_USER_IMAGE, () =>
-    userServices.getImage()
+    this.userService.getImage()
   )();
 
   GetUserImageSuccessAction = createAction(UserEvents.GET_USER_IMAGE_SUCCESS)<
@@ -67,14 +85,14 @@ class userActions {
   >();
 
   LogoutUserAction = createAction(UserEvents.LOGOUT_USER, () =>
-    userServices.Logout()
+    this.userService.Logout()
   )();
 
   LogoutUserSuccess = createAction(UserEvents.LOGOUT_USER_SUCCESS)<void>();
 
   UserSignupRequestAction = createAction(
     UserEvents.USER_SIGNUP_REQUEST,
-    (data) => userServices.Signup(data)
+    (data) => this.userService.Signup(data)
   )();
 
   UserSignupSuccessAction = createAction(UserEvents.USER_SIGNUP_SUCCESS)<
@@ -87,7 +105,7 @@ class userActions {
 
   UpdateUserRequestAction = createAction(
     UserEvents.UPDATE_USER_REQUEST,
-    (data) => userServices.UpdateUser(data)
+    (data) => this.userService.UpdateUser(data)
   )();
 
   UpdateUserSuccessAction = createAction(UserEvents.UPDATE_USER_SUCCESS)<
@@ -99,7 +117,7 @@ class userActions {
   >();
 
   AddVehicleAction = createAction(UserEvents.ADD_VEHICLE, (data) =>
-    userServices.addVehicle(data)
+    this.userService.addVehicle(data)
   )();
 
   AddVehicleSuccessAction = createAction(UserEvents.ADD_VEHICLE_SUCCESS)<
@@ -110,18 +128,18 @@ class userActions {
     string
   >();
 }
-let UserActions = new userActions();
+//let UserActions = new userActions();
 export default UserActions;
 export function getVehicles(
   isLoading: boolean,
   isLoaded: boolean
 ): Types.IVehicle[] {
   let x: Types.IVehicle[] = [];
-  if (window.location.pathname == "/OfferRide" && !isLoaded && !isLoading) {
-    store.dispatch(UserActions.GetVehiclesAction());
-  } else if (isLoaded) {
-    x =
-      store.getState().user == undefined ? [] : store.getState().user?.vehicles;
-  }
+  // if (window.location.pathname == "/OfferRide" && !isLoaded && !isLoading) {
+  //   store.dispatch(UserActions.GetVehiclesAction());
+  // } else if (isLoaded) {
+  //   x =
+  //     store.getState().user == undefined ? [] : store.getState().user?.vehicles;
+  // }
   return x;
 }

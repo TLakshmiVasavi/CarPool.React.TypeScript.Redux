@@ -4,7 +4,10 @@ import { Row, Col } from "react-grid-system";
 import { MdLocationOn } from "react-icons/md";
 import { AppState } from "./Redux/rootReducer";
 import { connect } from "react-redux";
-import rideActions from "./Redux/Ride/RideActions";
+import { container } from "../inversify.config";
+import rideAction from "./Redux/Ride/RideActions";
+import { TYPES } from "./Types";
+let rideActions = container.get<rideAction>(TYPES.RideActions);
 
 class RideRequests extends React.Component<IProps, {}> {
   constructor(props: IProps) {

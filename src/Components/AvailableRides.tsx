@@ -4,9 +4,13 @@ import { AppState } from "./Redux/rootReducer";
 import { MdLocationOn } from "react-icons/md";
 import { Types } from "./Interfaces";
 import { connect } from "react-redux";
-import rideActions from "./Redux/Ride/RideActions";
+//import rideActions from "./Redux/Ride/RideActions";
 import "../App.css";
 import Modal from "./PopUp";
+import { container } from "../inversify.config";
+import rideAction from "./Redux/Ride/RideActions";
+import { TYPES } from "./Types";
+let rideActions = container.get<rideAction>(TYPES.RideActions);
 
 interface IState {
   NumberOfSeats: number;

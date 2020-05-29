@@ -13,11 +13,14 @@ import "../StyleSheets/OfferRide.css";
 import "../StyleSheets/Toogle.css";
 import { Types, times } from "./Interfaces";
 import { connect } from "react-redux";
-import rideActions from "./Redux/Ride/RideActions";
 import userActions from "./Redux/User/UserActions";
 import { AppState } from "./Redux/rootReducer";
 import Loader from "react-loader-spinner";
 import { getVehicles } from "./Redux/User/UserActions";
+import { container } from "../inversify.config";
+import rideAction from "./Redux/Ride/RideActions";
+import { TYPES } from "./Types";
+let rideActions = container.get<rideAction>(TYPES.RideActions);
 
 const validationSchema = Yup.object({
   noOfOfferedSeats: Yup.string().required("Required"),

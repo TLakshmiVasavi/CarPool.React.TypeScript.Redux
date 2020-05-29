@@ -1,17 +1,25 @@
 import { RideEvents } from "./RideTypes";
 import { Types } from "../../Interfaces";
 import { createAction } from "typesafe-actions";
-import rideService from "./RideServices";
+import { RideService } from "./RideService";
+import { container } from "../../../inversify.config";
+import { TYPES } from "../../Types";
+import "reflect-metadata";
+import { inject, injectable } from "inversify";
 
+//const rideService: RideService = container.get<RideService>(TYPES.RideService);
+//let rideService: RideService = container.get(RideService);
+@injectable()
 class RideActions {
+  @inject(TYPES.RideService) private rideService: RideService;
   GetRideRequestsAction = createAction(RideEvents.GET_RIDE_REQUESTS, (rideId) =>
-    rideService.getRequests(rideId)
+    this.rideService.getRequests(rideId)
   )();
 
   ApproveRequestAction = createAction(
     RideEvents.APPROVE_REQUEST,
     (requestId, rideId, isApprove) =>
-      rideService.approveRideRequest(requestId, rideId, isApprove)
+      this.rideService.approveRideRequest(requestId, rideId, isApprove)
   )();
 
   ApproveRequestSuccessAction = createAction(
@@ -19,13 +27,13 @@ class RideActions {
   )<void>();
 
   OfferRideRequestAction = createAction(RideEvents.OFFER_RIDE_REQUEST, (data) =>
-    rideService.offerRide(data)
+    this.rideService.offerRide(data)
   )();
 
   OfferRideSuccessAction = createAction(RideEvents.OFFER_RIDE_SUCCESS)<void>();
 
   BookRideRequestAction = createAction(RideEvents.BOOK_RIDE_REQUEST, (data) =>
-    rideService.bookRide(data)
+    this.rideService.bookRide(data)
   )();
 
   OfferRideFailureAction = createAction(RideEvents.OFFER_RIDE_FAILURE)<
@@ -41,18 +49,18 @@ class RideActions {
   RequestRideAction = createAction(
     RideEvents.REQUEST_RIDE,
     (request, noOfSeats, rideId) =>
-      rideService.requestRide(request, noOfSeats, rideId)
+      this.rideService.requestRide(request, noOfSeats, rideId)
   )();
 
   RequestRideSuccessAction = createAction(RideEvents.REQUEST_RIDE_SUCCESS)<
     void
   >();
   GetMyOffersAction = createAction(RideEvents.GET_MY_OFFERS, () =>
-    rideService.getOffers()
+    this.rideService.getOffers()
   )();
 
   GetMyBookingsAction = createAction(RideEvents.GET_MY_BOOKINGS, () =>
-    rideService.getBookings()
+    this.rideService.getBookings()
   )();
 
   GetMyBookingsSuccessAction = createAction(RideEvents.GET_MY_BOOKINGS_SUCCESS)<
@@ -87,5 +95,6 @@ class RideActions {
     string
   >();
 }
-let rideActions = new RideActions();
-export default rideActions;
+// let rideActions = new RideActions();
+// export default rideActions;
+export default RideActions;

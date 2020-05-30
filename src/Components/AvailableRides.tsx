@@ -4,10 +4,10 @@ import { AppState } from "./Redux/rootReducer";
 import { MdLocationOn } from "react-icons/md";
 import { Types } from "./Interfaces";
 import { connect } from "react-redux";
-import rideActions from "./Redux/Ride/RideActions";
+import { RideActions } from "./Redux/Ride/RideActions";
 import "../App.css";
 import Modal from "./PopUp";
-
+let rideActions = new RideActions();
 interface IState {
   NumberOfSeats: number;
   modal: boolean;
@@ -48,7 +48,8 @@ class AvailableRides extends React.Component<IProps, IState> {
     this.props.requestRide(
       this.props.request,
       this.state.NumberOfSeats,
-      rideId
+      rideId,
+      this.props.userId
     );
   }
 
@@ -164,6 +165,7 @@ const mapStateToProps = (state: AppState, ownProps: Types.IBookRide) => ({
   request: ownProps,
   isLoaded: state.ride.isLoaded,
   availableRides: state.ride.availableRides,
+  userId: state.user.mail,
 });
 
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
@@ -172,7 +174,8 @@ interface DispatchProps {
   requestRide(
     Request: Types.IBookRide,
     noOfSeats: number,
-    rideId: number
+    rideId: number,
+    userId: string
   ): void;
 }
 

@@ -9,8 +9,8 @@ import { Types } from "./Interfaces";
 import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
 import { Redirect } from "react-router-dom";
-import userActions from "./Redux/User/UserActions";
-
+import { UserActions } from "./Redux/User/UserActions";
+let userActions = new UserActions();
 const validationSchema = Yup.object({
   id: Yup.string().required("Required"),
   password: Yup.string().required("Required"),

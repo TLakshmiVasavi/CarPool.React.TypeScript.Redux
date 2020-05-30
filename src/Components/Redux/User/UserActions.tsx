@@ -2,10 +2,11 @@ import React from "react";
 import { UserEvents } from "./UserTypes";
 import { createAction } from "typesafe-actions";
 import { Types } from "../../Interfaces";
-import userServices from "./UserServices";
+import { UserServices } from "./UserServices";
 import { store } from "../Store";
-
-class userActions {
+import rideActions from "../Ride/RideActions";
+const userServices = new UserServices();
+class UserActions {
   UserLoginRequestAction = createAction(UserEvents.USER_LOGIN_REQUEST, (data) =>
     userServices.Login(data)
   )();
@@ -18,8 +19,8 @@ class userActions {
     Types.IUser
   >();
 
-  GetVehiclesAction = createAction(UserEvents.GET_VEHICLES, () =>
-    userServices.getVehicles()
+  GetVehiclesAction = createAction(UserEvents.GET_VEHICLES, (userId) =>
+    userServices.getVehicles(userId)
   )<void>();
 
   GetVehiclesSuccessAction = createAction(UserEvents.GET_VEHICLES_SUCCESS)<
@@ -30,10 +31,13 @@ class userActions {
     string
   >();
 
-  UpdateImageAction = createAction(UserEvents.UPDATE_USER_IMAGE, (data) => {
-    console.log(data);
-    userServices.updateImage(data);
-  });
+  UpdateImageAction = createAction(
+    UserEvents.UPDATE_USER_IMAGE,
+    (data, userId) => {
+      console.log(data);
+      userServices.updateImage(data, userId);
+    }
+  );
   UpdateImageSuccessAction = createAction(UserEvents.UPDATE_USER_IMAGE_SUCCESS)<
     any
   >();
@@ -43,7 +47,7 @@ class userActions {
 
   UpdateBalanceAction = createAction(
     UserEvents.UPDATE_BALANCE_REQUEST,
-    (data) => userServices.updateBalance(data)
+    (data, userId) => userServices.updateBalance(data, userId)
   )();
 
   UpdateBalanceSuccessAction = createAction(UserEvents.UPDATE_BALANCE_SUCCESS)<
@@ -54,8 +58,8 @@ class userActions {
     string
   >();
 
-  GetUserImageAction = createAction(UserEvents.GET_USER_IMAGE, () =>
-    userServices.getImage()
+  GetUserImageAction = createAction(UserEvents.GET_USER_IMAGE, (userId) =>
+    userServices.getImage(userId)
   )();
 
   GetUserImageSuccessAction = createAction(UserEvents.GET_USER_IMAGE_SUCCESS)<
@@ -66,8 +70,8 @@ class userActions {
     string
   >();
 
-  LogoutUserAction = createAction(UserEvents.LOGOUT_USER, () =>
-    userServices.Logout()
+  LogoutUserAction = createAction(UserEvents.LOGOUT_USER, (userId) =>
+    userServices.Logout(userId)
   )();
 
   LogoutUserSuccess = createAction(UserEvents.LOGOUT_USER_SUCCESS)<void>();
@@ -98,8 +102,8 @@ class userActions {
     string
   >();
 
-  AddVehicleAction = createAction(UserEvents.ADD_VEHICLE, (data) =>
-    userServices.addVehicle(data)
+  AddVehicleAction = createAction(UserEvents.ADD_VEHICLE, (data, userId) =>
+    userServices.addVehicle(data, userId)
   )();
 
   AddVehicleSuccessAction = createAction(UserEvents.ADD_VEHICLE_SUCCESS)<
@@ -110,18 +114,26 @@ class userActions {
     string
   >();
 }
-let UserActions = new userActions();
-export default UserActions;
+export { UserActions };
+let userActions = new UserActions();
 export function getVehicles(
   isLoading: boolean,
-  isLoaded: boolean
+  isLoaded: boolean,
+  userId: string
 ): Types.IVehicle[] {
   let x: Types.IVehicle[] = [];
-  if (window.location.pathname == "/OfferRide" && !isLoaded && !isLoading) {
-    store.dispatch(UserActions.GetVehiclesAction());
+  if (
+    (window.location.pathname == "/OfferRide" ||
+      window.location.pathname == "/Profile") &&
+    !isLoaded &&
+    !isLoading
+  ) {
+    store.dispatch(userActions.GetVehiclesAction(userId));
   } else if (isLoaded) {
     x =
       store.getState().user == undefined ? [] : store.getState().user?.vehicles;
   }
   return x;
 }
+
+export default userActions;

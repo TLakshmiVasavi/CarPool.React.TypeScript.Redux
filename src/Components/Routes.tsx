@@ -9,10 +9,12 @@ import OfferRide from "./OfferRide";
 import AddVehicle from "./AddVehicle";
 import Wallet from "./Wallet";
 import { Redirect } from "react-router-dom";
+import AdminLoginForm from "./AdminLogin";
 
 export default function Routes() {
   return (
     <Switch>
+      <Route path="/Admin/Login" component={AdminLoginForm} />
       <Route path="/(Login|SignUp|)/" component={LoginSignUp} />
       <Route path="/Profile" component={UserProfile} />
       <Route path="/MyRides" component={MyRides} />

@@ -5,11 +5,11 @@ import "../StyleSheets/Colors.css";
 import { RouteComponentProps } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import userActions from "./Redux/User/UserActions";
+import { UserActions } from "./Redux/User/UserActions";
 import { connect } from "react-redux";
 import { Types } from "./Interfaces";
 import { AppState } from "./Redux/rootReducer";
-
+let userActions = new UserActions();
 const validationSchema = Yup.object({
   balance: Yup.number().required("Required"),
 });
@@ -33,7 +33,7 @@ class Wallet extends Component<IProps, Types.IWallet> {
         initialValues={this.state}
         validationSchema={validationSchema}
         onSubmit={(values) => {
-          this.props.updateBalance(this.state);
+          this.props.updateBalance(this.state, this.props.userId);
         }}
       >
         {({ handleSubmit, handleChange, errors }) => (
@@ -62,10 +62,11 @@ type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
 
 const mapStateToProps = (state: AppState) => ({
   isLoggedIn: state.user.isLoggedIn,
+  userId: state.user.mail,
 });
 
 interface DispatchProps {
-  updateBalance: (data: Types.IWallet) => void;
+  updateBalance: (data: Types.IWallet, userId: string) => void;
 }
 
 export default connect(null, {

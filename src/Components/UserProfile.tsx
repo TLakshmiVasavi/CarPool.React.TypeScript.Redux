@@ -3,10 +3,11 @@ import { Row, Col, Container } from "react-grid-system";
 import { Types } from "./Interfaces";
 import { connect, DispatchProp } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
-import userActions from "./Redux/User/UserActions";
+import { UserActions, getVehicles } from "./Redux/User/UserActions";
 import { Redirect } from "react-router-dom";
 import { RouteComponentProps } from "react-router-dom";
-
+import { stat } from "fs";
+let userActions = new UserActions();
 interface IState extends Types.IUser {
   disable: boolean;
 }
@@ -34,9 +35,9 @@ class UserProfile extends React.Component<IProps, IState> {
     //this.props.updateImage(e.target.files[0]);
   }
 
-  componentWillMount() {
-    this.props.getVehicles();
-  }
+  // componentWillMount() {
+  //   this.props.getVehicles();
+  // }
 
   handleChange(e: any) {
     const { name, value } = e.target;
@@ -181,13 +182,15 @@ class UserProfile extends React.Component<IProps, IState> {
 const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   history: ownProps.history,
   user: state.user,
-  vehicles: state.user.vehicles,
+  vehicles: getVehicles(
+    state.user.isLoading,
+    state.user.isLoaded,
+    state.user.mail
+  ),
 });
 
 interface DispatchProps {
   updateUser: (user: Types.IUser) => void;
-  getVehicles: () => void;
-  updateImage: (Photo: Types.IImage) => void;
 }
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
 export default connect(mapStateToProps, {

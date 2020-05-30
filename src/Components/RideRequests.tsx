@@ -4,15 +4,20 @@ import { Row, Col } from "react-grid-system";
 import { MdLocationOn } from "react-icons/md";
 import { AppState } from "./Redux/rootReducer";
 import { connect } from "react-redux";
-import rideActions from "./Redux/Ride/RideActions";
-
+import { RideActions } from "./Redux/Ride/RideActions";
+let rideActions = new RideActions();
 class RideRequests extends React.Component<IProps, {}> {
   constructor(props: IProps) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   handleSubmit(isApprove: boolean, requestId: number) {
-    this.props.approveRideRequest(requestId, this.props.rideId, isApprove);
+    this.props.approveRideRequest(
+      requestId,
+      this.props.rideId,
+      isApprove,
+      this.props.userId
+    );
   }
   render() {
     return (
@@ -86,13 +91,15 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => ({
   rideId: ownProps.rideId,
   isLoaded: state.ride.isRequestsLoaded,
   requests: state.ride.requests,
+  userId: state.user.mail,
 });
 
 interface DispatchProps {
   approveRideRequest: (
     requestId: number,
     rideId: number,
-    isApprove: boolean
+    isApprove: boolean,
+    userId: string
   ) => void;
 }
 const mapDispatchToProps = {

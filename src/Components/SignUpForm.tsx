@@ -16,23 +16,9 @@ import { RouteComponentProps } from "react-router-dom";
 import { Types, hasVehicle, vehicleType, Gender } from "./Interfaces";
 import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
-import userActions from "./Redux/User/UserActions";
+import { UserActions } from "./Redux/User/UserActions";
 import "../StyleSheets/Colors.css";
-const styles = {
-  root: {
-    "& $notchedOutline": {
-      borderWidth: 0,
-    },
-    "&:hover $notchedOutline": {
-      borderWidth: 0,
-    },
-    "&$focused $notchedOutline": {
-      borderWidth: 0,
-    },
-  },
-  focused: {},
-  notchedOutline: {},
-};
+let userActions = new UserActions();
 const validationSchema = Yup.object().shape({
   mail: Yup.string()
     .email("Please enter valid mail")

@@ -6,10 +6,10 @@ import { RouteComponentProps, Redirect } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Types, vehicleType } from "./Interfaces";
-import userActions from "./Redux/User/UserActions";
+import { UserActions } from "./Redux/User/UserActions";
 import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
-
+let userActions = new UserActions();
 const validationSchema = Yup.object({
   model: Yup.string().required("Required"),
   number: Yup.string().required("Required"),
@@ -38,7 +38,7 @@ class AddVehicle extends Component<IProps, Types.IVehicle> {
         initialValues={this.state}
         validationSchema={validationSchema}
         onSubmit={(values) => {
-          this.props.addVehicle(values);
+          this.props.addVehicle(values, this.props.userId);
         }}
       >
         {({ handleSubmit, handleChange, errors }) => (
@@ -100,12 +100,13 @@ class AddVehicle extends Component<IProps, Types.IVehicle> {
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
 
 interface DispatchProps {
-  addVehicle: (vehicle: Types.IVehicle) => void;
+  addVehicle: (vehicle: Types.IVehicle, userId: string) => void;
 }
 
 const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   history: ownProps.history,
   isLoggedIn: state.user.isLoggedIn,
+  userId: state.user.mail,
 });
 
 export default connect(mapStateToProps, {

@@ -3,8 +3,10 @@ import { UserEvents } from "./UserTypes";
 import { Types } from "../../Interfaces";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
-import userActions from "./UserActions";
+import { UserActions } from "./UserActions";
 import { store } from "../Store";
+import userActions from "./UserActions";
+
 class UserServices {
   Login(user: Types.IAuthUser) {
     axios
@@ -14,7 +16,9 @@ class UserServices {
           store.dispatch(
             userActions.UserLoginSuccessAction(response.data.user)
           );
-          store.dispatch(userActions.GetUserImageAction());
+          store.dispatch(
+            userActions.GetUserImageAction(response.data.user.mail)
+          );
         } else {
           toast.error(response.data.errorMessage);
           store.dispatch(
@@ -28,12 +32,9 @@ class UserServices {
       });
   }
 
-  Logout() {
+  Logout(userId: string) {
     axios
-      .post(
-        "https://localhost:5001/api/UserApi/Logout?userId=" +
-          store.getState().user.mail
-      )
+      .post("https://localhost:5001/api/UserApi/Logout?userId=" + userId)
       .then(() => store.dispatch(userActions.LogoutUserSuccess()));
   }
 
@@ -58,7 +59,7 @@ class UserServices {
       .post("https://localhost:5001/api/UserApi/UpdateUser", data)
       .then((response) => {
         store.dispatch(userActions.UpdateUserSuccessAction(response.data.user));
-        store.dispatch(userActions.GetUserImageAction());
+        store.dispatch(userActions.GetUserImageAction(response.data.user.mail));
       })
       .catch((error) => {
         toast.error("Server Not Responding");
@@ -66,12 +67,9 @@ class UserServices {
       });
   }
 
-  getVehicles() {
+  getVehicles(userId: string) {
     axios
-      .get(
-        "https://localhost:5001/api/UserApi/GetVehicles?userId=" +
-          store.getState().user.mail
-      )
+      .get("https://localhost:5001/api/UserApi/GetVehicles?userId=" + userId)
       .then((response) => {
         console.log(response.data);
         store.dispatch(userActions.GetVehiclesSuccessAction(response.data));
@@ -82,11 +80,10 @@ class UserServices {
       });
   }
 
-  addVehicle(vehicle: Types.IVehicle) {
+  addVehicle(vehicle: Types.IVehicle, userId: string) {
     axios
       .post(
-        "https://localhost:5001/api/UserApi/AddVehicle?userId=" +
-          store.getState().user.mail,
+        "https://localhost:5001/api/UserApi/AddVehicle?userId=" + userId,
         vehicle
       )
       .then(() => store.dispatch(userActions.AddVehicleSuccessAction()))
@@ -96,11 +93,10 @@ class UserServices {
       });
   }
 
-  updateBalance(data: Types.IWallet) {
+  updateBalance(data: Types.IWallet, userId: string) {
     axios
       .post(
-        "https://localhost:5001/api/UserApi/UpdateBalance?userId=" +
-          store.getState().user.mail,
+        "https://localhost:5001/api/UserApi/UpdateBalance?userId=" + userId,
         data
       )
       .then(() => store.dispatch(userActions.UpdateBalanceSuccessAction()))
@@ -110,12 +106,9 @@ class UserServices {
       });
   }
 
-  getImage() {
+  getImage(userId: string) {
     axios
-      .get(
-        "https://localhost:5001/api/UserApi/GetImage?userId=" +
-          store.getState().user.mail
-      )
+      .get("https://localhost:5001/api/UserApi/GetImage?userId=" + userId)
       .then((response) => {
         store.dispatch(userActions.GetUserImageSuccessAction(response.data));
       })
@@ -125,13 +118,12 @@ class UserServices {
       });
   }
 
-  updateImage(Photo: Types.IImage) {
+  updateImage(Photo: Types.IImage, userId: string) {
     console.log(Photo.image);
     alert("hi");
     axios
       .post(
-        "https://localhost:5001/api/UserApi/UpdateImage?userId=" +
-          store.getState().user.mail,
+        "https://localhost:5001/api/UserApi/UpdateImage?userId=" + userId,
         Photo.image
       )
       .then((response) => {
@@ -143,5 +135,4 @@ class UserServices {
       });
   }
 }
-let userServices = new UserServices();
-export default userServices;
+export { UserServices };

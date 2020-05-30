@@ -14,6 +14,7 @@ interface IUserReducerState extends Types.IUser, Types.IVehicles {
 const user: IUserReducerState = {
   isLoading: false,
   isLoaded: false,
+  role: "user",
   name: "",
   mail: "",
   age: 20,

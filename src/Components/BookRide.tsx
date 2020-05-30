@@ -11,10 +11,10 @@ import "react-datepicker/dist/react-datepicker.css";
 import { RouteComponentProps } from "react-router-dom";
 import { connect } from "react-redux";
 import { Types, vehicleType, times } from "./Interfaces";
-import rideActions from "./Redux/Ride/RideActions";
+import { RideActions } from "./Redux/Ride/RideActions";
 import { AppState } from "./Redux/rootReducer";
 import AvailableRides from "./AvailableRides";
-
+let rideActions = new RideActions();
 const validationSchema = Yup.object({
   from: Yup.string().required("Required"),
   to: Yup.string().required("Required"),
@@ -60,7 +60,7 @@ class BookRide extends React.Component<IProps, Types.IBookRide> {
           enableReinitialize
           initialValues={this.state}
           validationSchema={validationSchema}
-          onSubmit={() => this.props.bookRide(this.state)}
+          onSubmit={() => this.props.bookRide(this.state, this.props.userId)}
         >
           {({ handleSubmit, errors }) => (
             <form onSubmit={handleSubmit}>
@@ -196,7 +196,7 @@ class BookRide extends React.Component<IProps, Types.IBookRide> {
 }
 
 interface DispatchProps {
-  bookRide: (ride: Types.IBookRide) => void;
+  bookRide: (ride: Types.IBookRide, userId: string) => void;
 }
 
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
@@ -206,6 +206,7 @@ const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   isLoggedIn: state.user.isLoggedIn,
   isRequested: state.ride.isRequested,
   isLoaded: state.ride.isLoaded,
+  userId: state.user.mail,
 });
 
 export default connect(mapStateToProps, {

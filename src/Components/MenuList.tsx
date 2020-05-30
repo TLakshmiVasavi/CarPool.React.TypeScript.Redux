@@ -9,8 +9,9 @@ import MenuList from "@material-ui/core/MenuList";
 import "../App.css";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import userActions from "./Redux/User/UserActions";
+import { UserActions } from "./Redux/User/UserActions";
 import { AppState } from "./Redux/rootReducer";
+let userActions = new UserActions();
 interface MenuState {
   open: boolean;
 }
@@ -41,7 +42,7 @@ class UserMenuList extends React.Component<IProps, MenuState> {
   };
 
   handleLogout = () => {
-    this.props.Logout();
+    this.props.Logout(this.props.userId);
     this.setState({ open: false });
   };
 
@@ -135,10 +136,11 @@ const mapStateToProps = (state: AppState) => ({
   photo: state.user.photo,
   name: state.user.name,
   isLoggedIn: state.user.isLoggedIn,
+  userId: state.user.mail,
 });
 
 interface DispatchProps {
-  Logout: () => void;
+  Logout: (userId: string) => void;
 }
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
 export default connect(mapStateToProps, {

@@ -1,27 +1,28 @@
 import axios from "axios";
 import { RideEvents } from "./RideTypes";
 import { Types } from "../../Interfaces";
-import RideActions from "./RideActions";
+import { RideActions } from "./RideActions";
 import { store } from "../Store";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
+import rideActions from "./RideActions";
 
 class RideService {
-  offerRide(offerRide: Types.IOfferRide) {
+  offerRide(offerRide: Types.IOfferRide, userId: string) {
     axios
       .post(
         "https://localhost:5001/api/RideApi/OfferRide?userId=" +
           store.getState().user.mail,
         offerRide
       )
-      .then(() => store.dispatch(RideActions.OfferRideSuccessAction()))
+      .then(() => store.dispatch(rideActions.OfferRideSuccessAction()))
       .catch((error) => {
         toast.error("Server Not Responding");
-        store.dispatch(RideActions.OfferRideFailureAction(error));
+        store.dispatch(rideActions.OfferRideFailureAction(error));
       });
   }
 
-  bookRide(Request: Types.IBookRide) {
+  bookRide(Request: Types.IBookRide, userId: string) {
     axios
       .post(
         "https://localhost:5001/api/RideApi/BookRide?userId=" +
@@ -29,15 +30,20 @@ class RideService {
         Request
       )
       .then((response) => {
-        store.dispatch(RideActions.BookRideResponseAction(response.data));
+        store.dispatch(rideActions.BookRideResponseAction(response.data));
       })
       .catch((error) => {
         toast.error("Server Not Responding");
-        store.dispatch(RideActions.BookRideFailureAction(error));
+        store.dispatch(rideActions.BookRideFailureAction(error));
       });
   }
 
-  requestRide(Request: Types.IBookRide, noOfSeats: number, rideId: number) {
+  requestRide(
+    Request: Types.IBookRide,
+    noOfSeats: number,
+    rideId: number,
+    userId: string
+  ) {
     axios
       .post(
         "https://localhost:5001/api/RideApi/RequestRide?userId=" +
@@ -48,44 +54,49 @@ class RideService {
           noOfSeats,
         Request
       )
-      .then(() => store.dispatch(RideActions.RequestRideSuccessAction()))
+      .then(() => store.dispatch(rideActions.RequestRideSuccessAction()))
       .catch((error) => {
         toast.error("Server Not Responding");
-        store.dispatch(RideActions.RequestRideFailureAction(error));
+        store.dispatch(rideActions.RequestRideFailureAction(error));
       });
   }
 
-  getOffers() {
+  getOffers(userId: string) {
     axios
       .get(
         "https://localhost:5001/api/RideApi/GetOfferedRides?userId=" +
           store.getState().user.mail
       )
       .then((response) =>
-        store.dispatch(RideActions.GetMyOffersSuccessAction(response.data))
+        store.dispatch(rideActions.GetMyOffersSuccessAction(response.data))
       )
       .catch((error) => {
         toast.error("Server Not Responding");
-        store.dispatch(RideActions.GetMyOffersFailureAction(error));
+        store.dispatch(rideActions.GetMyOffersFailureAction(error));
       });
   }
 
-  getBookings() {
+  getBookings(userId: string) {
     axios
       .get(
         "https://localhost:5001/api/RideApi/GetBookings?userId=" +
           store.getState().user.mail
       )
       .then((response) =>
-        store.dispatch(RideActions.GetMyBookingsSuccessAction(response.data))
+        store.dispatch(rideActions.GetMyBookingsSuccessAction(response.data))
       )
       .catch((error) => {
         toast.error("Server Not Responding");
-        store.dispatch(RideActions.GetMyBookingsFailureAction(error));
+        store.dispatch(rideActions.GetMyBookingsFailureAction(error));
       });
   }
 
-  approveRideRequest(requestId: number, rideId: number, isApprove: boolean) {
+  approveRideRequest(
+    requestId: number,
+    rideId: number,
+    isApprove: boolean,
+    userId: string
+  ) {
     axios
       .post(
         "https://localhost:5001/api/RideApi/ApproveRequest?rideId=" +
@@ -97,14 +108,14 @@ class RideService {
           "&providerId" +
           store.getState().user.mail
       )
-      .then(() => store.dispatch(RideActions.ApproveRequestSuccessAction()))
+      .then(() => store.dispatch(rideActions.ApproveRequestSuccessAction()))
       .catch((error) => {
         toast.error("Server Not Responding");
-        store.dispatch(RideActions.ApproveRequestFailureAction(error));
+        store.dispatch(rideActions.ApproveRequestFailureAction(error));
       });
   }
 
-  getRequests(rideId: number) {
+  getRequests(rideId: number, userId: string) {
     axios
       .get(
         "https://localhost:5001/api/RideApi/GetRequests?userId=" +
@@ -113,13 +124,13 @@ class RideService {
           rideId
       )
       .then((response) =>
-        store.dispatch(RideActions.GetRideRequestsSuccessAction(response.data))
+        store.dispatch(rideActions.GetRideRequestsSuccessAction(response.data))
       )
       .catch((error) => {
         toast.error("Server Not Responding");
-        store.dispatch(RideActions.GetRideRequestsFailureAction(error));
+        store.dispatch(rideActions.GetRideRequestsFailureAction(error));
       });
   }
 }
-let rideService = new RideService();
-export default rideService;
+
+export { RideService };

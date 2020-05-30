@@ -13,12 +13,13 @@ import "../StyleSheets/OfferRide.css";
 import "../StyleSheets/Toogle.css";
 import { Types, times } from "./Interfaces";
 import { connect } from "react-redux";
-import rideActions from "./Redux/Ride/RideActions";
-import userActions from "./Redux/User/UserActions";
+import { RideActions } from "./Redux/Ride/RideActions";
+import { UserActions } from "./Redux/User/UserActions";
 import { AppState } from "./Redux/rootReducer";
 import Loader from "react-loader-spinner";
 import { getVehicles } from "./Redux/User/UserActions";
-
+let userActions = new UserActions();
+let rideActions = new RideActions();
 const validationSchema = Yup.object({
   noOfOfferedSeats: Yup.string().required("Required"),
   time: Yup.string().required("Required"),
@@ -105,7 +106,7 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
   handleSubmit(e: any) {
     this.setState(["vehicleId"]);
     e.preventDefault();
-    this.props.offerRide(this.state);
+    this.props.offerRide(this.state, this.props.userId);
   }
 
   onStopChange(e: any) {
@@ -172,7 +173,7 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
             initialValues={this.state}
             validationSchema={validationSchema}
             onSubmit={() => {
-              this.props.offerRide(this.state);
+              this.props.offerRide(this.state, this.props.userId);
             }}
           >
             {({ handleSubmit, errors }) => (
@@ -407,18 +408,24 @@ const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   isLoaded: state.user.isLoaded,
   // vehicles: state.user.isLoaded
   //   ? state.user.vehicles
-  vehicles: getVehicles(state.user.isLoading, state.user.isLoaded),
+  vehicles: getVehicles(
+    state.user.isLoading,
+    state.user.isLoaded,
+    state.user.mail
+  ),
+  userId: state.user.mail,
   // executeQueryAndExtractData()
   //await getVehicles(),
 });
 
 interface DispatchProps {
-  offerRide: (ride: Types.IOfferRide) => void;
+  offerRide: (ride: Types.IOfferRide, userId: string) => void;
   //getVehicles: () => void;
 }
 
 const mapDispatchToProps = {
   offerRide: rideActions.OfferRideRequestAction,
+
   //getVehicles: userActions.GetVehiclesAction,
 };
 

@@ -4,6 +4,9 @@ import { Reducer } from "redux";
 
 const intialState: IRideReducerState = {
   isLoaded: false,
+  isLoading: false,
+  isOffersLoaded: false,
+  isOffersLoading: false,
   offers: [],
   bookings: [],
   availableRides: [],
@@ -13,7 +16,10 @@ interface IRideReducerState
   extends Types.IMyOffers,
     Types.IBookRideResponse,
     Types.IMyBookings {
+  isLoading: boolean;
   isLoaded: boolean;
+  isOffersLoaded: boolean;
+  isOffersLoading: boolean;
 }
 interface IRideAction {
   type: string;
@@ -41,11 +47,15 @@ export const rideReducer: Reducer<IRideReducerState> = (
       return {
         ...state,
         bookings: action.payload ?? [],
+        isLoaded: true,
+        isLoading: false,
       };
     case RideEvents.GET_MY_OFFERS_SUCCESS:
       return {
         ...state,
         offers: action.payload ?? [],
+        isOffersLoaded: true,
+        isOffersLoading: false,
       };
     case RideEvents.GET_RIDE_REQUESTS:
       return {
@@ -58,6 +68,18 @@ export const rideReducer: Reducer<IRideReducerState> = (
         requests: action.payload ?? [],
         isRequestsLoaded: true,
       };
+    case RideEvents.GET_MY_BOOKINGS:
+      return {
+        ...state,
+        isLoaded: false,
+        isLoading: true,
+      };
+    case RideEvents.GET_MY_OFFERS:
+      return {
+        ...state,
+        isOffersLoaded: false,
+        isOffersLoading: true,
+      };
     case RideEvents.OFFER_RIDE_REQUEST:
     case RideEvents.OFFER_RIDE_SUCCESS:
     case RideEvents.OFFER_RIDE_FAILURE:
@@ -65,9 +87,9 @@ export const rideReducer: Reducer<IRideReducerState> = (
     case RideEvents.REQUEST_RIDE:
     case RideEvents.REQUEST_RIDE_SUCCESS:
     case RideEvents.REQUEST_RIDE_FAILURE:
-    case RideEvents.GET_MY_BOOKINGS:
+
     case RideEvents.GET_MY_BOOKINGS_FAILURE:
-    case RideEvents.GET_MY_OFFERS:
+
     case RideEvents.GET_MY_OFFERS_FAILURE:
     case RideEvents.GET_RIDE_REQUESTS_FAILURE:
     default:

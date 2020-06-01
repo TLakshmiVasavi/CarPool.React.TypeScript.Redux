@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 class Dashboard extends React.Component<IProps, {}> {
   render() {
     if (!this.props.isLoggedIn) {
-      this.props.history.push("/Login");
+      this.props.history.push("/");
     }
 
     return (
@@ -28,9 +28,6 @@ class Dashboard extends React.Component<IProps, {}> {
                 <Link className="box bg-darkorange" to="/OfferRide">
                   Offer Ride
                 </Link>
-                {/* <Link to="/MyRides" />
-                <Link to="/Wallet" />
-                <Link to="/AddVehicle" /> */}
               </Col>
             </Row>
           </Container>
@@ -45,5 +42,6 @@ const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   userName: state.user.name,
   isLoggedIn: state.user.isLoggedIn,
 });
+
 type IProps = ReturnType<typeof mapStateToProps>;
 export default connect(mapStateToProps, null)(Dashboard);

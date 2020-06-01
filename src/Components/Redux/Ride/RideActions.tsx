@@ -3,122 +3,129 @@ import { Types } from "../../Interfaces";
 import { createAction } from "typesafe-actions";
 import { RideService } from "./RideServices";
 import { store } from "../Store";
+
 const rideService = new RideService();
-class RideActions {
+
+class RideRequestActions {
   GetRideRequestsAction = createAction(
     RideEvents.GET_RIDE_REQUESTS,
-    (rideId, userId) => rideService.getRequests(rideId, userId)
+    (rideId, userId, token) => rideService.getRequests(rideId, userId, token)
   )();
 
   ApproveRequestAction = createAction(
     RideEvents.APPROVE_REQUEST,
-    (requestId, rideId, isApprove, userId) =>
-      rideService.approveRideRequest(requestId, rideId, isApprove, userId)
+    (requestId, rideId, isApprove, userId, token) =>
+      rideService.approveRideRequest(
+        requestId,
+        rideId,
+        isApprove,
+        userId,
+        token
+      )
   )();
-
-  ApproveRequestSuccessAction = createAction(
-    RideEvents.APPROVE_REQUEST_SUCCESS
-  )<void>();
 
   OfferRideRequestAction = createAction(
     RideEvents.OFFER_RIDE_REQUEST,
-    (data, userId) => rideService.offerRide(data, userId)
+    (data, userId, token) => rideService.offerRide(data, userId, token)
   )();
-
-  OfferRideSuccessAction = createAction(RideEvents.OFFER_RIDE_SUCCESS)<void>();
 
   BookRideRequestAction = createAction(
     RideEvents.BOOK_RIDE_REQUEST,
-    (data, userId) => rideService.bookRide(data, userId)
+    (data, userId, token) => rideService.bookRide(data, userId, token)
   )();
-
-  OfferRideFailureAction = createAction(RideEvents.OFFER_RIDE_FAILURE)<
-    string
-  >();
-
-  BookRideResponseAction = createAction(RideEvents.BOOK_RIDE_RESPONSE)<
-    Types.IBookRideResponse
-  >();
-
-  BookRideFailureAction = createAction(RideEvents.BOOK_RIDE_FAILURE)<string>();
 
   RequestRideAction = createAction(
     RideEvents.REQUEST_RIDE,
-    (request, noOfSeats, rideId, userId) =>
-      rideService.requestRide(request, noOfSeats, rideId, userId)
+    (request, noOfSeats, rideId, userId, token) =>
+      rideService.requestRide(request, noOfSeats, rideId, userId, token)
   )();
 
-  RequestRideSuccessAction = createAction(RideEvents.REQUEST_RIDE_SUCCESS)<
-    void
-  >();
-  GetMyOffersAction = createAction(RideEvents.GET_MY_OFFERS, (userId) =>
-    rideService.getOffers(userId)
+  GetOffersAction = createAction(RideEvents.GET_OFFERS, (token) =>
+    rideService.getOffers(token)
   )();
 
-  GetMyBookingsAction = createAction(RideEvents.GET_MY_BOOKINGS, (userId) =>
-    rideService.getBookings(userId)
+  GetMyOffersAction = createAction(RideEvents.GET_MY_OFFERS, (userId, token) =>
+    rideService.getMyOffers(userId, token)
   )();
 
-  GetMyBookingsSuccessAction = createAction(RideEvents.GET_MY_BOOKINGS_SUCCESS)<
-    Types.IMyBookings
-  >();
+  GetBookingsAction = createAction(RideEvents.GET_BOOKINGS, (token) =>
+    rideService.getBookings(token)
+  )();
 
-  GetMyBookingsFailureAction = createAction(RideEvents.GET_MY_BOOKINGS_FAILURE)<
-    string
-  >();
-
-  GetMyOffersSuccessAction = createAction(RideEvents.GET_MY_OFFERS_SUCCESS)<
-    Types.IMyOffers
-  >();
-
-  GetMyOffersFailureAction = createAction(RideEvents.GET_MY_OFFERS_FAILURE)<
-    string
-  >();
-
-  GetRideRequestsSuccessAction = createAction(
-    RideEvents.GET_RIDE_REQUESTS_SUCCESS
-  )<Types.IRideRequests>();
-
-  GetRideRequestsFailureAction = createAction(
-    RideEvents.GET_RIDE_REQUESTS_FAILURE
-  )<string>();
-
-  ApproveRequestFailureAction = createAction(
-    RideEvents.APPROVE_REQUEST_FAILURE
-  )<string>();
-
-  RequestRideFailureAction = createAction(RideEvents.REQUEST_RIDE_FAILURE)<
-    string
-  >();
+  GetMyBookingsAction = createAction(
+    RideEvents.GET_MY_BOOKINGS,
+    (userId, token) => rideService.getMyBookings(userId, token)
+  )();
 }
-export { RideActions };
 
-let rideActions = new RideActions();
-export function getOffers(
+export { RideRequestActions };
+
+let rideActions = new RideRequestActions();
+
+export function getMyOffers(
   isLoading: boolean,
   isLoaded: boolean,
-  userId: string
+  userId: string,
+  token: string
 ): Types.IMyOffer[] {
   let x: Types.IMyOffer[] = [];
   if (window.location.pathname == "/MyRides" && !isLoaded && !isLoading) {
-    store.dispatch(rideActions.GetMyOffersAction(userId));
+    store.dispatch(rideActions.GetMyOffersAction(userId, token));
   } else if (isLoaded) {
     x = store.getState().ride == undefined ? [] : store.getState().ride?.Offers;
   }
   return x;
 }
+
+export function getOffers(
+  isLoading: boolean,
+  isLoaded: boolean,
+  token: string
+): Types.IMyOffer[] {
+  let x: Types.IMyOffer[] = [];
+  if (
+    window.location.pathname == "/MyRides" ||
+    (window.location.pathname == "/Admin/Rides" && !isLoaded && !isLoading)
+  ) {
+    store.dispatch(rideActions.GetOffersAction(token));
+  } else if (isLoaded) {
+    x = store.getState().ride == undefined ? [] : store.getState().ride?.Offers;
+  }
+  return x;
+}
+
 export function getBookings(
   isLoading: boolean,
   isLoaded: boolean,
-  userId: string
+  token: string
 ): Types.IMyBooking[] {
   let x: Types.IMyBooking[] = [];
-  if (window.location.pathname == "/MyRides" && !isLoaded && !isLoading) {
-    store.dispatch(rideActions.GetMyBookingsAction(userId));
+  if (
+    window.location.pathname == "/MyRides" ||
+    (window.location.pathname == "/Admin/Bookings" && !isLoaded && !isLoading)
+  ) {
+    store.dispatch(rideActions.GetBookingsAction(token));
   } else if (isLoaded) {
     x =
       store.getState().ride == undefined ? [] : store.getState().ride?.bookings;
   }
   return x;
 }
+
+export function getMyBookings(
+  isLoading: boolean,
+  isLoaded: boolean,
+  userId: string,
+  token: string
+): Types.IMyBooking[] {
+  let x: Types.IMyBooking[] = [];
+  if (window.location.pathname == "/MyRides" && !isLoaded && !isLoading) {
+    store.dispatch(rideActions.GetMyBookingsAction(userId, token));
+  } else if (isLoaded) {
+    x =
+      store.getState().ride == undefined ? [] : store.getState().ride?.bookings;
+  }
+  return x;
+}
+
 export default rideActions;

@@ -9,7 +9,7 @@ import { Redirect, RouteComponentProps } from "react-router-dom";
 class MyRides extends React.Component<IProps, {}> {
   render() {
     if (!this.props.isLoggedIn) {
-      this.props.history.push("/Login");
+      this.props.history.push("/");
     }
 
     return (
@@ -18,13 +18,13 @@ class MyRides extends React.Component<IProps, {}> {
           <Col md={6}>
             <div className="rectangle bg-darkviolet">Booked Rides</div>
             <Col id="bookings" md={10}>
-              <BookedRides />
+              <BookedRides {...this.props.routeProps} />
             </Col>
           </Col>
           <Col md={6}>
             <div className="rectangle bg-darkorange">Offered Rides</div>
             <Col id="offers" md={10}>
-              <OfferedRides />
+              <OfferedRides {...this.props.routeProps} />
             </Col>
           </Col>
         </Row>
@@ -34,6 +34,7 @@ class MyRides extends React.Component<IProps, {}> {
 }
 type IProps = ReturnType<typeof mapStateToProps>;
 const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
+  routeProps: ownProps,
   history: ownProps.history,
   isLoggedIn: state.user.isLoggedIn,
 });

@@ -3,22 +3,23 @@ import { UserEvents } from "./UserTypes";
 import { Types } from "../../Interfaces";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
-import { UserActions } from "./UserActions";
+import { UserResponseActions } from "./UserResponseActions";
 import { store } from "../Store";
-import userActions from "./UserActions";
-
+//import userActions from "./UserActions";
+let userActions = new UserResponseActions();
 class UserServices {
   Login(user: Types.IAuthUser) {
     axios
       .post("https://localhost:5001/api/UserApi/Login", user)
       .then((response) => {
         if (response.data.isSuccess) {
-          store.dispatch(
-            userActions.UserLoginSuccessAction(response.data.user)
-          );
-          store.dispatch(
-            userActions.GetUserImageAction(response.data.user.mail)
-          );
+          store.dispatch(userActions.UserLoginSuccessAction(response.data));
+          // store.dispatch(
+          //   userActions.GetUserImageAction(
+          //     response.data.mail,
+          //     response.data.token
+          //   )
+          // );
         } else {
           toast.error(response.data.errorMessage);
           store.dispatch(
@@ -32,9 +33,13 @@ class UserServices {
       });
   }
 
-  Logout(userId: string) {
+  Logout(userId: string, token: string) {
     axios
-      .post("https://localhost:5001/api/UserApi/Logout?userId=" + userId)
+      .post("https://localhost:5001/api/UserApi/Logout?userId=" + userId, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
       .then(() => store.dispatch(userActions.LogoutUserSuccess()));
   }
 
@@ -52,14 +57,20 @@ class UserServices {
       });
   }
 
-  UpdateUser(user: Types.IUser) {
+  UpdateUser(user: Types.IUser, token: string) {
     const data = new FormData();
     Object.keys(user).map((i) => data.append(i, user[i]));
     axios
-      .post("https://localhost:5001/api/UserApi/UpdateUser", data)
+      .post("https://localhost:5001/api/UserApi/UpdateUser", data, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
       .then((response) => {
         store.dispatch(userActions.UpdateUserSuccessAction(response.data.user));
-        store.dispatch(userActions.GetUserImageAction(response.data.user.mail));
+        // store.dispatch(
+        //   userActions.GetUserImageAction(response.data.user.mail, "")
+        // );
       })
       .catch((error) => {
         toast.error("Server Not Responding");
@@ -67,11 +78,65 @@ class UserServices {
       });
   }
 
-  getVehicles(userId: string) {
+  UpdateVehicle(
+    data: Types.IVehicle,
+    userId: string,
+    token: string,
+    vehicleId: string
+  ) {
     axios
-      .get("https://localhost:5001/api/UserApi/GetVehicles?userId=" + userId)
+      .post(
+        "https://localhost:5001/api/UserApi/UpdateVehicle?userId=" +
+          userId +
+          "&vehicleId=" +
+          vehicleId,
+        data,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
       .then((response) => {
-        console.log(response.data);
+        toast.info("Vehicle Updated Successfully");
+        store.dispatch(userActions.UpdateVehicleSuccessAction());
+      })
+      .catch((error) => {
+        toast.error("Server Not Responding");
+        store.dispatch(userActions.UpdateVehicleFailureAction());
+      });
+  }
+
+  ChangePassword(data: Types.IChangePassword, userId: string, token: string) {
+    axios
+      .post(
+        "https://localhost:5001/api/UserApi/ChangePassword?userId=" + userId,
+        data,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then((response) => {
+        toast.info(response.data);
+
+        store.dispatch(userActions.ChangePasswordSuccessAction());
+      })
+      .catch((error) => {
+        toast.error("Server Not Responding");
+        store.dispatch(userActions.ChangePasswordFailureAction());
+      });
+  }
+
+  getVehicles(userId: string, token: string) {
+    axios
+      .get("https://localhost:5001/api/UserApi/GetVehicles?userId=" + userId, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((response) => {
         store.dispatch(userActions.GetVehiclesSuccessAction(response.data));
       })
       .catch((error) => {
@@ -80,11 +145,48 @@ class UserServices {
       });
   }
 
-  addVehicle(vehicle: Types.IVehicle, userId: string) {
+  getAllVehicles(token: string) {
+    axios
+      .get("https://localhost:5001/api/UserApi/GetAllVehicles", {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((response) => {
+        store.dispatch(userActions.GetAllVehiclesSuccessAction(response.data));
+      })
+      .catch((error) => {
+        toast.error("Server Not Responding");
+        store.dispatch(userActions.GetAllVehiclesFailureAction(error));
+      });
+  }
+
+  getAllUsers(token: string) {
+    axios
+      .get("https://localhost:5001/api/UserApi/GetAllUsers", {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((response) => {
+        store.dispatch(userActions.GetAllUsersSuccessAction(response.data));
+      })
+      .catch((error) => {
+        toast.error("Server Not Responding");
+        store.dispatch(userActions.GetAllUsersFailureAction(error));
+      });
+  }
+
+  addVehicle(vehicle: Types.IVehicle, userId: string, token: string) {
     axios
       .post(
         "https://localhost:5001/api/UserApi/AddVehicle?userId=" + userId,
-        vehicle
+        vehicle,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
       )
       .then(() => store.dispatch(userActions.AddVehicleSuccessAction()))
       .catch((error) => {
@@ -93,11 +195,16 @@ class UserServices {
       });
   }
 
-  updateBalance(data: Types.IWallet, userId: string) {
+  updateBalance(data: Types.IWallet, userId: string, token: string) {
     axios
       .post(
         "https://localhost:5001/api/UserApi/UpdateBalance?userId=" + userId,
-        data
+        data,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
       )
       .then(() => store.dispatch(userActions.UpdateBalanceSuccessAction()))
       .catch((error) => {
@@ -106,9 +213,13 @@ class UserServices {
       });
   }
 
-  getImage(userId: string) {
+  getImage(userId: string, token: string) {
     axios
-      .get("https://localhost:5001/api/UserApi/GetImage?userId=" + userId)
+      .get("https://localhost:5001/api/UserApi/GetImage?userId=" + userId, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
       .then((response) => {
         store.dispatch(userActions.GetUserImageSuccessAction(response.data));
       })
@@ -118,13 +229,16 @@ class UserServices {
       });
   }
 
-  updateImage(Photo: Types.IImage, userId: string) {
-    console.log(Photo.image);
-    alert("hi");
+  updateImage(Photo: Types.IImage, userId: string, token: string) {
     axios
       .post(
         "https://localhost:5001/api/UserApi/UpdateImage?userId=" + userId,
-        Photo.image
+        Photo.image,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
       )
       .then((response) => {
         store.dispatch(userActions.UpdateImageSuccessAction(response.data));

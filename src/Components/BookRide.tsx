@@ -11,10 +11,10 @@ import "react-datepicker/dist/react-datepicker.css";
 import { RouteComponentProps } from "react-router-dom";
 import { connect } from "react-redux";
 import { Types, vehicleType, times } from "./Interfaces";
-import { RideActions } from "./Redux/Ride/RideActions";
+import { RideRequestActions } from "./Redux/Ride/RideActions";
 import { AppState } from "./Redux/rootReducer";
 import AvailableRides from "./AvailableRides";
-let rideActions = new RideActions();
+let rideActions = new RideRequestActions();
 const validationSchema = Yup.object({
   from: Yup.string().required("Required"),
   to: Yup.string().required("Required"),
@@ -51,7 +51,7 @@ class BookRide extends React.Component<IProps, Types.IBookRide> {
 
   render() {
     if (!this.props.isLoggedIn) {
-      this.props.history.push("/Login");
+      this.props.history.push("/");
     }
 
     return (
@@ -60,7 +60,9 @@ class BookRide extends React.Component<IProps, Types.IBookRide> {
           enableReinitialize
           initialValues={this.state}
           validationSchema={validationSchema}
-          onSubmit={() => this.props.bookRide(this.state, this.props.userId)}
+          onSubmit={() =>
+            this.props.bookRide(this.state, this.props.userId, this.props.token)
+          }
         >
           {({ handleSubmit, errors }) => (
             <form onSubmit={handleSubmit}>
@@ -137,9 +139,7 @@ class BookRide extends React.Component<IProps, Types.IBookRide> {
                           <small>Date</small>
                           <DatePicker
                             dateFormat="MM/dd/yyyy"
-                            // margin="normal"
                             id="date-picker-inline"
-                            //label="Date picker inline"
                             selected={this.state.startDate}
                             onChange={this.dateHandler}
                             minDate={new Date()}
@@ -196,7 +196,7 @@ class BookRide extends React.Component<IProps, Types.IBookRide> {
 }
 
 interface DispatchProps {
-  bookRide: (ride: Types.IBookRide, userId: string) => void;
+  bookRide: (ride: Types.IBookRide, userId: string, token: string) => void;
 }
 
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
@@ -207,6 +207,7 @@ const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   isRequested: state.ride.isRequested,
   isLoaded: state.ride.isLoaded,
   userId: state.user.mail,
+  token: state.user.token,
 });
 
 export default connect(mapStateToProps, {

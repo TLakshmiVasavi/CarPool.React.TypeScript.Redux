@@ -27,15 +27,22 @@ export declare module Types {
     showPassword: Boolean;
   }
 
+  export interface IChangePassword {
+    [key: string]: string;
+    password: string;
+    newPassword: string;
+    confirmPassword: string;
+  }
+
   export interface IUser {
     [key: string]: any;
+    role: string;
     name: string;
     mail: string;
     number: string;
     age: number;
     gender: string;
     photo?: any;
-    isLoggedIn: boolean;
   }
 
   export interface IRoute {
@@ -47,7 +54,6 @@ export declare module Types {
 
   export interface IOfferRide {
     [key: string]: any;
-    //id: number;
     noOfOfferedSeats: number;
     isChecked: Boolean;
     startDate: Date;

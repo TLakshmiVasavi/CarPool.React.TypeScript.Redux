@@ -10,11 +10,20 @@ import AddVehicle from "./AddVehicle";
 import Wallet from "./Wallet";
 import { Redirect } from "react-router-dom";
 import AdminLoginForm from "./AdminLogin";
+import Vehicles from "./Vehicles";
+import Rides from "./OfferedRides";
+import Bookings from "./BookedRides";
+import ChangePassword from "./ChangePassword";
+//import Users from "./Users";
 
 export default function Routes() {
   return (
     <Switch>
       <Route path="/Admin/Login" component={AdminLoginForm} />
+      <Route path="/Admin/Rides" component={Rides} />
+      <Route path="/Admin/Bookings" component={Bookings} />
+      {/* <Route path="/Admin/Users" component={Users} /> */}
+      <Route path="/Admin/Vehicles" component={Vehicles} />
       <Route path="/(Login|SignUp|)/" component={LoginSignUp} />
       <Route path="/Profile" component={UserProfile} />
       <Route path="/MyRides" component={MyRides} />
@@ -23,6 +32,7 @@ export default function Routes() {
       <Route path="/AddVehicle" component={AddVehicle} />
       <Route path="/Wallet" component={Wallet} />
       <Route path="/Dashboard" component={Dashboard} />
+      <Route path="/ChangePassword" component={ChangePassword} />
       <Redirect to="/" />
     </Switch>
   );

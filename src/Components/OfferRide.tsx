@@ -13,13 +13,13 @@ import "../StyleSheets/OfferRide.css";
 import "../StyleSheets/Toogle.css";
 import { Types, times } from "./Interfaces";
 import { connect } from "react-redux";
-import { RideActions } from "./Redux/Ride/RideActions";
-import { UserActions } from "./Redux/User/UserActions";
+import { RideRequestActions } from "./Redux/Ride/RideActions";
+import { UserRequestActions } from "./Redux/User/UserActions";
 import { AppState } from "./Redux/rootReducer";
 import Loader from "react-loader-spinner";
 import { getVehicles } from "./Redux/User/UserActions";
-let userActions = new UserActions();
-let rideActions = new RideActions();
+let userActions = new UserRequestActions();
+let rideActions = new RideRequestActions();
 const validationSchema = Yup.object({
   noOfOfferedSeats: Yup.string().required("Required"),
   time: Yup.string().required("Required"),
@@ -47,7 +47,6 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
       cost: 0,
       availableVehicles: [],
       vehicleId: "0",
-      //this.props.vehicles == [] ? "0" : this.props.vehicles[0].number,
     };
     this.handleChecked = this.handleChecked.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -60,10 +59,6 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
     this.handleRouteChange = this.handleRouteChange.bind(this);
     this.handleDateChange = this.handleDateChange.bind(this);
   }
-
-  // componentWillMount() {
-  //   this.props.getVehicles();
-  // }
 
   handleChange(e: any) {
     const { name, value } = e.target;
@@ -89,24 +84,16 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
     route[name] = value;
     this.setState({ route });
   }
-  componentWillReceiveProps() {
-    if (this.props.isLoaded) {
-      if (this.props.vehicles == []) {
-        this.props.history.push("/User/AddVehicle");
-      } else {
-        this.setState({ ["vehicleId"]: this.props.vehicles[0]?.number });
-        this.setState({ ["totalNoOfSeats"]: this.props.vehicles[0]?.capacity });
-        this.setState({
-          ["noOfOfferedSeats"]: this.props.vehicles[0]?.capacity,
-        });
-      }
+
+  componentDidUpdate(prevProps: any, prevState: any) {
+    if (this.props.vehicles !== prevProps.vehicles) {
+      this.setState({ ["availableVehicles"]: this.props.vehicles });
     }
   }
-
   handleSubmit(e: any) {
     this.setState(["vehicleId"]);
     e.preventDefault();
-    this.props.offerRide(this.state, this.props.userId);
+    this.props.offerRide(this.state, this.props.userId, this.props.token);
   }
 
   onStopChange(e: any) {
@@ -149,10 +136,11 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
 
   render() {
     if (!this.props.isLoggedIn) {
-      this.props.history.push("/Login");
+      this.props.history.push("/");
     }
 
-    if (this.props.isLoading) {
+    if (this.props.isLoaded) {
+      console.log(this.props.vehicles);
       if (this.props.vehicles == []) {
         this.props.history.push("/User/AddVehicle");
       }
@@ -165,7 +153,7 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
             color="#00BFFF"
             height={100}
             width={100}
-            timeout={3000} //3 secs
+            timeout={3000}
           />
         ) : (
           <Formik
@@ -173,7 +161,11 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
             initialValues={this.state}
             validationSchema={validationSchema}
             onSubmit={() => {
-              this.props.offerRide(this.state, this.props.userId);
+              this.props.offerRide(
+                this.state,
+                this.props.userId,
+                this.props.token
+              );
             }}
           >
             {({ handleSubmit, errors }) => (
@@ -406,27 +398,23 @@ const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   isLoggedIn: state.user.isLoggedIn,
   isLoading: state.user.isLoading,
   isLoaded: state.user.isLoaded,
-  // vehicles: state.user.isLoaded
-  //   ? state.user.vehicles
+
   vehicles: getVehicles(
     state.user.isLoading,
     state.user.isLoaded,
-    state.user.mail
+    state.user.mail,
+    state.user.token
   ),
   userId: state.user.mail,
-  // executeQueryAndExtractData()
-  //await getVehicles(),
+  token: state.user.token,
 });
 
 interface DispatchProps {
-  offerRide: (ride: Types.IOfferRide, userId: string) => void;
-  //getVehicles: () => void;
+  offerRide: (ride: Types.IOfferRide, userId: string, token: string) => void;
 }
 
 const mapDispatchToProps = {
   offerRide: rideActions.OfferRideRequestAction,
-
-  //getVehicles: userActions.GetVehiclesAction,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(OfferRide);

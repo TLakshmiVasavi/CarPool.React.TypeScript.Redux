@@ -1,7 +1,7 @@
 import React from "react";
 import "../App.css";
 interface IProps {
-  handleClose: () => void;
+  handleClose: (e?: any) => void;
   show: boolean;
   children: any;
 }

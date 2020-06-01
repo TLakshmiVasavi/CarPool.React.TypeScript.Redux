@@ -35,7 +35,7 @@ export const rideReducer: Reducer<IRideReducerState> = (
       return {
         ...state,
         isLoaded: false,
-        isRequested: true,
+        isLoading: true,
       };
     case RideEvents.BOOK_RIDE_RESPONSE:
       return {
@@ -43,6 +43,7 @@ export const rideReducer: Reducer<IRideReducerState> = (
         availableRides: action.payload,
         isLoaded: true,
       };
+    case RideEvents.GET_BOOKINGS_SUCCESS:
     case RideEvents.GET_MY_BOOKINGS_SUCCESS:
       return {
         ...state,
@@ -50,6 +51,7 @@ export const rideReducer: Reducer<IRideReducerState> = (
         isLoaded: true,
         isLoading: false,
       };
+    case RideEvents.GET_OFFERS_SUCCESS:
     case RideEvents.GET_MY_OFFERS_SUCCESS:
       return {
         ...state,
@@ -80,18 +82,23 @@ export const rideReducer: Reducer<IRideReducerState> = (
         isOffersLoaded: false,
         isOffersLoading: true,
       };
-    case RideEvents.OFFER_RIDE_REQUEST:
-    case RideEvents.OFFER_RIDE_SUCCESS:
     case RideEvents.OFFER_RIDE_FAILURE:
     case RideEvents.BOOK_RIDE_FAILURE:
-    case RideEvents.REQUEST_RIDE:
-    case RideEvents.REQUEST_RIDE_SUCCESS:
     case RideEvents.REQUEST_RIDE_FAILURE:
-
     case RideEvents.GET_MY_BOOKINGS_FAILURE:
-
     case RideEvents.GET_MY_OFFERS_FAILURE:
     case RideEvents.GET_RIDE_REQUESTS_FAILURE:
+    case RideEvents.GET_OFFERS_FAILURE:
+    case RideEvents.GET_BOOKINGS_FAILURE:
+      return {
+        ...state,
+        error: action.payload,
+      };
+    case RideEvents.OFFER_RIDE_REQUEST:
+    case RideEvents.OFFER_RIDE_SUCCESS:
+    case RideEvents.REQUEST_RIDE:
+    case RideEvents.REQUEST_RIDE_SUCCESS:
+
     default:
       return state;
   }

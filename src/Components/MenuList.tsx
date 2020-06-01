@@ -9,9 +9,10 @@ import MenuList from "@material-ui/core/MenuList";
 import "../App.css";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { UserActions } from "./Redux/User/UserActions";
+import { UserRequestActions, getUserImage } from "./Redux/User/UserActions";
 import { AppState } from "./Redux/rootReducer";
-let userActions = new UserActions();
+import { stat } from "fs";
+let userActions = new UserRequestActions();
 interface MenuState {
   open: boolean;
 }
@@ -42,7 +43,7 @@ class UserMenuList extends React.Component<IProps, MenuState> {
   };
 
   handleLogout = () => {
-    this.props.Logout(this.props.userId);
+    this.props.Logout(this.props.userId, this.props.token);
     this.setState({ open: false });
   };
 
@@ -77,49 +78,106 @@ class UserMenuList extends React.Component<IProps, MenuState> {
                 >
                   <Paper>
                     <ClickAwayListener onClickAway={this.handleClose}>
-                      <MenuList
-                        className="links"
-                        autoFocusItem={this.state.open}
-                        id="menu-list-grow"
-                        onKeyDown={this.handleListKeyDown}
-                      >
-                        <MenuItem
-                          component={Link}
-                          to="/Profile"
-                          onClick={this.handleClose}
+                      {this.props.userRole == "User" ? (
+                        <MenuList
+                          className="links"
+                          autoFocusItem={this.state.open}
+                          id="menu-list-grow"
+                          onKeyDown={this.handleListKeyDown}
                         >
-                          Profile
-                        </MenuItem>
-                        <MenuItem
-                          component={Link}
-                          to="/MyRides"
-                          onClick={this.handleClose}
+                          <MenuItem
+                            component={Link}
+                            to="/Profile"
+                            onClick={this.handleClose}
+                          >
+                            Profile
+                          </MenuItem>
+                          <MenuItem
+                            component={Link}
+                            to="/ChangePassword"
+                            onClick={this.handleClose}
+                          >
+                            Change Password
+                          </MenuItem>
+                          <MenuItem
+                            component={Link}
+                            to="/MyRides"
+                            onClick={this.handleClose}
+                          >
+                            My Rides
+                          </MenuItem>
+                          <MenuItem
+                            component={Link}
+                            to="/Dashboard"
+                            onClick={this.handleClose}
+                          >
+                            DashBoard
+                          </MenuItem>
+                          <MenuItem
+                            component={Link}
+                            to="/Wallet"
+                            onClick={this.handleClose}
+                          >
+                            Wallet
+                          </MenuItem>
+                          <MenuItem
+                            component={Link}
+                            to="/AddVehicle"
+                            onClick={this.handleClose}
+                          >
+                            AddVehicle
+                          </MenuItem>
+                          <MenuItem onClick={this.handleLogout}>
+                            Logout
+                          </MenuItem>
+                        </MenuList>
+                      ) : (
+                        <MenuList
+                          className="links"
+                          autoFocusItem={this.state.open}
+                          id="menu-list-grow"
+                          onKeyDown={this.handleListKeyDown}
                         >
-                          My Rides
-                        </MenuItem>
-                        <MenuItem
-                          component={Link}
-                          to="/Dashboard"
-                          onClick={this.handleClose}
-                        >
-                          DashBoard
-                        </MenuItem>
-                        <MenuItem
-                          component={Link}
-                          to="/Wallet"
-                          onClick={this.handleClose}
-                        >
-                          Wallet
-                        </MenuItem>
-                        <MenuItem
-                          component={Link}
-                          to="/AddVehicle"
-                          onClick={this.handleClose}
-                        >
-                          AddVehicle
-                        </MenuItem>
-                        <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
-                      </MenuList>
+                          <MenuItem
+                            component={Link}
+                            to="/Profile"
+                            onClick={this.handleClose}
+                          >
+                            Profile
+                          </MenuItem>
+                          <MenuItem
+                            component={Link}
+                            to="/Admin/Rides"
+                            onClick={this.handleClose}
+                          >
+                            Rides
+                          </MenuItem>
+                          <MenuItem
+                            component={Link}
+                            to="/Admin/Bookings"
+                            onClick={this.handleClose}
+                          >
+                            Bookings
+                          </MenuItem>
+                          <MenuItem
+                            component={Link}
+                            to="/Admin/Users"
+                            onClick={this.handleClose}
+                          >
+                            Users
+                          </MenuItem>
+                          <MenuItem
+                            component={Link}
+                            to="/Admin/Vehicles"
+                            onClick={this.handleClose}
+                          >
+                            Vehicles
+                          </MenuItem>
+                          <MenuItem onClick={this.handleLogout}>
+                            Logout
+                          </MenuItem>
+                        </MenuList>
+                      )}
                     </ClickAwayListener>
                   </Paper>
                 </Grow>
@@ -133,14 +191,22 @@ class UserMenuList extends React.Component<IProps, MenuState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  photo: state.user.photo,
+  photo: getUserImage(
+    state.user.isImageLoading,
+    state.user.isImageLoaded,
+    state.user.mail,
+    state.user.token,
+    state.user.isLoggedIn
+  ),
   name: state.user.name,
   isLoggedIn: state.user.isLoggedIn,
   userId: state.user.mail,
+  userRole: state.user.role,
+  token: state.user.token,
 });
 
 interface DispatchProps {
-  Logout: (userId: string) => void;
+  Logout: (userId: string, token: string) => void;
 }
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
 export default connect(mapStateToProps, {

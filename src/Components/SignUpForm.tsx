@@ -16,9 +16,9 @@ import { RouteComponentProps } from "react-router-dom";
 import { Types, hasVehicle, vehicleType, Gender } from "./Interfaces";
 import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
-import { UserActions } from "./Redux/User/UserActions";
+import { UserRequestActions } from "./Redux/User/UserActions";
 import "../StyleSheets/Colors.css";
-let userActions = new UserActions();
+let userActions = new UserRequestActions();
 const validationSchema = Yup.object().shape({
   mail: Yup.string()
     .email("Please enter valid mail")
@@ -78,8 +78,6 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
   }
 
   handlefile(e: any) {
-    console.log(e.target);
-    console.log(e.target.files[0]);
     this.setState({
       [e.target.name]: e.target.files[0],
     });
@@ -91,7 +89,6 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
 
   handleChange(e: any) {
     let { name, value } = e.target;
-    console.log(e);
     if (value == "true") {
       value = true;
     }
@@ -160,7 +157,6 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
                 margin="normal"
                 select
                 label="Gender"
-                //value={Gender}
                 onChange={this.handleChange}
                 SelectProps={{
                   native: true,
@@ -267,7 +263,7 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
                 <a
                   className="underline white"
                   onClick={() => {
-                    this.props.history.push("/Login");
+                    this.props.history.push("/");
                   }}
                 >
                   LogIn

@@ -6,10 +6,10 @@ import { RouteComponentProps, Redirect } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Types, vehicleType } from "./Interfaces";
-import { UserActions } from "./Redux/User/UserActions";
+import { UserRequestActions } from "./Redux/User/UserActions";
 import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
-let userActions = new UserActions();
+let userActions = new UserRequestActions();
 const validationSchema = Yup.object({
   model: Yup.string().required("Required"),
   number: Yup.string().required("Required"),
@@ -29,7 +29,7 @@ class AddVehicle extends Component<IProps, Types.IVehicle> {
 
   render() {
     if (!this.props.isLoggedIn) {
-      this.props.history.push("/Login");
+      this.props.history.push("/");
     }
 
     return (
@@ -38,7 +38,7 @@ class AddVehicle extends Component<IProps, Types.IVehicle> {
         initialValues={this.state}
         validationSchema={validationSchema}
         onSubmit={(values) => {
-          this.props.addVehicle(values, this.props.userId);
+          this.props.addVehicle(values, this.props.userId, this.props.token);
         }}
       >
         {({ handleSubmit, handleChange, errors }) => (
@@ -80,7 +80,7 @@ class AddVehicle extends Component<IProps, Types.IVehicle> {
               <TextField
                 margin="normal"
                 className="bg-white rounded-corners"
-                type="text"
+                type="number"
                 onChange={handleChange}
                 name="capacity"
                 label={errors.capacity ?? "capacity"}
@@ -100,13 +100,14 @@ class AddVehicle extends Component<IProps, Types.IVehicle> {
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
 
 interface DispatchProps {
-  addVehicle: (vehicle: Types.IVehicle, userId: string) => void;
+  addVehicle: (vehicle: Types.IVehicle, userId: string, token: string) => void;
 }
 
 const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   history: ownProps.history,
   isLoggedIn: state.user.isLoggedIn,
   userId: state.user.mail,
+  token: state.user.token,
 });
 
 export default connect(mapStateToProps, {

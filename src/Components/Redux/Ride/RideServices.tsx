@@ -1,19 +1,24 @@
 import axios from "axios";
 import { RideEvents } from "./RideTypes";
 import { Types } from "../../Interfaces";
-import { RideActions } from "./RideActions";
+import { RideResponseActions } from "./RideResponseActions";
 import { store } from "../Store";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
-import rideActions from "./RideActions";
-
+//import rideActions from "./RideActions";
+let rideActions = new RideResponseActions();
 class RideService {
-  offerRide(offerRide: Types.IOfferRide, userId: string) {
+  offerRide(offerRide: Types.IOfferRide, userId: string, token: string) {
     axios
       .post(
         "https://localhost:5001/api/RideApi/OfferRide?userId=" +
           store.getState().user.mail,
-        offerRide
+        offerRide,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
       )
       .then(() => store.dispatch(rideActions.OfferRideSuccessAction()))
       .catch((error) => {
@@ -22,12 +27,17 @@ class RideService {
       });
   }
 
-  bookRide(Request: Types.IBookRide, userId: string) {
+  bookRide(Request: Types.IBookRide, userId: string, token: string) {
     axios
       .post(
         "https://localhost:5001/api/RideApi/BookRide?userId=" +
           store.getState().user.mail,
-        Request
+        Request,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
       )
       .then((response) => {
         store.dispatch(rideActions.BookRideResponseAction(response.data));
@@ -42,7 +52,8 @@ class RideService {
     Request: Types.IBookRide,
     noOfSeats: number,
     rideId: number,
-    userId: string
+    userId: string,
+    token: string
   ) {
     axios
       .post(
@@ -52,7 +63,12 @@ class RideService {
           rideId +
           "&noOfSeats" +
           noOfSeats,
-        Request
+        Request,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
       )
       .then(() => store.dispatch(rideActions.RequestRideSuccessAction()))
       .catch((error) => {
@@ -61,11 +77,16 @@ class RideService {
       });
   }
 
-  getOffers(userId: string) {
+  getMyOffers(userId: string, token: string) {
     axios
       .get(
         "https://localhost:5001/api/RideApi/GetOfferedRides?userId=" +
-          store.getState().user.mail
+          store.getState().user.mail,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
       )
       .then((response) =>
         store.dispatch(rideActions.GetMyOffersSuccessAction(response.data))
@@ -75,12 +96,33 @@ class RideService {
         store.dispatch(rideActions.GetMyOffersFailureAction(error));
       });
   }
+  //
+  getOffers(token: string) {
+    axios
+      .get("https://localhost:5001/api/RideApi/GetAllOffers", {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((response) =>
+        store.dispatch(rideActions.GetOffersSuccessAction(response.data))
+      )
+      .catch((error) => {
+        toast.error("Server Not Responding");
+        store.dispatch(rideActions.GetOffersFailureAction(error));
+      });
+  }
 
-  getBookings(userId: string) {
+  getMyBookings(userId: string, token: string) {
     axios
       .get(
         "https://localhost:5001/api/RideApi/GetBookings?userId=" +
-          store.getState().user.mail
+          store.getState().user.mail,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
       )
       .then((response) =>
         store.dispatch(rideActions.GetMyBookingsSuccessAction(response.data))
@@ -90,12 +132,28 @@ class RideService {
         store.dispatch(rideActions.GetMyBookingsFailureAction(error));
       });
   }
-
+  //
+  getBookings(token: string) {
+    axios
+      .get("https://localhost:5001/api/RideApi/GetAllBookings", {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((response) =>
+        store.dispatch(rideActions.GetBookingsSuccessAction(response.data))
+      )
+      .catch((error) => {
+        toast.error("Server Not Responding");
+        store.dispatch(rideActions.GetBookingsFailureAction(error));
+      });
+  }
   approveRideRequest(
     requestId: number,
     rideId: number,
     isApprove: boolean,
-    userId: string
+    userId: string,
+    token: string
   ) {
     axios
       .post(
@@ -106,7 +164,12 @@ class RideService {
           "&isApprove" +
           isApprove +
           "&providerId" +
-          store.getState().user.mail
+          store.getState().user.mail,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
       )
       .then(() => store.dispatch(rideActions.ApproveRequestSuccessAction()))
       .catch((error) => {
@@ -115,13 +178,18 @@ class RideService {
       });
   }
 
-  getRequests(rideId: number, userId: string) {
+  getRequests(rideId: number, userId: string, token: string) {
     axios
       .get(
         "https://localhost:5001/api/RideApi/GetRequests?userId=" +
           store.getState().user.mail +
           "&rideId=" +
-          rideId
+          rideId,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
       )
       .then((response) =>
         store.dispatch(rideActions.GetRideRequestsSuccessAction(response.data))

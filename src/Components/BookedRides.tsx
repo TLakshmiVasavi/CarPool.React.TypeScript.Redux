@@ -3,12 +3,13 @@ import { Container, Row, Col } from "react-grid-system";
 import { Types } from "./Interfaces";
 import { MdLocationOn } from "react-icons/md";
 import { AppState } from "./Redux/rootReducer";
-import { RideActions } from "./Redux/Ride/RideActions";
+import { RideRequestActions } from "./Redux/Ride/RideActions";
 import { connect } from "react-redux";
-import { getBookings } from "./Redux/Ride/RideActions";
+import { getBookings, getMyBookings } from "./Redux/Ride/RideActions";
 import { stat } from "fs";
 import Loader from "react-loader-spinner";
-let rideActions = new RideActions();
+import { RouteComponentProps } from "react-router-dom";
+let rideActions = new RideRequestActions();
 class BookedRides extends React.Component<IProps, {}> {
   render() {
     var url = "data:image/png;base64,";
@@ -20,7 +21,7 @@ class BookedRides extends React.Component<IProps, {}> {
             color="#00BFFF"
             height={100}
             width={100}
-            timeout={3000} //3 secs
+            timeout={3000}
           />
         ) : (
           <>
@@ -105,13 +106,23 @@ class BookedRides extends React.Component<IProps, {}> {
 
 type IProps = ReturnType<typeof mapStateToProps>;
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
+  history: ownProps.history,
   isLoading: state.ride.isLoading,
-  bookings: getBookings(
-    state.ride.isLoading,
-    state.ride.isLoaded,
-    state.user.mail
-  ),
+  bookings:
+    state.user.role == "User"
+      ? getMyBookings(
+          state.ride.isLoading,
+          state.ride.isLoaded,
+          state.user.mail,
+          state.user.token
+        )
+      : getBookings(
+          state.ride.isLoading,
+          state.ride.isLoaded,
+          state.user.token
+        ),
+  token: state.user.token,
 });
 
 export default connect(mapStateToProps, {})(BookedRides);

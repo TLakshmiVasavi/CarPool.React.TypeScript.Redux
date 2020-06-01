@@ -65,7 +65,7 @@ export const userReducer: Reducer<IUserReducerState> = (
         ...state,
         ...action.payload,
       };
-
+    case UserEvents.ADD_VEHICLE_SUCCESS:
     case UserEvents.GET_ALL_VEHICLES_SUCCESS:
     case UserEvents.GET_VEHICLES_SUCCESS:
       return {
@@ -84,7 +84,6 @@ export const userReducer: Reducer<IUserReducerState> = (
     case UserEvents.GET_VEHICLES_FAILURE:
     case UserEvents.UPDATE_USER_FAILURE:
     case UserEvents.ADD_VEHICLE_FAILURE:
-
     case UserEvents.UPDATE_USER_IMAGE_FAILURE:
     case UserEvents.USER_LOGIN_FAILURE:
     case UserEvents.USER_SIGNUP_FAILURE:
@@ -132,7 +131,7 @@ export const userReducer: Reducer<IUserReducerState> = (
     case UserEvents.USER_SIGNUP_REQUEST:
     case UserEvents.UPDATE_USER_REQUEST:
     case UserEvents.ADD_VEHICLE:
-    case UserEvents.ADD_VEHICLE_SUCCESS:
+
     default:
       return state;
   }

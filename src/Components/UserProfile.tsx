@@ -1,18 +1,12 @@
 import React from "react";
-import { Row, Col, Container } from "react-grid-system";
+import { Container } from "react-grid-system";
 import { Types } from "./Interfaces";
-import { connect, DispatchProp } from "react-redux";
+import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
-import { UserRequestActions, getVehicles } from "./Redux/User/UserActions";
-import { Redirect } from "react-router-dom";
+import { UserRequestActions } from "./Redux/User/UserActions";
 import { RouteComponentProps } from "react-router-dom";
-import { stat } from "fs";
-import Modal from "./PopUp";
 import Vehicles from "./Vehicles";
 import UserDetails from "./UserDetails";
-import * as Yup from "yup";
-import { Formik } from "formik";
-import { TextField } from "@material-ui/core";
 let userActions = new UserRequestActions();
 
 class UserProfile extends React.Component<IProps, Types.IChangePassword> {

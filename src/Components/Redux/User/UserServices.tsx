@@ -49,7 +49,7 @@ class UserServices {
     axios
       .post("https://localhost:5001/api/UserApi/SignUp", data)
       .then((response) =>
-        store.dispatch(userActions.UserSignupSuccessAction(response.data.user))
+        store.dispatch(userActions.UserSignupSuccessAction(response.data))
       )
       .catch((error) => {
         toast.error("Server Not Responding");
@@ -188,7 +188,9 @@ class UserServices {
           },
         }
       )
-      .then(() => store.dispatch(userActions.AddVehicleSuccessAction()))
+      .then((response) =>
+        store.dispatch(userActions.AddVehicleSuccessAction(response.data))
+      )
       .catch((error) => {
         toast.error("Server Not Responding");
         store.dispatch(userActions.AddVehicleFailureAction(error));

@@ -1,9 +1,31 @@
+form > div > label.Mui-focused {
+  color: black !important;
+}
+
+form > div.error > label.Mui-focused {
+  color: red !important;
+}
+
+form > div.error > label {
+  color: red;
+}
+
+a:hover {
+  cursor: pointer;
+}
+
 .img-container {
   position: relative;
 }
+
+.Dashboard > .center {
+  margin-top: 10%;
+}
+
 .img-container:hover {
   cursor: pointer;
 }
+
 .user-image {
   opacity: 1;
   height: 100%;
@@ -26,6 +48,11 @@
 
 .img-container:hover .middle {
   opacity: 1;
+}
+
+select {
+  float: left;
+  width: unset;
 }
 
 .change {
@@ -134,6 +161,7 @@ input:disabled {
 .Profile {
   flex-direction: column !important;
   text-align: right;
+  margin-top: 8% !important;
 }
 
 .Profile > div > button {
@@ -145,10 +173,12 @@ select:disabled {
   border: unset;
   font-size: medium;
   color: black;
+  width: 100%;
+  opacity: 1;
 }
 
 .center {
-  margin-top: 10%;
+  /* margin-top: 10%; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -201,9 +231,10 @@ select:disabled {
   width: 40px;
   height: 40px;
 }
-.number.selected {
+
+/* .number.selected {
   border-color: darkviolet;
-}
+} */
 
 .number:hover,
 :focus {
@@ -289,7 +320,9 @@ p {
   background-color: darkviolet;
 }
 
-.selected {
+.time.selected,
+.number.selected {
+  border-color: darkviolet;
   margin: 5px;
   color: white;
   font-weight: bold;

@@ -18,7 +18,9 @@ import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
 import { UserRequestActions } from "./Redux/User/UserActions";
 import "../StyleSheets/Colors.css";
+
 let userActions = new UserRequestActions();
+
 const validationSchema = Yup.object().shape({
   mail: Yup.string()
     .email("Please enter valid mail")
@@ -129,25 +131,29 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
             <form onSubmit={handleSubmit}>
               <h1 className="form-heading underline">SignUp</h1>
               <TextField
-                label={errors.name ?? "Enter Name"}
+                label={errors.name ?? "Name"}
+                className={errors.name ? "error" : ""}
                 onChange={this.handleChange}
                 margin="normal"
                 name="name"
               />
               <TextField
-                label={errors.mail ?? "Enter Mail"}
+                label={errors.mail ?? "Mail"}
+                className={errors.mail ? "error" : ""}
                 onChange={this.handleChange}
                 margin="normal"
                 name="mail"
               />
               <TextField
-                label={errors.number ?? "Enter Phone number"}
+                label={errors.number ?? "Phone number"}
+                className={errors.number ? "error" : ""}
                 onChange={this.handleChange}
                 margin="normal"
                 name="number"
               />
               <TextField
-                label={errors.age ?? "Enter Age"}
+                label={errors.age ?? "Age"}
+                className={errors.age ? "error" : ""}
                 onChange={this.handleChange}
                 margin="normal"
                 name="age"
@@ -170,7 +176,7 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
 
               <FormControl>
                 <InputLabel htmlFor="standard-adornment-password">
-                  Password
+                  {errors.password ?? "Password"}
                 </InputLabel>
                 <Input
                   className="margin"
@@ -194,7 +200,12 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
                   }
                 />
               </FormControl>
-              <input type="file" name="photo" onChange={this.handlefile} />
+              <input
+                type="file"
+                name="photo"
+                className="margin"
+                onChange={this.handlefile}
+              />
               <TextField
                 margin="normal"
                 select
@@ -233,22 +244,25 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
                     </TextField>
                     <TextField
                       label={errors.vehicle?.number ?? "Enter Car number"}
+                      className={errors.vehicle?.number ? "error" : ""}
                       onChange={this.handleVehicleChange}
                       margin="normal"
-                      name="vehicle.number"
+                      name="number"
                     />
                     <TextField
                       label={errors.vehicle?.model ?? "Enter model"}
+                      className={errors.vehicle?.model ? "error" : ""}
                       onChange={this.handleVehicleChange}
                       margin="normal"
-                      name="vehicle.model"
+                      name="model"
                     />
                     {this.state.vehicle.type != "Bike" && (
                       <TextField
                         label={errors.vehicle?.capacity ?? "Enter capacity"}
+                        className={errors.vehicle?.capacity ? "error" : ""}
                         onChange={this.handleVehicleChange}
                         margin="normal"
-                        name="vehicle.capacity"
+                        name="capacity"
                         type="number"
                       />
                     )}
@@ -276,6 +290,7 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
     );
   }
 }
+
 interface DispatchProps {
   Signup: (user: Types.INewUser) => void;
 }
@@ -284,7 +299,9 @@ const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   history: ownProps.history,
   isLoggedIn: state.user.isLoggedIn,
 });
+
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
+
 export default connect(mapStateToProps, {
   Signup: userActions.UserSignupRequestAction,
 })(SignUpForm);

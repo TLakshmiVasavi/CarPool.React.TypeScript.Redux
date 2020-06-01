@@ -73,7 +73,9 @@ class UserRequestActions {
 }
 
 export { UserRequestActions };
+
 let userActions = new UserRequestActions();
+
 export function getVehicles(
   isLoading: boolean,
   isLoaded: boolean,

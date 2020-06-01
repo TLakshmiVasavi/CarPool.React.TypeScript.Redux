@@ -12,8 +12,8 @@ import { Redirect } from "react-router-dom";
 import { UserRequestActions } from "./Redux/User/UserActions";
 let userActions = new UserRequestActions();
 const validationSchema = Yup.object({
-  id: Yup.string().required("Required"),
-  password: Yup.string().required("Required"),
+  id: Yup.string().required("Id is Required"),
+  password: Yup.string().required("Password is Required"),
 });
 
 class LoginForm extends Component<IProps, Types.IAuthUser> {
@@ -48,6 +48,7 @@ class LoginForm extends Component<IProps, Types.IAuthUser> {
                 margin="normal"
                 type="text"
                 onChange={handleChange}
+                className={errors.id ? "error" : ""}
                 name="id"
                 label={errors.id ?? "id"}
               />
@@ -56,6 +57,7 @@ class LoginForm extends Component<IProps, Types.IAuthUser> {
                 type="text"
                 onChange={handleChange}
                 name="password"
+                className={errors.password ? "error" : ""}
                 label={errors.password ?? "password"}
               />
               <button type="submit" className="submit bg-darkorange">

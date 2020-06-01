@@ -25,7 +25,7 @@ class BookRide extends React.Component<IProps, Types.IBookRide> {
   constructor(props: any) {
     super(props);
     this.state = {
-      isChecked: false,
+      isChecked: true,
       startDate: new Date(),
       from: "",
       to: "",
@@ -41,6 +41,7 @@ class BookRide extends React.Component<IProps, Types.IBookRide> {
   }
 
   handleChecked() {
+    this.props.history.push("/OfferRide");
     this.setState({ isChecked: !this.state.isChecked });
   }
 
@@ -79,6 +80,7 @@ class BookRide extends React.Component<IProps, Types.IBookRide> {
                           <input
                             type="checkbox"
                             className="checkbox"
+                            checked
                             onChange={this.handleChecked}
                           />
                           <span className="slider round"></span>
@@ -105,11 +107,13 @@ class BookRide extends React.Component<IProps, Types.IBookRide> {
                           />
                         </Col>
                         <Col md={2}>
-                          <div className="dot bg-darkviolet" />
-                          <div className="dot" />
-                          <div className="dot" />
-                          <div className="dot" />
-                          <MdLocationOn />
+                          <div className="dots">
+                            <div className="dot bg-darkviolet" />
+                            <div className="dot" />
+                            <div className="dot" />
+                            <div className="dot" />
+                            <MdLocationOn className="darkviolet" />
+                          </div>
                         </Col>
                       </Row>
                       <Row>
@@ -160,8 +164,8 @@ class BookRide extends React.Component<IProps, Types.IBookRide> {
                                 key={index}
                                 className={
                                   this.state.time === item
-                                    ? "selected"
-                                    : "" + "time"
+                                    ? "selected time"
+                                    : "time"
                                 }
                                 onClick={this.handleChange}
                                 value={item}

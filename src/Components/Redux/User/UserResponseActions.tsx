@@ -82,7 +82,7 @@ class UserResponseActions {
   >();
 
   AddVehicleSuccessAction = createAction(UserEvents.ADD_VEHICLE_SUCCESS)<
-    void
+    Types.IVehicles
   >();
 
   AddVehicleFailureAction = createAction(UserEvents.ADD_VEHICLE_FAILURE)<

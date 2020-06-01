@@ -18,8 +18,11 @@ import { UserRequestActions } from "./Redux/User/UserActions";
 import { AppState } from "./Redux/rootReducer";
 import Loader from "react-loader-spinner";
 import { getVehicles } from "./Redux/User/UserActions";
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 let userActions = new UserRequestActions();
 let rideActions = new RideRequestActions();
+
 const validationSchema = Yup.object({
   noOfOfferedSeats: Yup.string().required("Required"),
   time: Yup.string().required("Required"),
@@ -64,6 +67,7 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
     const { name, value } = e.target;
     this.setState({ [name]: value });
   }
+
   handleDateChange(e: any) {
     this.setState({ ["startDate"]: e });
   }
@@ -86,10 +90,16 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
   }
 
   componentDidUpdate(prevProps: any, prevState: any) {
-    if (this.props.vehicles !== prevProps.vehicles) {
+    if (this.props.vehicles.length == 0) {
+      toast.info("Please add Vehicle to Offer Ride");
+      this.props.history.push("/AddVehicle");
+    } else if (this.props.vehicles !== prevProps.vehicles) {
       this.setState({ ["availableVehicles"]: this.props.vehicles });
+      this.setState({ ["noOfOfferedSeats"]: this.props.vehicles[0].capacity });
+      this.setState({ ["totalNoOfSeats"]: this.props.vehicles[0].capacity });
     }
   }
+
   handleSubmit(e: any) {
     this.setState(["vehicleId"]);
     e.preventDefault();
@@ -140,7 +150,6 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
     }
 
     if (this.props.isLoaded) {
-      console.log(this.props.vehicles);
       if (this.props.vehicles == []) {
         this.props.history.push("/User/AddVehicle");
       }
@@ -243,8 +252,8 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
                                   name="time"
                                   className={
                                     this.state.time === item
-                                      ? "selected"
-                                      : "" + "time"
+                                      ? "selected time"
+                                      : "time"
                                   }
                                   onClick={this.handleChange}
                                   value={item}
@@ -272,7 +281,7 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
                                 Add
                               </button>
                             ) : (
-                              <React.Fragment>
+                              <>
                                 {this.state.route.stops
                                   .slice(0, -1)
                                   .map((item: string, index: number) => (
@@ -303,7 +312,27 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
                                     ),
                                   }}
                                 />
-                              </React.Fragment>
+                              </>
+                            )}
+                          </Col>
+                          <Col md={4}>
+                            {this.state.route.stops.length < 2 ? (
+                              <></>
+                            ) : (
+                              <div className="dots">
+                                <div className="dot bg-darkviolet" />
+                                {Array.from(
+                                  {
+                                    length:
+                                      5 * (this.state.route.stops.length - 1) -
+                                      1,
+                                  },
+                                  (_, k) => (
+                                    <div className="dot" />
+                                  )
+                                )}
+                                <MdLocationOn className="darkviolet" />
+                              </div>
                             )}
                           </Col>
                         </Row>

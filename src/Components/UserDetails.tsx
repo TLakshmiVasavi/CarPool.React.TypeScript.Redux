@@ -2,14 +2,10 @@ import Modal from "./PopUp";
 import { RouteComponentProps } from "react-router-dom";
 import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
-import {
-  UserRequestActions,
-  getVehicles,
-  getAllUsers,
-} from "./Redux/User/UserActions";
+import { UserRequestActions, getAllUsers } from "./Redux/User/UserActions";
 import React from "react";
 import { Types } from "./Interfaces";
-import { Row, Col, Container } from "react-grid-system";
+import { Row, Col } from "react-grid-system";
 interface IState extends Types.IUser {
   disable: boolean;
   open: boolean;
@@ -46,16 +42,16 @@ class UserDetails extends React.Component<IProps, IState> {
     });
     this.setState({ [e.target.name]: e.target.value });
   }
-  enableEdit(e: any) {
+  enableEdit() {
     this.setState({ disable: false });
   }
 
-  handleSubmit(e: any) {
+  handleSubmit() {
     this.setState({ disable: true });
     this.props.updateUser(this.state, this.props.token);
   }
 
-  disableEdit(e: any) {
+  disableEdit() {
     this.setState({ disable: true });
     this.setState({ ...this.props.user });
   }
@@ -156,35 +152,40 @@ class UserDetails extends React.Component<IProps, IState> {
                   </select>
                 </Col>
               </Row>
-              <Row>
-                <Col>
-                  {this.state.disable ? (
-                    <button id="edit" value="edit" onClick={this.enableEdit}>
-                      edit
+
+              <div className="center">
+                {this.state.disable ? (
+                  <button
+                    id="edit"
+                    value="edit"
+                    className="submit bg-darkorange"
+                    onClick={this.enableEdit}
+                  >
+                    edit
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      type="submit"
+                      id="save"
+                      value="save"
+                      className="submit"
+                      onClick={this.handleSubmit}
+                    >
+                      save
                     </button>
-                  ) : (
-                    <>
-                      <Row>
-                        <button
-                          type="submit"
-                          id="save"
-                          value="save"
-                          onClick={this.handleSubmit}
-                        >
-                          save
-                        </button>
-                        <button
-                          id="cancel"
-                          value="cancel"
-                          onClick={this.disableEdit}
-                        >
-                          cancel
-                        </button>
-                      </Row>
-                    </>
-                  )}
-                </Col>
-              </Row>
+
+                    <button
+                      id="cancel"
+                      value="cancel"
+                      className="submit bg-darkorange"
+                      onClick={this.disableEdit}
+                    >
+                      cancel
+                    </button>
+                  </>
+                )}
+              </div>
             </Col>
           </Row>
         </div>

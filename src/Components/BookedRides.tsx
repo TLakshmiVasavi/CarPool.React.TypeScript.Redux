@@ -25,6 +25,7 @@ class BookedRides extends React.Component<IProps, {}> {
           />
         ) : (
           <>
+            {this.props.bookings.length == 0 && <div>No Bookings</div>}
             {this.props.bookings.map((ride: Types.IMyBooking) => (
               <div className="shadowBox">
                 <Row>

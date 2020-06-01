@@ -34,25 +34,21 @@ class ChangePassword extends Component<IProps, Types.IChangePassword> {
   }
   render() {
     return (
-      <div className="rightHalf">
-        <Formik
-          enableReinitialize
-          initialValues={this.state}
-          validationSchema={validationSchema}
-          onSubmit={(values) => {
-            console.log(values);
-
-            this.props.changePassword(
-              values,
-              this.props.userId,
-              this.props.token
-            );
-          }}
-        >
-          {({ handleSubmit, handleChange, errors }) => (
+      <Formik
+        enableReinitialize
+        initialValues={this.state}
+        validationSchema={validationSchema}
+        onSubmit={(values) => {
+          this.props.changePassword(
+            values,
+            this.props.userId,
+            this.props.token
+          );
+        }}
+      >
+        {({ handleSubmit, handleChange, errors }) => (
+          <div className="form-center">
             <form onSubmit={handleSubmit}>
-              <div>{this.state.error}</div>
-              <h1 className="form-heading underline">Log In</h1>
               <TextField
                 margin="normal"
                 type="text"
@@ -75,7 +71,7 @@ class ChangePassword extends Component<IProps, Types.IChangePassword> {
                 label={errors.confirmPassword ?? "confirm Password"}
               />
               <button type="submit" className="submit bg-darkorange">
-                Log In
+                Submit
               </button>
               <div className="form-group white link">
                 Not a member yet?
@@ -89,9 +85,9 @@ class ChangePassword extends Component<IProps, Types.IChangePassword> {
                 </a>
               </div>
             </form>
-          )}
-        </Formik>
-      </div>
+          </div>
+        )}
+      </Formik>
     );
   }
 }

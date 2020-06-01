@@ -53,6 +53,7 @@ class OfferedRides extends React.Component<IProps, IPopUp> {
           />
         ) : (
           <>
+            {this.props.offers == [] && <div>No Rides</div>}
             {this.props.offers.map((ride: Types.IMyOffer) => (
               <>
                 <div

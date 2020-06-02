@@ -40,6 +40,11 @@ class OfferedRides extends React.Component<IProps, IPopUp> {
       open: false,
     });
   }
+  componentDidUpdate() {
+    console.log(this.props.offers);
+    console.log(this.props.offers.length == 0);
+    this.props.offers.map((item) => console.log(item));
+  }
   render() {
     return (
       <>
@@ -49,16 +54,18 @@ class OfferedRides extends React.Component<IProps, IPopUp> {
             color="#00BFFF"
             height={100}
             width={100}
-            timeout={3000}
+            timeout={1000}
           />
         ) : (
           <>
-            {this.props.offers == [] && <div>No Rides</div>}
+            {this.props.offers.length == 0 && <div>No Offers</div>}
             {this.props.offers.map((ride: Types.IMyOffer) => (
               <>
                 <div
                   className="shadowBox"
-                  onClick={() => this.handleClick(ride.id)}
+                  onClick={() => {
+                    this.props.userRole == "User" && this.handleClick(ride.id);
+                  }}
                 >
                   <Row>
                     <Col md={4}>
@@ -129,8 +136,9 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
+  userRole: state.user.role,
   history: ownProps.history,
-  isOffersLoading: state.ride.isOffersLoaded,
+  isOffersLoading: state.ride.isOffersLoading,
   offers:
     state.user.role == "User"
       ? getMyOffers(

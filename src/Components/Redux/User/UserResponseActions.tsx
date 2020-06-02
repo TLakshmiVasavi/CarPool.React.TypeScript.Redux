@@ -104,5 +104,17 @@ class UserResponseActions {
   GetVehiclesFailureAction = createAction(UserEvents.GET_VEHICLES_FAILURE)<
     string
   >();
+  GetBalanceSuccessAction = createAction(UserEvents.GET_BALANCE_SUCCESS)<
+    number
+  >();
+  GetBalanceFailureAction = createAction(UserEvents.GET_BALANCE_FAILURE)<
+    string
+  >();
+  GetTransactionsSuccessAction = createAction(
+    UserEvents.GET_TRANSACTIONS_SUCCESS
+  )<Types.ITransaction[]>();
+  GetTransactionFailureAction = createAction(
+    UserEvents.GET_TRANSACTIONS_FAILURE
+  )<string>();
 }
 export { UserResponseActions };

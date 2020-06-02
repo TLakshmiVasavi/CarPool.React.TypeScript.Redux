@@ -34,6 +34,11 @@ class UserDetails extends React.Component<IProps, IState> {
     this.setState({
       [e.target.name]: e.target.files[0],
     });
+    this.props.updateImage(
+      e.target.files[0],
+      this.props.user.mail,
+      this.props.token
+    );
   }
   handleChange(e: any) {
     const { name, value } = e.target;
@@ -71,125 +76,123 @@ class UserDetails extends React.Component<IProps, IState> {
       this.props.history.push("/");
     }
     return (
-      <>
-        <div className="shadowBox Profile center">
-          <Modal show={this.state.open} handleClose={this.modalClose}>
-            <input type="file" name="photo" onChange={this.updateImage} />
-          </Modal>
-          <Row>
-            <Col md={4}>
-              <div className="img-container">
-                <img
-                  src={url + this.props.user.photo}
-                  className="fill"
-                  onClick={this.modalOpen}
+      <div className="shadowBox Profile center">
+        <Modal show={this.state.open} handleClose={this.modalClose}>
+          <input type="file" name="photo" onChange={this.updateImage} />
+        </Modal>
+        <Row>
+          <Col md={4}>
+            <div className="img-container">
+              <img
+                src={url + this.props.user.photo}
+                className="fill"
+                onClick={this.modalOpen}
+              />
+              <div className="middle">
+                <div className="change">Change Picture</div>
+              </div>
+            </div>
+          </Col>
+          <Col md={8}>
+            <Row>
+              <Col md={6}>Name</Col>
+              <Col md={6}>
+                <input
+                  type="text"
+                  name="name"
+                  value={this.state.name}
+                  onChange={this.handleChange}
+                  disabled={this.state.disable}
                 />
-                <div className="middle">
-                  <div className="change">Change Picture</div>
-                </div>
-              </div>
-            </Col>
-            <Col md={8}>
-              <Row>
-                <Col md={6}>Name</Col>
-                <Col md={6}>
-                  <input
-                    type="text"
-                    name="name"
-                    value={this.state.name}
-                    onChange={this.handleChange}
-                    disabled={this.state.disable}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col md={6}>Age</Col>
-                <Col md={6}>
-                  <input
-                    type="number"
-                    name="age"
-                    value={this.state.age}
-                    onChange={this.handleChange}
-                    disabled={this.state.disable}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col md={6}>Mail</Col>
-                <Col md={6}>
-                  <input
-                    type="text"
-                    name="mail"
-                    value={this.state.mail}
-                    onChange={this.handleChange}
-                    disabled={this.state.disable}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col md={6}>Number</Col>
-                <Col md={6}>
-                  <input
-                    type="text"
-                    name="number"
-                    value={this.state.number}
-                    onChange={this.handleChange}
-                    disabled={this.state.disable}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col md={6}>Gender</Col>
-                <Col md={6}>
-                  <select
-                    name="gender"
-                    defaultValue={this.state.gender}
-                    onChange={this.handleChange}
-                    disabled={this.state.disable}
-                  >
-                    <option value="Female">Female</option>
-                    <option value="Male">Male</option>
-                  </select>
-                </Col>
-              </Row>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6}>Age</Col>
+              <Col md={6}>
+                <input
+                  type="number"
+                  name="age"
+                  value={this.state.age}
+                  onChange={this.handleChange}
+                  disabled={this.state.disable}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6}>Mail</Col>
+              <Col md={6}>
+                <input
+                  type="text"
+                  name="mail"
+                  value={this.state.mail}
+                  onChange={this.handleChange}
+                  disabled={this.state.disable}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6}>Number</Col>
+              <Col md={6}>
+                <input
+                  type="text"
+                  name="number"
+                  value={this.state.number}
+                  onChange={this.handleChange}
+                  disabled={this.state.disable}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6}>Gender</Col>
+              <Col md={6}>
+                <select
+                  name="gender"
+                  defaultValue={this.state.gender}
+                  onChange={this.handleChange}
+                  disabled={this.state.disable}
+                >
+                  <option value="Female">Female</option>
+                  <option value="Male">Male</option>
+                </select>
+              </Col>
+            </Row>
 
-              <div className="center">
-                {this.state.disable ? (
+            <div className="center">
+              {this.state.disable ? (
+                <button
+                  id="edit"
+                  value="edit"
+                  className="submit bg-darkorange"
+                  onClick={this.enableEdit}
+                >
+                  edit
+                </button>
+              ) : (
+                <>
                   <button
-                    id="edit"
-                    value="edit"
-                    className="submit bg-darkorange"
-                    onClick={this.enableEdit}
+                    type="submit"
+                    id="save"
+                    value="save"
+                    className="submit"
+                    onClick={this.handleSubmit}
                   >
-                    edit
+                    save
                   </button>
-                ) : (
-                  <>
-                    <button
-                      type="submit"
-                      id="save"
-                      value="save"
-                      className="submit"
-                      onClick={this.handleSubmit}
-                    >
-                      save
-                    </button>
 
-                    <button
-                      id="cancel"
-                      value="cancel"
-                      className="submit bg-darkorange"
-                      onClick={this.disableEdit}
-                    >
-                      cancel
-                    </button>
-                  </>
-                )}
-              </div>
-            </Col>
-          </Row>
-        </div>
-      </>
+                  <button
+                    id="cancel"
+                    value="cancel"
+                    className="submit bg-darkorange"
+                    onClick={this.disableEdit}
+                  >
+                    cancel
+                  </button>
+                </>
+              )}
+            </div>
+          </Col>
+        </Row>
+      </div>
     );
   }
 }
@@ -197,20 +200,14 @@ class UserDetails extends React.Component<IProps, IState> {
 const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   history: ownProps.history,
   user: state.user,
-  users:
-    state.user.role == "User"
-      ? undefined
-      : getAllUsers(
-          state.user.isLoading,
-          state.user.isLoaded,
-          state.user.token
-        ),
   token: state.user.token,
 });
 interface DispatchProps {
+  updateImage: (Photo: Types.IImage, userId: string, token: string) => void;
   updateUser: (user: Types.IUser, token: string) => void;
 }
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
 export default connect(mapStateToProps, {
   updateUser: userActions.UpdateUserRequestAction,
+  updateImage: userActions.UpdateImageAction,
 })(UserDetails);

@@ -55,7 +55,7 @@ class BookedRides extends React.Component<IProps, {}> {
                 <Row>
                   <Col md={4}>
                     <small>Date</small>
-                    <p>{ride.startDate.toString()}</p>
+                    <p>{ride.startDate.toString().split("T")[0]}</p>
                   </Col>
                   <Col md={4} />
                   <Col md={4}>

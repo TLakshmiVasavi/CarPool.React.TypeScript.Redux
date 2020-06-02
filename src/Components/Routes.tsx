@@ -13,10 +13,12 @@ import Vehicles from "./Vehicles";
 import Rides from "./OfferedRides";
 import Bookings from "./BookedRides";
 import ChangePassword from "./ChangePassword";
+import Users from "./Users";
 
 export default function Routes() {
   return (
     <Switch>
+      <Route path="/Admin/Users" component={Users} />
       <Route path="/Admin/Rides" component={Rides} />
       <Route path="/Admin/Bookings" component={Bookings} />
       <Route path="/Admin/Vehicles" component={Vehicles} />

@@ -6,22 +6,38 @@ import { ActionType } from "typesafe-actions";
 
 export type TestAction = ActionType<typeof actions>;
 
-interface IUserReducerState extends Types.IUser, Types.IVehicles {
+interface IUserReducerState
+  extends Types.IUser,
+    Types.IVehicles,
+    Types.ITransactions {
+  isTransactionsLoaded: boolean;
+  isTransactionsLoading: boolean;
   isLoading: boolean;
   isLoaded: boolean;
+  isUsersLoading: boolean;
+  isUsersLoaded: boolean;
+  isVehiclesLoading: boolean;
+  isVehiclesLoaded: boolean;
   isImageLoading: boolean;
   isImageLoaded: boolean;
   users: Types.IUser[];
+  transactions: Types.ITransaction[];
   token: string;
   error: string;
   isLoggedIn: boolean;
 }
 
 const user: IUserReducerState = {
+  isTransactionsLoaded: false,
+  isTransactionsLoading: false,
   isImageLoaded: false,
   isImageLoading: false,
   isLoading: false,
   isLoaded: false,
+  isUsersLoading: false,
+  isUsersLoaded: false,
+  isVehiclesLoaded: false,
+  isVehiclesLoading: false,
   token: "",
   role: "",
   name: "",
@@ -32,8 +48,10 @@ const user: IUserReducerState = {
   gender: "Female",
   isLoggedIn: false,
   error: "",
+  balance: 0,
   vehicles: [],
   users: [],
+  transactions: [],
 };
 
 interface IUserAction {
@@ -55,11 +73,7 @@ export const userReducer: Reducer<IUserReducerState> = (
       };
 
     case UserEvents.LOGOUT_USER:
-      return {
-        ...state,
-        user: null,
-        isLoggedIn: false,
-      };
+      return user;
     case UserEvents.UPDATE_USER_SUCCESS:
       return {
         ...state,
@@ -71,16 +85,17 @@ export const userReducer: Reducer<IUserReducerState> = (
       return {
         ...state,
         vehicles: action.payload ?? [],
-        isLoading: false,
-        isLoaded: true,
+        isVehiclesLoading: false,
+        isVehiclesLoaded: true,
       };
     case UserEvents.GET_ALL_USERS_SUCCESS:
       return {
         ...state,
         users: action.payload ?? [],
-        isLoading: false,
-        isLoaded: true,
+        isUsersLoading: false,
+        isUsersLoaded: true,
       };
+    case UserEvents.GET_TRANSACTIONS_FAILURE:
     case UserEvents.GET_VEHICLES_FAILURE:
     case UserEvents.UPDATE_USER_FAILURE:
     case UserEvents.ADD_VEHICLE_FAILURE:
@@ -89,6 +104,7 @@ export const userReducer: Reducer<IUserReducerState> = (
     case UserEvents.USER_SIGNUP_FAILURE:
     case UserEvents.GET_ALL_VEHICLES_FAILURE:
     case UserEvents.GET_ALL_USERS_FAILURE:
+    case UserEvents.GET_BALANCE_FAILURE:
       return {
         ...state,
         error: action.payload,
@@ -100,17 +116,18 @@ export const userReducer: Reducer<IUserReducerState> = (
         isImageLoading: false,
       };
     case UserEvents.GET_VEHICLES:
+    case UserEvents.GET_ALL_VEHICLES:
       return {
         ...state,
-        isLoading: true,
-        isLoaded: false,
+        isVehiclesLoading: true,
+        isVehiclesLoaded: false,
       };
-    case UserEvents.GET_ALL_VEHICLES:
+
     case UserEvents.GET_ALL_USERS_REQUEST:
       return {
         ...state,
-        isLoading: true,
-        isLoaded: false,
+        isUsersLoading: true,
+        isUsersLoaded: false,
       };
     case UserEvents.GET_USER_IMAGE_SUCCESS:
     case UserEvents.UPDATE_USER_IMAGE_SUCCESS:
@@ -125,6 +142,32 @@ export const userReducer: Reducer<IUserReducerState> = (
         ...state,
         isImageLoading: true,
         isImageLoaded: false,
+      };
+    case UserEvents.GET_BALANCE:
+      return {
+        ...state,
+        isLoading: true,
+        isLoaded: false,
+      };
+    case UserEvents.GET_BALANCE_SUCCESS:
+      return {
+        ...state,
+        isLoaded: true,
+        isLoading: false,
+        balance: action.payload,
+      };
+    case UserEvents.GET_TRANSACTIONS:
+      return {
+        ...state,
+        isTransactionsLoaded: false,
+        isTransactionsLoading: true,
+      };
+    case UserEvents.GET_TRANSACTIONS_SUCCESS:
+      return {
+        ...state,
+        isTransactionsLoaded: true,
+        isTransactionsLoading: false,
+        transactions: action.payload,
       };
     case UserEvents.UPDATE_USER_IMAGE:
     case UserEvents.USER_LOGIN_REQUEST:

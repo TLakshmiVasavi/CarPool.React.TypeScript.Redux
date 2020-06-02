@@ -5,21 +5,37 @@ import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import { UserResponseActions } from "./UserResponseActions";
 import { store } from "../Store";
+import { RideResponseActions } from "../Ride/RideResponseActions";
+let rideActions = new RideResponseActions();
 //import userActions from "./UserActions";
 let userActions = new UserResponseActions();
 class UserServices {
+  GetTransactions(userId: string, token: string) {
+    axios
+      .get(
+        "https://localhost:5001/api/UserApi/GetTransactions?userId=" + userId,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        console.log(response.data);
+        store.dispatch(userActions.GetTransactionsSuccessAction(response.data));
+      })
+      .catch((error) => {
+        toast.error("Server Not Responding");
+        store.dispatch(userActions.GetTransactionFailureAction(error));
+      });
+  }
   Login(user: Types.IAuthUser) {
     axios
       .post("https://localhost:5001/api/UserApi/Login", user)
       .then((response) => {
         if (response.data.isSuccess) {
           store.dispatch(userActions.UserLoginSuccessAction(response.data));
-          // store.dispatch(
-          //   userActions.GetUserImageAction(
-          //     response.data.mail,
-          //     response.data.token
-          //   )
-          // );
         } else {
           toast.error(response.data.errorMessage);
           store.dispatch(
@@ -34,13 +50,20 @@ class UserServices {
   }
 
   Logout(userId: string, token: string) {
+    store.dispatch(rideActions.ResetDataAction());
     axios
-      .post("https://localhost:5001/api/UserApi/Logout?userId=" + userId, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
-      .then(() => store.dispatch(userActions.LogoutUserSuccess()));
+      .post(
+        "https://localhost:5001/api/UserApi/Logout?userId=" + userId,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then(() => {
+        store.dispatch(userActions.LogoutUserSuccess());
+      });
   }
 
   Signup(user: Types.INewUser) {
@@ -169,6 +192,7 @@ class UserServices {
         },
       })
       .then((response) => {
+        console.log(response.data);
         store.dispatch(userActions.GetAllUsersSuccessAction(response.data));
       })
       .catch((error) => {
@@ -231,11 +255,13 @@ class UserServices {
       });
   }
 
-  updateImage(Photo: Types.IImage, userId: string, token: string) {
+  updateImage(Photo: any, userId: string, token: string) {
+    const data = new FormData();
+    data.append("Photo", Photo);
     axios
       .post(
         "https://localhost:5001/api/UserApi/UpdateImage?userId=" + userId,
-        Photo.image,
+        data,
         {
           headers: {
             Authorization: "Bearer " + token,
@@ -248,6 +274,22 @@ class UserServices {
       .catch((error) => {
         toast.error("Server Not Responding");
         store.dispatch(userActions.UpdateImageFailureAction(error));
+      });
+  }
+
+  getBalance(userId: string, token: string) {
+    axios
+      .get("https://localhost:5001/api/UserApi/GetBalance?userId=" + userId, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((response) => {
+        store.dispatch(userActions.GetBalanceSuccessAction(response.data));
+      })
+      .catch((error) => {
+        toast.error("Server Not Responding");
+        store.dispatch(userActions.GetBalanceFailureAction(error));
       });
   }
 }

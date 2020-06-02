@@ -21,6 +21,7 @@ class RideRequests extends React.Component<IProps, {}> {
     );
   }
   render() {
+    var url = "data:image/png;base64,";
     return (
       <React.Fragment>
         {this.props.isLoaded && (
@@ -30,6 +31,14 @@ class RideRequests extends React.Component<IProps, {}> {
             ) : (
               this.props.requests.map((item: Types.IRideRequest) => (
                 <div className="shadowBox">
+                  <Row>
+                    <Col md={8}>
+                      <h2>{item.riderName}</h2>
+                    </Col>
+                    <Col md={4}>
+                      <img src={url + item.riderPic} className="imgRound" />
+                    </Col>
+                  </Row>
                   <Row>
                     <Col md={4}>
                       <small>From</small>
@@ -51,31 +60,36 @@ class RideRequests extends React.Component<IProps, {}> {
                       <small>Cost</small>
                       <p>{item.cost}</p>
                     </Col>
+                    <Col md={4} />
                     <Col md={4}>
                       <small>Seats Requested</small>
                       <p>{item.noOfSeats}</p>
                     </Col>
                   </Row>
-                  <Row>
-                    <Col md={4}>
-                      <button
-                        type="submit"
-                        className="submit bg-darkorange"
-                        onClick={() => this.handleSubmit(true, item.id)}
-                      >
-                        Accept
-                      </button>
-                    </Col>
-                    <Col md={4}>
-                      <button
-                        type="submit"
-                        className="submit bg-darkorange"
-                        onClick={() => this.handleSubmit(true, item.id)}
-                      >
-                        Reject
-                      </button>
-                    </Col>
-                  </Row>
+                  {item.status == "Requested" ? (
+                    <Row>
+                      <Col md={4}>
+                        <button
+                          type="submit"
+                          className="submit bg-darkorange"
+                          onClick={() => this.handleSubmit(true, item.id)}
+                        >
+                          Accept
+                        </button>
+                      </Col>
+                      <Col md={4}>
+                        <button
+                          type="submit"
+                          className="submit bg-darkorange"
+                          onClick={() => this.handleSubmit(false, item.id)}
+                        >
+                          Reject
+                        </button>
+                      </Col>
+                    </Row>
+                  ) : (
+                    <Row>{item.status}</Row>
+                  )}
                 </div>
               ))
             )}

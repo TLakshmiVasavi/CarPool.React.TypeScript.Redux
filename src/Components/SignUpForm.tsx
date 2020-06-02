@@ -54,7 +54,7 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
       password: "",
       age: 20,
       number: "",
-      photo: "",
+      image: null,
       gender: "Female",
       hasVehicle: true,
       vehicle: {
@@ -202,7 +202,7 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
               </FormControl>
               <input
                 type="file"
-                name="photo"
+                name="image"
                 className="margin"
                 onChange={this.handlefile}
               />

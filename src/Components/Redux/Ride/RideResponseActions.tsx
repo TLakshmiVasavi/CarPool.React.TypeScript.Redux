@@ -72,6 +72,7 @@ class RideResponseActions {
   RequestRideFailureAction = createAction(RideEvents.REQUEST_RIDE_FAILURE)<
     string
   >();
+  ResetDataAction = createAction(RideEvents.RESET_DATA)();
 }
 
 export { RideResponseActions };

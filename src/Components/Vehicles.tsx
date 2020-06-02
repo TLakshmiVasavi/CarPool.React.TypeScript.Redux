@@ -71,13 +71,15 @@ class Vehicles extends React.Component<IProps, IState> {
                   <p>{item.type}</p>
                   <small>Capacity</small>
                   <p>{item.capacity}</p>
-                  <button
-                    onClick={() => {
-                      this.modalOpen(item);
-                    }}
-                  >
-                    edit
-                  </button>
+                  {this.props.userRole == "User" && (
+                    <button
+                      onClick={() => {
+                        this.modalOpen(item);
+                      }}
+                    >
+                      edit
+                    </button>
+                  )}
                 </Col>
               </Row>
             </div>
@@ -159,17 +161,18 @@ const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   history: ownProps.history,
   isLoggedIn: state.user.isLoggedIn,
   userId: state.user.mail,
+  userRole: state.user.role,
   vehicles:
     state.user.role == "User"
       ? getVehicles(
-          state.user.isLoading,
-          state.user.isLoaded,
+          state.user.isVehiclesLoading,
+          state.user.isVehiclesLoaded,
           state.user.mail,
           state.user.token
         )
       : getAllVehicles(
-          state.user.isLoading,
-          state.user.isLoaded,
+          state.user.isVehiclesLoading,
+          state.user.isVehiclesLoaded,
           state.user.token
         ),
   token: state.user.token,

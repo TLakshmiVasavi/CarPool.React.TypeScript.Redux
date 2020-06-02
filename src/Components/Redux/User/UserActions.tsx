@@ -8,6 +8,10 @@ import rideActions from "../Ride/RideActions";
 
 const userServices = new UserServices();
 class UserRequestActions {
+  GetBalanceRequestAction = createAction(
+    UserEvents.GET_BALANCE,
+    (userId, token) => userServices.getBalance(userId, token)
+  )();
   UpdateVehicleRequestAction = createAction(
     UserEvents.UPDATE_VEHICLE,
     (data, userId, token, vehicleId) =>
@@ -28,7 +32,7 @@ class UserRequestActions {
     (data, userId, token) => {
       userServices.updateImage(data, userId, token);
     }
-  );
+  )();
 
   GetUserImageAction = createAction(
     UserEvents.GET_USER_IMAGE,
@@ -70,6 +74,10 @@ class UserRequestActions {
     UserEvents.UPDATE_USER_REQUEST,
     (data, token) => userServices.UpdateUser(data, token)
   )();
+
+  GetTransactions = createAction(UserEvents.GET_TRANSACTIONS, (userId, token) =>
+    userServices.GetTransactions(userId, token)
+  )();
 }
 
 export { UserRequestActions };
@@ -104,9 +112,7 @@ export function getAllVehicles(
 ): Types.IVehicle[] {
   let x: Types.IVehicle[] = [];
   if (
-    (window.location.pathname == "/OfferRide" ||
-      window.location.pathname == "/Profile" ||
-      window.location.pathname == "/Admin/Vehicles") &&
+    window.location.pathname == "/Admin/Vehicles" &&
     !isLoading &&
     !isLoaded
   ) {
@@ -124,11 +130,7 @@ export function getAllUsers(
   token: string
 ): Types.IUser[] {
   let x: Types.IUser[] = [];
-  if (
-    (window.location.pathname == "/OfferRide" ||
-      window.location.pathname == "/Profile") &&
-    !isLoading
-  ) {
+  if (window.location.pathname == "/Admin/Users" && !isLoading && !isLoaded) {
     store.dispatch(userActions.GetAllUsersAction(token));
   } else if (isLoaded) {
     x = store.getState().user == undefined ? [] : store.getState().user?.users;
@@ -149,6 +151,43 @@ export function getUserImage(
   } else if (isImageLoaded) {
     x =
       store.getState().user == undefined ? null : store.getState().user?.photo;
+  }
+  return x;
+}
+
+export function getBalance(
+  isLoading: boolean,
+  isLoaded: boolean,
+  userId: string,
+  token: string
+): any {
+  console.log("getBalance");
+  let x: any = null;
+  if (!isLoading && !isLoaded) {
+    store.dispatch(userActions.GetBalanceRequestAction(userId, token));
+  } else if (isLoaded) {
+    x =
+      store.getState().user == undefined
+        ? null
+        : store.getState().user?.balance;
+  }
+  return x;
+}
+
+export function getTransactions(
+  isLoading: boolean,
+  isLoaded: boolean,
+  userId: string,
+  token: string
+): Types.ITransaction[] {
+  let x: Types.ITransaction[] = [];
+  if (!isLoading && !isLoaded) {
+    store.dispatch(userActions.GetTransactions(userId, token));
+  } else if (isLoaded) {
+    x =
+      store.getState().user == undefined
+        ? null
+        : store.getState().user?.transactions;
   }
   return x;
 }

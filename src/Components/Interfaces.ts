@@ -1,8 +1,18 @@
 export declare module Types {
+  export interface ITransaction {
+    id: string;
+    bookingId: number;
+    amount: number;
+    paymentMessage: string;
+  }
+  export interface ITransactions {
+    transactions: ITransaction[];
+  }
   export interface IWallet {
     [key: string]: number;
     balance: number;
   }
+
   export interface IImage {
     image: any;
   }
@@ -20,7 +30,7 @@ export declare module Types {
     password: string;
     age: number;
     number: string;
-    photo: any;
+    image: any;
     gender: string;
     hasVehicle: boolean;
     vehicle: IVehicle;
@@ -43,6 +53,7 @@ export declare module Types {
     age: number;
     gender: string;
     photo?: any;
+    balance: number;
   }
 
   export interface IRoute {
@@ -126,6 +137,7 @@ export declare module Types {
     to: string;
     noOfSeats: number;
     cost: number;
+    status: string;
   }
 
   export interface IMyRides {
@@ -149,6 +161,8 @@ export declare module Types {
     providerId: string;
     providerPic: any;
     availableSeats: number;
+    startDate: Date;
+    time: string;
   }
 
   export interface IRideRequests {

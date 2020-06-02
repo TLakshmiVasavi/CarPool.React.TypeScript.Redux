@@ -185,6 +185,14 @@ select:disabled {
   flex-direction: row;
 }
 
+.payments {
+  margin: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
 .name {
   margin-left: 30px;
   margin-bottom: 10px;

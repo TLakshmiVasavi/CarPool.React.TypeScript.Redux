@@ -9,10 +9,10 @@ import { toast } from "react-toastify";
 let rideActions = new RideResponseActions();
 class RideService {
   offerRide(offerRide: Types.IOfferRide, userId: string, token: string) {
+    offerRide.availableVehicles = [];
     axios
       .post(
-        "https://localhost:5001/api/RideApi/OfferRide?userId=" +
-          store.getState().user.mail,
+        "https://localhost:5001/api/RideApi/OfferRide?userId=" + userId,
         offerRide,
         {
           headers: {
@@ -30,8 +30,7 @@ class RideService {
   bookRide(Request: Types.IBookRide, userId: string, token: string) {
     axios
       .post(
-        "https://localhost:5001/api/RideApi/BookRide?userId=" +
-          store.getState().user.mail,
+        "https://localhost:5001/api/RideApi/BookRide?userId=" + userId,
         Request,
         {
           headers: {
@@ -58,10 +57,10 @@ class RideService {
     axios
       .post(
         "https://localhost:5001/api/RideApi/RequestRide?userId=" +
-          store.getState().user.mail +
+          userId +
           "&rideId=" +
           rideId +
-          "&noOfSeats" +
+          "&noOfSeats=" +
           noOfSeats,
         Request,
         {
@@ -80,8 +79,7 @@ class RideService {
   getMyOffers(userId: string, token: string) {
     axios
       .get(
-        "https://localhost:5001/api/RideApi/GetOfferedRides?userId=" +
-          store.getState().user.mail,
+        "https://localhost:5001/api/RideApi/GetOfferedRides?userId=" + userId,
         {
           headers: {
             Authorization: "Bearer " + token,
@@ -115,15 +113,11 @@ class RideService {
 
   getMyBookings(userId: string, token: string) {
     axios
-      .get(
-        "https://localhost:5001/api/RideApi/GetBookings?userId=" +
-          store.getState().user.mail,
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        }
-      )
+      .get("https://localhost:5001/api/RideApi/GetBookings?userId=" + userId, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
       .then((response) =>
         store.dispatch(rideActions.GetMyBookingsSuccessAction(response.data))
       )
@@ -148,6 +142,7 @@ class RideService {
         store.dispatch(rideActions.GetBookingsFailureAction(error));
       });
   }
+
   approveRideRequest(
     requestId: number,
     rideId: number,
@@ -159,19 +154,26 @@ class RideService {
       .post(
         "https://localhost:5001/api/RideApi/ApproveRequest?rideId=" +
           rideId +
-          "&requestId" +
+          "&requestId=" +
           requestId +
-          "&isApprove" +
+          "&isApprove=" +
           isApprove +
-          "&providerId" +
-          store.getState().user.mail,
+          "&providerId=" +
+          userId,
+        {},
         {
           headers: {
             Authorization: "Bearer " + token,
           },
         }
       )
-      .then(() => store.dispatch(rideActions.ApproveRequestSuccessAction()))
+      .then((response) => {
+        if (response.data.result) {
+          store.dispatch(rideActions.ApproveRequestSuccessAction());
+        } else {
+          toast.error(response.data.errorMessage);
+        }
+      })
       .catch((error) => {
         toast.error("Server Not Responding");
         store.dispatch(rideActions.ApproveRequestFailureAction(error));
@@ -182,7 +184,7 @@ class RideService {
     axios
       .get(
         "https://localhost:5001/api/RideApi/GetRequests?userId=" +
-          store.getState().user.mail +
+          userId +
           "&rideId=" +
           rideId,
         {

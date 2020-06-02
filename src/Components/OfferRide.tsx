@@ -65,7 +65,11 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
 
   handleChange(e: any) {
     const { name, value } = e.target;
-    this.setState({ [name]: value });
+    if (name == "noOfOfferedSeats" || name == "cost") {
+      this.setState({ [name]: parseInt(value) });
+    } else {
+      this.setState({ [name]: value });
+    }
   }
 
   handleDateChange(e: any) {
@@ -392,6 +396,7 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
                             <small>Price</small>
                             <TextField
                               label=""
+                              type="number"
                               onChange={this.handleChange}
                               margin="normal"
                               name="cost"
@@ -429,8 +434,8 @@ const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   isLoaded: state.user.isLoaded,
 
   vehicles: getVehicles(
-    state.user.isLoading,
-    state.user.isLoaded,
+    state.user.isVehiclesLoading,
+    state.user.isVehiclesLoaded,
     state.user.mail,
     state.user.token
   ),

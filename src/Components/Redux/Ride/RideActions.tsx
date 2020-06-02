@@ -72,7 +72,7 @@ export function getMyOffers(
   if (window.location.pathname == "/MyRides" && !isLoaded && !isLoading) {
     store.dispatch(rideActions.GetMyOffersAction(userId, token));
   } else if (isLoaded) {
-    x = store.getState().ride == undefined ? [] : store.getState().ride?.Offers;
+    x = store.getState().ride == undefined ? [] : store.getState().ride?.offers;
   }
   return x;
 }

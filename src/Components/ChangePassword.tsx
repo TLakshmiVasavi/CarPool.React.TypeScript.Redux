@@ -10,6 +10,7 @@ import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
 import { Redirect } from "react-router-dom";
 import { UserRequestActions } from "./Redux/User/UserActions";
+
 let userActions = new UserRequestActions();
 
 const validationSchema = Yup.object({
@@ -23,6 +24,7 @@ const validationSchema = Yup.object({
     ),
   }),
 });
+
 class ChangePassword extends Component<IProps, Types.IChangePassword> {
   constructor(props: IProps) {
     super(props);
@@ -33,6 +35,9 @@ class ChangePassword extends Component<IProps, Types.IChangePassword> {
     };
   }
   render() {
+    if (!this.props.isLoggedIn) {
+      this.props.history.push("/");
+    }
     return (
       <Formik
         enableReinitialize
@@ -108,6 +113,7 @@ const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   userId: state.user.mail,
   token: state.user.token,
 });
+
 export default connect(mapStateToProps, {
   changePassword: userActions.ChangePasswordRequestAction,
 })(ChangePassword);

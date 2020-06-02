@@ -7,6 +7,7 @@ import { UserRequestActions } from "./Redux/User/UserActions";
 import { RouteComponentProps } from "react-router-dom";
 import Vehicles from "./Vehicles";
 import UserDetails from "./UserDetails";
+
 let userActions = new UserRequestActions();
 
 class UserProfile extends React.Component<IProps, Types.IChangePassword> {
@@ -55,7 +56,9 @@ interface DispatchProps {
     token: string
   ) => void;
 }
+
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
+
 export default connect(mapStateToProps, {
   updateUser: userActions.UpdateUserRequestAction,
   changePassword: userActions.ChangePasswordRequestAction,

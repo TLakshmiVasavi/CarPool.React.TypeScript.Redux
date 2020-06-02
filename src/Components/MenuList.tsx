@@ -11,8 +11,9 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { UserRequestActions, getUserImage } from "./Redux/User/UserActions";
 import { AppState } from "./Redux/rootReducer";
-import { stat } from "fs";
+
 let userActions = new UserRequestActions();
+
 interface MenuState {
   open: boolean;
 }
@@ -208,7 +209,9 @@ const mapStateToProps = (state: AppState) => ({
 interface DispatchProps {
   Logout: (userId: string, token: string) => void;
 }
+
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
+
 export default connect(mapStateToProps, {
   Logout: userActions.LogoutUserAction,
 })(UserMenuList);

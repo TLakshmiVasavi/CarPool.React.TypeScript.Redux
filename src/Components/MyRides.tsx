@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
 import OfferedRides from "./OfferedRides";
 import BookedRides from "./BookedRides";
-import { Redirect, RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps } from "react-router-dom";
 
 class MyRides extends React.Component<IProps, {}> {
   render() {
@@ -32,10 +32,13 @@ class MyRides extends React.Component<IProps, {}> {
     );
   }
 }
+
 type IProps = ReturnType<typeof mapStateToProps>;
+
 const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   routeProps: ownProps,
   history: ownProps.history,
   isLoggedIn: state.user.isLoggedIn,
 });
+
 export default connect(mapStateToProps, null)(MyRides);

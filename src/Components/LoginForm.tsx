@@ -8,9 +8,10 @@ import * as Yup from "yup";
 import { Types } from "./Interfaces";
 import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
-import { Redirect } from "react-router-dom";
 import { UserRequestActions } from "./Redux/User/UserActions";
+
 let userActions = new UserRequestActions();
+
 const validationSchema = Yup.object({
   id: Yup.string().required("Id is Required"),
   password: Yup.string().required("Password is Required"),
@@ -92,6 +93,7 @@ const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   history: ownProps.history,
   isLoggedIn: state.user.isLoggedIn,
 });
+
 export default connect(mapStateToProps, {
   Login: userActions.UserLoginRequestAction,
 })(LoginForm);

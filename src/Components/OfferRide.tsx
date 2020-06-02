@@ -20,6 +20,7 @@ import Loader from "react-loader-spinner";
 import { getVehicles } from "./Redux/User/UserActions";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
+
 let userActions = new UserRequestActions();
 let rideActions = new RideRequestActions();
 

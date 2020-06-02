@@ -5,9 +5,11 @@ export declare module Types {
     amount: number;
     paymentMessage: string;
   }
+
   export interface ITransactions {
     transactions: ITransaction[];
   }
+
   export interface IWallet {
     [key: string]: number;
     balance: number;

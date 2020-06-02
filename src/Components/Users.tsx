@@ -1,4 +1,3 @@
-import Modal from "./PopUp";
 import { RouteComponentProps } from "react-router-dom";
 import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
@@ -6,8 +5,6 @@ import { UserRequestActions, getAllUsers } from "./Redux/User/UserActions";
 import React from "react";
 import { Types } from "./Interfaces";
 import { Row, Col } from "react-grid-system";
-
-let userActions = new UserRequestActions();
 
 class Users extends React.Component<IProps> {
   render() {
@@ -66,5 +63,7 @@ const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
         ),
   token: state.user.token,
 });
+
 type IProps = ReturnType<typeof mapStateToProps>;
+
 export default connect(mapStateToProps, {})(Users);

@@ -7,7 +7,9 @@ import { connect } from "react-redux";
 import { RideRequestActions } from "./Redux/Ride/RideActions";
 import "../App.css";
 import Modal from "./PopUp";
+
 let rideActions = new RideRequestActions();
+
 interface IState {
   NumberOfSeats: number;
   modal: boolean;
@@ -173,6 +175,7 @@ class AvailableRides extends React.Component<IProps, IState> {
     );
   }
 }
+
 const mapStateToProps = (state: AppState, ownProps: Types.IBookRide) => ({
   request: ownProps,
   isLoaded: state.ride.isLoaded,

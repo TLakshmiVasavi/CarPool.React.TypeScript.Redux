@@ -1,17 +1,19 @@
 import React from "react";
-import { Container, Row, Col } from "react-grid-system";
+import { Row, Col } from "react-grid-system";
 import { Types } from "./Interfaces";
 import { MdLocationOn } from "react-icons/md";
 import { AppState } from "./Redux/rootReducer";
 import { RideRequestActions } from "./Redux/Ride/RideActions";
 import { connect } from "react-redux";
 import { getBookings, getMyBookings } from "./Redux/Ride/RideActions";
-import { stat } from "fs";
 import Loader from "react-loader-spinner";
 import { RouteComponentProps } from "react-router-dom";
-let rideActions = new RideRequestActions();
+
 class BookedRides extends React.Component<IProps, {}> {
   render() {
+    if (!this.props.isLoggedIn) {
+      this.props.history.push("/");
+    }
     var url = "data:image/png;base64,";
     return (
       <>
@@ -108,6 +110,7 @@ class BookedRides extends React.Component<IProps, {}> {
 type IProps = ReturnType<typeof mapStateToProps>;
 
 const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
+  isLoggedIn: state.user.isLoggedIn,
   history: ownProps.history,
   isLoading: state.ride.isLoading,
   bookings:

@@ -1,10 +1,12 @@
 import React from "react";
 import "../App.css";
+
 interface IProps {
   handleClose: (e?: any) => void;
   show: boolean;
   children: any;
 }
+
 class PopUpModal extends React.Component<IProps, {}> {
   render() {
     return (
@@ -22,4 +24,5 @@ class PopUpModal extends React.Component<IProps, {}> {
     );
   }
 }
+
 export default PopUpModal;

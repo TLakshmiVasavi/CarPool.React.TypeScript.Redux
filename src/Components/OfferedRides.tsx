@@ -13,10 +13,13 @@ import RideRequests from "./RideRequests";
 import { AppState } from "./Redux/rootReducer";
 import Loader from "react-loader-spinner";
 import { RouteComponentProps } from "react-router-dom";
+
 let rideActions = new RideRequestActions();
+
 interface IPopUp {
   open: boolean;
 }
+
 class OfferedRides extends React.Component<IProps, IPopUp> {
   constructor(props: IProps) {
     super(props);
@@ -46,6 +49,9 @@ class OfferedRides extends React.Component<IProps, IPopUp> {
     this.props.offers.map((item) => console.log(item));
   }
   render() {
+    if (!this.props.isLoggedIn) {
+      this.props.history.push("/");
+    }
     return (
       <>
         {this.props.isOffersLoading ? (
@@ -128,14 +134,17 @@ class OfferedRides extends React.Component<IProps, IPopUp> {
     );
   }
 }
+
 interface DispatchProps {
   getRequests: (rideId: number, userId: string, token: string) => void;
 }
+
 const mapDispatchToProps = {
   getRequests: rideActions.GetRideRequestsAction,
 };
 
 const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
+  isLoggedIn: state.user.isLoggedIn,
   userRole: state.user.role,
   history: ownProps.history,
   isOffersLoading: state.ride.isOffersLoading,
@@ -155,5 +164,7 @@ const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   userId: state.user.mail,
   token: state.user.token,
 });
+
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
+
 export default connect(mapStateToProps, mapDispatchToProps)(OfferedRides);

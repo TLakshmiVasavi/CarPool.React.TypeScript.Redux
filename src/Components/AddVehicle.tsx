@@ -2,14 +2,16 @@ import React, { Component } from "react";
 import { TextField } from "@material-ui/core";
 import "../App.css";
 import "../StyleSheets/Colors.css";
-import { RouteComponentProps, Redirect } from "react-router-dom";
+import { RouteComponentProps } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Types, vehicleType } from "./Interfaces";
 import { UserRequestActions } from "./Redux/User/UserActions";
 import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
+
 let userActions = new UserRequestActions();
+
 const validationSchema = Yup.object({
   model: Yup.string().required("Required"),
   number: Yup.string().required("Required"),

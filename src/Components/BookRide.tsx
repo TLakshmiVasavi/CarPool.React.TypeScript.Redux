@@ -14,7 +14,9 @@ import { Types, vehicleType, times } from "./Interfaces";
 import { RideRequestActions } from "./Redux/Ride/RideActions";
 import { AppState } from "./Redux/rootReducer";
 import AvailableRides from "./AvailableRides";
+
 let rideActions = new RideRequestActions();
+
 const validationSchema = Yup.object({
   from: Yup.string().required("Required"),
   to: Yup.string().required("Required"),

@@ -13,15 +13,19 @@ import Modal from "./PopUp";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { TextField } from "@material-ui/core";
+
 let userActions = new UserRequestActions();
+
 interface IState extends Types.IVehicle {
   selected: string;
   open: boolean;
 }
+
 const validationSchema = Yup.object({
   model: Yup.string().required("Required"),
   capacity: Yup.number().required("Required"),
 });
+
 class Vehicles extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
@@ -177,6 +181,7 @@ const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
         ),
   token: state.user.token,
 });
+
 interface DispatchProps {
   updateVehicle: (
     vehicle: Types.IVehicle,
@@ -185,7 +190,9 @@ interface DispatchProps {
     token: string
   ) => void;
 }
+
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
+
 export default connect(mapStateToProps, {
   updateVehicle: userActions.UpdateVehicleRequestAction,
 })(Vehicles);

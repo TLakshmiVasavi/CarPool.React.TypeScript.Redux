@@ -12,7 +12,10 @@ import {
 import { connect } from "react-redux";
 import { Types } from "./Interfaces";
 import { AppState } from "./Redux/rootReducer";
+import { RouteComponentProps } from "react-router-dom";
+
 let userActions = new UserRequestActions();
+
 const validationSchema = Yup.object({
   balance: Yup.number().required("Required"),
 });
@@ -30,6 +33,9 @@ class Wallet extends Component<IProps, Types.IWallet> {
   }
 
   render() {
+    if (!this.props.isLoggedIn) {
+      this.props.history.push("/");
+    }
     return (
       <>
         <Formik
@@ -86,7 +92,8 @@ class Wallet extends Component<IProps, Types.IWallet> {
 
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
+  history: ownProps.history,
   balance: getBalance(
     state.user.isLoading,
     state.user.isLoaded,

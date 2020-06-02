@@ -6,6 +6,7 @@ import { UserRequestActions, getAllUsers } from "./Redux/User/UserActions";
 import React from "react";
 import { Types } from "./Interfaces";
 import { Row, Col } from "react-grid-system";
+
 interface IState extends Types.IUser {
   disable: boolean;
   open: boolean;
@@ -202,11 +203,14 @@ const mapStateToProps = (state: AppState, ownProps: RouteComponentProps) => ({
   user: state.user,
   token: state.user.token,
 });
+
 interface DispatchProps {
   updateImage: (Photo: Types.IImage, userId: string, token: string) => void;
   updateUser: (user: Types.IUser, token: string) => void;
 }
+
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
+
 export default connect(mapStateToProps, {
   updateUser: userActions.UpdateUserRequestAction,
   updateImage: userActions.UpdateImageAction,

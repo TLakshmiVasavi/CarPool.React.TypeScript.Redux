@@ -5,7 +5,9 @@ import { MdLocationOn } from "react-icons/md";
 import { AppState } from "./Redux/rootReducer";
 import { connect } from "react-redux";
 import { RideRequestActions } from "./Redux/Ride/RideActions";
+
 let rideActions = new RideRequestActions();
+
 class RideRequests extends React.Component<IProps, {}> {
   constructor(props: IProps) {
     super(props);
@@ -99,9 +101,11 @@ class RideRequests extends React.Component<IProps, {}> {
     );
   }
 }
+
 interface OwnProps {
   rideId: number;
 }
+
 const mapStateToProps = (state: AppState, ownProps: OwnProps) => ({
   rideId: ownProps.rideId,
   isLoaded: state.ride.isRequestsLoaded,
@@ -119,8 +123,11 @@ interface DispatchProps {
     token: string
   ) => void;
 }
+
 const mapDispatchToProps = {
   approveRideRequest: rideActions.ApproveRequestAction,
 };
+
 type IProps = ReturnType<typeof mapStateToProps> & DispatchProps;
+
 export default connect(mapStateToProps, mapDispatchToProps)(RideRequests);

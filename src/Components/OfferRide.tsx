@@ -89,7 +89,12 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
     this.setState({ route });
   }
   componentWillReceiveProps() {
+    console.log("Props");
+    console.log(this.props.isLoaded);
+    console.log(this.props.isLoading);
+    console.log(this.props.vehicles);
     if (this.props.isLoaded) {
+      console.log(this.props.vehicles);
       if (this.props.vehicles == []) {
         this.props.history.push("/User/AddVehicle");
       } else {
@@ -100,6 +105,13 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
         });
       }
     }
+  }
+  componentDidUpdate(){
+    console.log("update");
+  }
+  componentWillMount() {
+    console.log("mount");
+    console.log(this.props);
   }
 
   handleSubmit(e: any) {
@@ -151,7 +163,7 @@ class OfferRide extends React.Component<IProps, Types.IOfferRide> {
       this.props.history.push("/Login");
     }
 
-    if (this.props.isLoading) {
+    if (this.props.isLoaded) {
       if (this.props.vehicles == []) {
         this.props.history.push("/User/AddVehicle");
       }

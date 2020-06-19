@@ -18,26 +18,12 @@ import { connect } from "react-redux";
 import { AppState } from "./Redux/rootReducer";
 import userActions from "./Redux/User/UserActions";
 import "../StyleSheets/Colors.css";
-const styles = {
-  root: {
-    "& $notchedOutline": {
-      borderWidth: 0,
-    },
-    "&:hover $notchedOutline": {
-      borderWidth: 0,
-    },
-    "&$focused $notchedOutline": {
-      borderWidth: 0,
-    },
-  },
-  focused: {},
-  notchedOutline: {},
-};
+
 const validationSchema = Yup.object().shape({
   mail: Yup.string()
     .email("Please enter valid mail")
-    .required("Name is Required"),
-  password: Yup.string()
+    .required("Mail is Required"),
+  password: Yup.string().required("Password is Required")
     .min(6, "Password has to be longer than 6 characters!")
     .matches(
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
@@ -51,10 +37,10 @@ const validationSchema = Yup.object().shape({
       /^[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-/\s.]?[0-9]{4}$/,
       "Please enter valid number"
     ),
-  age: Yup.string()
-    .required("Age is Required")
-    .min(0, "Enter Valid Value")
-    .max(100, "Enter Valid Value"),
+   age: Yup.number()
+     .required("Age is Required")
+     .min(0, "Enter Valid Value")
+     .max(100, "Enter Valid Value"),
 });
 
 class SignUpForm extends Component<IProps, Types.INewUser> {
@@ -138,8 +124,6 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
           enableReinitialize
           initialValues={this.state}
           validationSchema={validationSchema}
-          validateOnChange={false}
-          validateOnBlur={false}
           onSubmit={this.handleSubmit}
         >
           {({ handleSubmit, handleChange, errors }) => (
@@ -188,7 +172,7 @@ class SignUpForm extends Component<IProps, Types.INewUser> {
 
               <FormControl>
                 <InputLabel htmlFor="standard-adornment-password">
-                  Password
+                  {errors.password ??"Password"}
                 </InputLabel>
                 <Input
                   className="margin"

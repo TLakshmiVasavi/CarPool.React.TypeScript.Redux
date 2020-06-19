@@ -43,7 +43,12 @@ class UserServices {
     axios
       .post("https://localhost:5001/api/UserApi/SignUp", data)
       .then((response) =>
+      {if (response.data.isSuccess) {
         store.dispatch(userActions.UserSignupSuccessAction(response.data.user))
+      }else{
+        toast.error(response.data.errorMessage)
+        store.dispatch(userActions.UserSignupFailureAction(response.data.errorMessage));
+      }}
       )
       .catch((error) => {
         toast.error("Server Not Responding");
